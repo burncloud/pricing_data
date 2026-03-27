@@ -1,0 +1,49 @@
+name: Validate pricing.json
+
+on:
+  pull_request:
+    paths:
+      - 'pricing.json'
+  push:
+    branches: [main]
+    paths:
+      - 'pricing.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON syntax
+        run: jq empty pricing.json
+
+      - name: Check required top-level fields
+        run: |
+          jq -e '.version and .updated_at and .source and .models' pricing.json > /dev/null
+          echo "Required fields present"
+
+      - name: Check all prices are non-negative
+        run: |
+          jq -e '
+            .models | to_entries[] | .value.pricing | to_entries[] | .value |
+            (.input_price >= 0) and (.output_price >= 0)
+          ' pricing.json | grep -v false || true
+          # Fail if any price is negative
+          if jq -e '
+            [.models | to_entries[] | .value.pricing | to_entries[] | .value |
+            select(.input_price < 0 or .output_price < 0)] | length > 0
+          ' pricing.json | grep -q true; then
+            echo "❌ Negative prices found"
+            exit 1
+          fi
+          echo "✅ All prices are non-negative"
+
+      - name: Check model count
+        run: |
+          COUNT=$(jq '.models | length' pricing.json)
+          echo "Model count: $COUNT"
+          if [ "$COUNT" -lt 1 ]; then
+            echo "❌ pricing.json must contain at least one model"
+            exit 1
+          fi

@@ -1,0 +1,26 @@
+name: Sync to Gitee
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync to Gitee
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+          git remote add gitee "https://oauth2:${GITEE_TOKEN}@gitee.com/burncloud/pricing_data.git" || \
+            git remote set-url gitee "https://oauth2:${GITEE_TOKEN}@gitee.com/burncloud/pricing_data.git"
+
+          git push gitee HEAD:main --force
+          echo "✅ Synced to Gitee"
