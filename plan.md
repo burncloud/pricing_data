@@ -368,8 +368,9 @@ pricing_data/
 | Eng Review (Format Fix) | `/plan-eng-review` | 测试修复 + 新功能覆盖 | 3 | **CLEARED** | 67/67 pass, 10 new tests, 1 real bug fixed (shallow copy) |
 | CEO Review (Batch+Tiered) | `/plan-ceo-review` | LiteLLM 自动化 + CI 迁移 | 4 | **CLEAN** | 6 scope expansions accepted, 2 TODOs written, spec 6/10 |
 | /autoplan (Batch+Tiered) | `/autoplan` | Full pipeline: CEO+Eng dual voices | 5 | **DONE_WITH_CONCERNS** | 1 taste decision, 3 auto-scope adds, field-level merge risk flagged |
+| CEO Review (Endpoint Redesign) | `/plan-ceo-review` | endpoint key架构验证 + Vertex AI污染修复 | 5 | **DONE** | vertex_ai-* providers added to _SKIP_PROVIDERS, 28-model contamination fixed, TODOS reprioritized |
 
-**VERDICT:** APPROVED WITH 1 TASTE DECISION. Field-level merge enrichment needs user choice. 3 items auto-added to scope (batch drift detection, secondary batch guard, roundtrip test).
+**VERDICT:** APPROVED. Endpoint redesign working for major providers. Vertex AI contamination fixed. OpenAI fetcher is now P1 blocker.
 
 ---
 
