@@ -296,6 +296,32 @@ class TestProviderFiltering:
         models = fetcher._parse_models(resp)
         assert len(models) == 0
 
+    def test_vertex_ai_anthropic_models_skipped(self, fetcher):
+        """Bare Claude model IDs with vertex_ai-anthropic_models provider are skipped."""
+        data = {
+            "claude-opus-4-6": {
+                "input_cost_per_token": 15e-6,
+                "output_cost_per_token": 75e-6,
+                "litellm_provider": "vertex_ai-anthropic_models",
+            }
+        }
+        resp = _make_response(data)
+        models = fetcher._parse_models(resp)
+        assert len(models) == 0
+
+    def test_bedrock_converse_skipped(self, fetcher):
+        """bedrock_converse proxy route is skipped."""
+        data = {
+            "bedrock_converse/anthropic.claude-3-sonnet": {
+                "input_cost_per_token": 3e-6,
+                "output_cost_per_token": 15e-6,
+                "litellm_provider": "bedrock_converse",
+            }
+        }
+        resp = _make_response(data)
+        models = fetcher._parse_models(resp)
+        assert len(models) == 0
+
     def test_direct_provider_included(self, fetcher):
         """Models with direct provider (anthropic, openai) are included."""
         data = {

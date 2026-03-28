@@ -23,8 +23,13 @@ _SKIP_MODEL_IDS = frozenset({"sample_spec"})
 # The same models appear directly as litellm_provider=anthropic/openai/etc.
 _SKIP_PROVIDERS = frozenset({
     "bedrock",
+    "bedrock_converse",
     "vertex_ai",
     "vertex_ai_beta",
+    "vertex_ai-anthropic_models",
+    "vertex_ai-mistral_models",
+    "vertex_ai-llama_models",
+    "vertex_ai-google_models",
     "azure",
     "azure_ai",
     "sagemaker",
