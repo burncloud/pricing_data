@@ -711,6 +711,142 @@ class TestFieldLevelEnrichment:
         assert usd["batch_pricing"]["input_price"] == pytest.approx(1.25)
 
 
+class TestDerivedPricing:
+    """
+    Merge-stage derived pricing for providers with documented ratio rules.
+    Zhipu: cache read = 50% of input, batch = 50% (batch_supported_models whitelist).
+    Sources: docs.bigmodel.cn/cn/guide/capabilities/cache.md
+             docs.bigmodel.cn/cn/guide/tools/batch.md
+    """
+
+    def _merge_zhipu(self, model_id: str, input_price: float, output_price: float,
+                     tmp_path, *, existing_cache=None, existing_batch=None):
+        """Helper: merge a single Zhipu CNY model and return its CNY pricing entry."""
+        model = _model(
+            "open.bigmodel.cn",
+            {"input_price": input_price, "output_price": output_price},
+            currency="CNY",
+            metadata={"provider": "zhipu", "family": "glm"},
+            cache_pricing=existing_cache,
+            batch_pricing=existing_batch,
+        )
+        source = {"status": "success", "models": {model_id: model}}
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True, exist_ok=True)
+        with open(sources_dir / "zhipu.json", "w") as f:
+            json.dump(source, f)
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path):
+            result, warnings = merger.merge_all("2024-01-01")
+        return result["models"][model_id]["pricing"]["CNY"], warnings
+
+    def test_paid_model_gets_cache_pricing(self, tmp_path):
+        """Paid Zhipu model: cache_read_input_price = input * 0.5."""
+        cny, _ = self._merge_zhipu("glm-4-plus", 5.0, 5.0, tmp_path)
+        assert "cache_pricing" in cny
+        assert cny["cache_pricing"]["cache_read_input_price"] == pytest.approx(2.5)
+
+    def test_free_model_no_cache_pricing(self, tmp_path):
+        """Free model (input=0): no cache_pricing derived."""
+        cny, _ = self._merge_zhipu("glm-4.7-flash", 0.0, 0.0, tmp_path)
+        assert "cache_pricing" not in cny
+
+    def test_batch_supported_model_gets_batch_pricing(self, tmp_path):
+        """GLM-4-Plus is in batch whitelist — gets batch_pricing at 50%."""
+        cny, _ = self._merge_zhipu("glm-4-plus", 5.0, 5.0, tmp_path)
+        assert "batch_pricing" in cny
+        assert cny["batch_pricing"]["input_price"] == pytest.approx(2.5)
+        assert cny["batch_pricing"]["output_price"] == pytest.approx(2.5)
+
+    def test_batch_unsupported_model_no_batch_pricing(self, tmp_path):
+        """GLM-5-Turbo is not in batch whitelist — no batch_pricing."""
+        cny, _ = self._merge_zhipu("glm-5-turbo", 5.0, 22.0, tmp_path)
+        assert "batch_pricing" not in cny
+
+    def test_existing_cache_not_overwritten(self, tmp_path):
+        """Source-provided cache_pricing is not overwritten by derived value."""
+        explicit = {"cache_read_input_price": 1.0}
+        cny, _ = self._merge_zhipu("glm-4-plus", 5.0, 5.0, tmp_path, existing_cache=explicit)
+        assert cny["cache_pricing"]["cache_read_input_price"] == pytest.approx(1.0)
+
+    def test_existing_batch_not_overwritten(self, tmp_path):
+        """Source-provided batch_pricing is not overwritten by derived value."""
+        explicit = {"input_price": 1.0, "output_price": 1.0}
+        cny, _ = self._merge_zhipu("glm-4-plus", 5.0, 5.0, tmp_path, existing_batch=explicit)
+        assert cny["batch_pricing"]["input_price"] == pytest.approx(1.0)
+
+    def test_non_zhipu_model_no_derived(self, tmp_path):
+        """Provider with no rules (deepseek) gets no derived cache/batch."""
+        model = _model(
+            "api.deepseek.com",
+            {"input_price": 0.27, "output_price": 1.10},
+            currency="USD",
+            metadata={"provider": "deepseek"},
+        )
+        source = {"status": "success", "models": {"deepseek-chat": model}}
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True, exist_ok=True)
+        with open(sources_dir / "deepseek.json", "w") as f:
+            json.dump(source, f)
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path):
+            result, _ = merger.merge_all("2024-01-01")
+        usd = result["models"]["deepseek-chat"]["pricing"]["USD"]
+        assert "cache_pricing" not in usd
+        assert "batch_pricing" not in usd
+
+    def test_zhipu_usd_gets_derived_same_as_cny(self, tmp_path):
+        """
+        GLM model with both USD (openrouter) and CNY (zhipu) sources:
+        derived pricing is applied to both currencies — no completeness warning.
+        """
+        zhipu_data = {
+            "status": "success",
+            "models": {
+                "glm-4-plus": _model(
+                    "open.bigmodel.cn",
+                    {"input_price": 5.0, "output_price": 5.0},
+                    currency="CNY",
+                    metadata={"provider": "zhipu", "family": "glm"},
+                ),
+            },
+        }
+        openrouter_data = {
+            "status": "success",
+            "models": {
+                "zhipu/glm-4-plus": _model(
+                    "openrouter.ai",
+                    {"input_price": 0.70, "output_price": 0.70},
+                    currency="USD",
+                    metadata={"provider": "zhipu"},
+                ),
+            },
+        }
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True, exist_ok=True)
+        with open(sources_dir / "zhipu.json", "w") as f:
+            json.dump(zhipu_data, f)
+        with open(sources_dir / "openrouter.json", "w") as f:
+            json.dump(openrouter_data, f)
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "min_models_guard", {}), \
+             patch.object(config, "data_dir", tmp_path):
+            result, warnings = merger.merge_all("2024-01-01")
+
+        model = result["models"]["glm-4-plus"]
+        # Both currencies get cache and batch derived
+        assert "cache_pricing" in model["pricing"]["CNY"]
+        assert "cache_pricing" in model["pricing"]["USD"]
+        assert "batch_pricing" in model["pricing"]["CNY"]
+        assert "batch_pricing" in model["pricing"]["USD"]
+        # No completeness warnings
+        completeness = [w for w in warnings if "cache_pricing" in w or "batch_pricing" in w]
+        assert completeness == [], f"Unexpected completeness warnings: {completeness}"
+
+
 class TestPricingCompletenessCheck:
     """Quality check: completeness of batch/cache pricing across currencies."""
 

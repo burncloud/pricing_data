@@ -223,65 +223,18 @@ class TestParsePageText:
         models = fetcher._parse_page_text(text + "\n模型微调\n")
         assert "qwen-max" not in models
 
+    def test_no_derived_pricing_at_fetch_stage(self, fetcher):
+        """Fetch stage outputs base prices only — cache/batch are added at merge stage."""
+        models = fetcher._parse_page_text(FULL_SNIPPET)
+        for model_id, data in models.items():
+            ep = data["endpoints"].get("open.bigmodel.cn", {})
+            assert "cache_pricing" not in ep, f"{model_id}: cache_pricing should not be in fetch output"
+            assert "batch_pricing" not in ep, f"{model_id}: batch_pricing should not be in fetch output"
+
     def test_empty_page_returns_empty_dict(self, fetcher):
         """Page with no recognizable content returns empty dict."""
         models = fetcher._parse_page_text("Loading... 请稍候")
         assert models == {}
-
-
-# ---------------------------------------------------------------------------
-# TestDerivedPricing — cache_pricing and batch_pricing from documented ratios
-# ---------------------------------------------------------------------------
-
-class TestDerivedPricing:
-    """
-    Zhipu docs: cache read = 50% of input, batch = 50% of all prices.
-    Sources: docs.bigmodel.cn/cn/guide/capabilities/cache.md
-             docs.bigmodel.cn/cn/guide/tools/batch.md
-    """
-
-    _EP = "open.bigmodel.cn"
-
-    def test_paid_model_gets_cache_pricing(self, fetcher):
-        """Paid models get cache_read_input_price = input_price * 0.5."""
-        models = fetcher._parse_page_text(FULL_SNIPPET)
-        ep = models["glm-4-plus"]["endpoints"][self._EP]
-        assert "cache_pricing" in ep
-        assert ep["cache_pricing"]["cache_read_input_price"] == pytest.approx(2.5)  # 5.0 * 0.5
-
-    def test_free_model_no_cache_pricing(self, fetcher):
-        """Free models (input_price=0) do not get cache_pricing."""
-        models = fetcher._parse_page_text(FULL_SNIPPET)
-        ep = models["glm-4.7-flash"]["endpoints"][self._EP]
-        assert "cache_pricing" not in ep
-
-    def test_batch_supported_model_gets_batch_pricing(self, fetcher):
-        """GLM-4-Plus is in the batch supported list — gets batch_pricing at 50%."""
-        models = fetcher._parse_page_text(FULL_SNIPPET)
-        ep = models["glm-4-plus"]["endpoints"][self._EP]
-        assert "batch_pricing" in ep
-        assert ep["batch_pricing"]["input_price"] == pytest.approx(2.5)   # 5.0 * 0.5
-        assert ep["batch_pricing"]["output_price"] == pytest.approx(2.5)  # 5.0 * 0.5
-
-    def test_batch_unsupported_model_no_batch_pricing(self, fetcher):
-        """GLM-5-Turbo is not in the batch supported list — no batch_pricing."""
-        models = fetcher._parse_page_text(FULL_SNIPPET)
-        ep = models["glm-5-turbo"]["endpoints"][self._EP]
-        assert "batch_pricing" not in ep
-
-    def test_batch_supported_from_standard_section(self, fetcher):
-        """GLM-4-Air-250414 (standard section) is in batch list — gets batch_pricing."""
-        models = fetcher._parse_page_text(FULL_SNIPPET)
-        ep = models["glm-4-air-250414"]["endpoints"][self._EP]
-        assert "batch_pricing" in ep
-        assert ep["batch_pricing"]["input_price"] == pytest.approx(0.25)  # 0.5 * 0.5
-
-    def test_free_model_no_batch_pricing(self, fetcher):
-        """Free models (both prices = 0) get no batch_pricing even if in supported list."""
-        models = fetcher._parse_page_text(FULL_SNIPPET)
-        # glm-4-flash-250414 is free
-        ep = models["glm-4-flash-250414"]["endpoints"][self._EP]
-        assert "batch_pricing" not in ep
 
 
 # ---------------------------------------------------------------------------

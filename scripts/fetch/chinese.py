@@ -201,7 +201,7 @@ class ZhipuFetcher(BaseFetcher):
         def _flush(name: str, prices: list) -> None:
             if len(prices) >= 2:
                 model_id = name.lower()
-                models[model_id] = self._make_entry(prices[0], prices[1], model_id)
+                models[model_id] = self._make_entry(prices[0], prices[1])
                 logger.debug(
                     f"Zhipu flagship: {model_id} CNY {prices[0]}/{prices[1]}"
                 )
@@ -265,7 +265,7 @@ class ZhipuFetcher(BaseFetcher):
                 if current_model and found_price is not None:
                     model_id = current_model.lower()
                     if model_id not in models:
-                        models[model_id] = self._make_entry(found_price, found_price, model_id)
+                        models[model_id] = self._make_entry(found_price, found_price)
                         logger.debug(
                             f"Zhipu standard: {model_id} CNY {found_price}/{found_price}"
                         )
@@ -290,7 +290,7 @@ class ZhipuFetcher(BaseFetcher):
         if current_model and found_price is not None:
             model_id = current_model.lower()
             if model_id not in models:
-                models[model_id] = self._make_entry(found_price, found_price, model_id)
+                models[model_id] = self._make_entry(found_price, found_price)
 
         return models
 
@@ -306,17 +306,12 @@ class ZhipuFetcher(BaseFetcher):
         except ValueError:
             return None
 
-    def _make_entry(self, input_price: float, output_price: float, model_id: str = "") -> Dict[str, Any]:
-        cache_pricing, batch_pricing = self.config.get_derived_pricing(
-            "zhipu", model_id, input_price, output_price
-        )
+    def _make_entry(self, input_price: float, output_price: float) -> Dict[str, Any]:
         metadata = {"provider": "zhipu", "family": "glm"}
         endpoint_entry = self._build_endpoint_entry(
             {
                 "input_price": round(input_price, 6),
                 "output_price": round(output_price, 6),
             },
-            cache_pricing=cache_pricing,
-            batch_pricing=batch_pricing,
         )
         return self._build_model_entry(endpoint_entry, metadata)

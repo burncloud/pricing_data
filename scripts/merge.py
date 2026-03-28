@@ -174,6 +174,14 @@ class PricingMerger:
         for model_id, currency_map in model_currency_sources.items():
             pricing: Dict[str, Any] = {}
 
+            # Resolve provider early so we can apply derived pricing per currency.
+            # Sort in place — the metadata section below reuses the same list.
+            _meta_list = model_metadata.get(model_id, [])
+            _provider: Optional[str] = None
+            if _meta_list:
+                _meta_list.sort(key=lambda x: x[2], reverse=True)
+                _provider = _meta_list[0][1].get("provider")
+
             for currency, source_list in currency_map.items():
                 source_list.sort(key=lambda x: x[2], reverse=True)
 
@@ -216,6 +224,25 @@ class PricingMerger:
                     cache.pop("unit", None)
                     if "cache_write_input_price" in cache:
                         cache["cache_creation_input_price"] = cache.pop("cache_write_input_price")
+
+                # Apply provider-level derived pricing for any missing optional fields.
+                # This runs for every currency so USD and CNY are treated symmetrically.
+                if _provider:
+                    cache_d, batch_d = config.get_derived_pricing(
+                        _provider, model_id, entry["input_price"], entry["output_price"]
+                    )
+                    if "cache_pricing" not in entry and cache_d:
+                        entry["cache_pricing"] = cache_d
+                        logger.debug(
+                            f"Derived cache_pricing for {model_id}[{currency}] "
+                            f"from {_provider} rules"
+                        )
+                    if "batch_pricing" not in entry and batch_d:
+                        entry["batch_pricing"] = batch_d
+                        logger.debug(
+                            f"Derived batch_pricing for {model_id}[{currency}] "
+                            f"from {_provider} rules"
+                        )
 
                 pricing[currency] = entry
 
