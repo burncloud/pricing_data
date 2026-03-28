@@ -235,7 +235,7 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `ft:gpt-3.5-turbo-0613` | $3.00 | $6.00 | — | — | — | 4K | USD |
 | `ft:gpt-3.5-turbo-1106` | $3.00 | $6.00 | — | — | — | 4K | USD |
 | `ft:gpt-4.1-2025-04-14` | $3.00 | $12.00 | — | $1.50 | $6.00 | 32K | USD |
-| `gpt-5.4` | $2.50 | $15.00 | $0.25 | — | — | — | USD |
+| `gpt-5.4` | $2.50 | $15.00 | $0.25 | $1.25 | $7.50 | — | USD |
 | `gpt-audio` | $2.50 | $10.00 | — | — | — | 16K | USD |
 | `gpt-5-image-mini` | $2.50 | $2.00 | — | — | — | 400K | USD |
 | `gpt-4o-audio-preview` | $2.50 | $10.00 | — | — | — | 16K | USD |
@@ -294,7 +294,7 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `gpt-3.5-turbo-0613` | $1.00 | $2.00 | — | — | — | 4K | USD |
 | `gpt-3.5-turbo-1106` | $1.00 | $2.00 | — | — | — | 4K | USD |
 | `ft:gpt-4.1-mini-2025-04-14` | $0.80 | $3.20 | — | $0.40 | $1.60 | 32K | USD |
-| `gpt-5.4-mini` | $0.75 | $4.50 | $0.075 | — | — | — | USD |
+| `gpt-5.4-mini` | $0.75 | $4.50 | $0.075 | $0.38 | $2.25 | — | USD |
 | `gpt-audio-mini` | $0.60 | $2.40 | — | — | — | 16K | USD |
 | `gpt-audio-mini-2025-10-06` | $0.60 | $2.40 | — | — | — | 16K | USD |
 | `gpt-audio-mini-2025-12-15` | $0.60 | $2.40 | — | — | — | 16K | USD |
@@ -311,7 +311,7 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `gpt-5.1-codex-mini` | $0.25 | $2.00 | — | — | — | 128K | USD |
 | `gpt-5-mini` | $0.25 | $2.00 | — | — | — | 128K | USD |
 | `gpt-5-mini-2025-08-07` | $0.25 | $2.00 | — | — | — | 128K | USD |
-| `gpt-5.4-nano` | $0.20 | $1.25 | $0.020 | — | — | — | USD |
+| `gpt-5.4-nano` | $0.20 | $1.25 | $0.020 | $0.10 | $0.62 | — | USD |
 | `ft:gpt-4.1-nano-2025-04-14` | $0.20 | $0.80 | — | $0.10 | $0.40 | 32K | USD |
 | `gpt-4o-mini-search-preview` | $0.15 | $0.60 | — | $0.075 | $0.30 | 16K | USD |
 | `gpt-4o-mini` | $0.15 | $0.60 | — | $0.075 | $0.30 | 16K | USD |
@@ -338,37 +338,37 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 
 ## Google
 
-| Model | Input | Output | Cache Read | Context | Currency |
-|-------|------:|-------:|----------:|--------:|---------|
-| `gemini-3.1-pro-preview` | $2.00 | $12.00 | $0.20 | — | USD |
-| `gemini-3-pro-image-preview` | $2.00 | $12.00 | — | — | USD |
-| `gemini-2.5-pro` | $1.25 | $10.00 | $0.12 | — | USD |
-| `gemini-2.5-pro-preview` | $1.25 | $10.00 | — | 1M | USD |
-| `gemini-2.5-pro-preview-05-06` | $1.25 | $10.00 | — | 1M | USD |
-| `gemini-2.5-computer-use-preview` | $1.25 | $10.00 | — | — | USD |
-| `gemini-2.5-pro-preview-tts` | $1.00 | $20.00 | — | — | USD |
-| `gemini-3.1-flash-live-preview` | $0.75 | $4.50 | — | — | USD |
-| `gemma-2-27b-it` | $0.65 | $0.65 | — | 8K | USD |
-| `gemini-3.1-flash-image-preview` | $0.50 | $3.00 | — | — | USD |
-| `gemini-3-flash-preview` | $0.50 | $3.00 | $0.050 | — | USD |
-| `gemini-2.5-flash-native-audio` | $0.50 | $2.00 | — | — | USD |
-| `gemini-2.5-flash-preview-tts` | $0.50 | $10.00 | — | — | USD |
-| `gemini-2.5-flash-image` | $0.30 | $0.039 | — | — | USD |
-| `gemini-2.5-flash` | $0.30 | $2.50 | $0.030 | — | USD |
-| `gemini-3.1-flash-lite-preview` | $0.25 | $1.50 | $0.025 | — | USD |
-| `gemini-2.5-flash-lite` | $0.10 | $0.40 | $0.010 | — | USD |
-| `gemini-2.5-flash-lite-preview` | $0.10 | $0.40 | $0.010 | — | USD |
-| `gemini-2.0-flash` | $0.10 | $0.40 | $0.025 | — | USD |
-| `gemini-2.0-flash-lite` | $0.075 | $0.30 | — | — | USD |
-| `gemma-3-4b-it` | $0.040 | $0.080 | — | 131K | USD |
-| `gemma-3-12b-it` | $0.040 | $0.13 | — | 131K | USD |
-| `gemma-2-9b-it` | $0.030 | $0.090 | — | 8K | USD |
-| `gemma-3n-e4b-it` | $0.020 | $0.040 | — | 32K | USD |
-| `gemma-3n-e2b-it:free` | free | free | — | 8K | USD |
-| `gemma-3n-e4b-it:free` | free | free | — | 8K | USD |
-| `gemma-3-4b-it:free` | free | free | — | 32K | USD |
-| `gemma-3-12b-it:free` | free | free | — | 32K | USD |
-| `gemma-3-27b-it:free` | free | free | — | 131K | USD |
+| Model | Input | Output | Cache Read | Batch In | Batch Out | Context | Currency |
+|-------|------:|-------:|----------:|---------:|----------:|--------:|---------|
+| `gemini-3.1-pro-preview` | $2.00 | $12.00 | $0.20 | $1.00 | $6.00 | — | USD |
+| `gemini-3-pro-image-preview` | $2.00 | $12.00 | — | — | — | — | USD |
+| `gemini-2.5-pro` | $1.25 | $10.00 | $0.12 | — | — | — | USD |
+| `gemini-2.5-pro-preview` | $1.25 | $10.00 | — | — | — | 1M | USD |
+| `gemini-2.5-pro-preview-05-06` | $1.25 | $10.00 | — | — | — | 1M | USD |
+| `gemini-2.5-computer-use-preview` | $1.25 | $10.00 | — | — | — | — | USD |
+| `gemini-2.5-pro-preview-tts` | $1.00 | $20.00 | — | — | — | — | USD |
+| `gemini-3.1-flash-live-preview` | $0.75 | $4.50 | — | — | — | — | USD |
+| `gemma-2-27b-it` | $0.65 | $0.65 | — | — | — | 8K | USD |
+| `gemini-3.1-flash-image-preview` | $0.50 | $3.00 | — | — | — | — | USD |
+| `gemini-3-flash-preview` | $0.50 | $3.00 | $0.050 | — | — | — | USD |
+| `gemini-2.5-flash-native-audio` | $0.50 | $2.00 | — | — | — | — | USD |
+| `gemini-2.5-flash-preview-tts` | $0.50 | $10.00 | — | — | — | — | USD |
+| `gemini-2.5-flash-image` | $0.30 | $0.039 | — | — | — | — | USD |
+| `gemini-2.5-flash` | $0.30 | $2.50 | $0.030 | — | — | — | USD |
+| `gemini-3.1-flash-lite-preview` | $0.25 | $1.50 | $0.025 | — | — | — | USD |
+| `gemini-2.5-flash-lite` | $0.10 | $0.40 | $0.010 | — | — | — | USD |
+| `gemini-2.5-flash-lite-preview` | $0.10 | $0.40 | $0.010 | — | — | — | USD |
+| `gemini-2.0-flash` | $0.10 | $0.40 | $0.025 | — | — | — | USD |
+| `gemini-2.0-flash-lite` | $0.075 | $0.30 | — | — | — | — | USD |
+| `gemma-3-4b-it` | $0.040 | $0.080 | — | — | — | 131K | USD |
+| `gemma-3-12b-it` | $0.040 | $0.13 | — | — | — | 131K | USD |
+| `gemma-2-9b-it` | $0.030 | $0.090 | — | — | — | 8K | USD |
+| `gemma-3n-e4b-it` | $0.020 | $0.040 | — | — | — | 32K | USD |
+| `gemma-3n-e2b-it:free` | free | free | — | — | — | 8K | USD |
+| `gemma-3n-e4b-it:free` | free | free | — | — | — | 8K | USD |
+| `gemma-3-4b-it:free` | free | free | — | — | — | 32K | USD |
+| `gemma-3-12b-it:free` | free | free | — | — | — | 32K | USD |
+| `gemma-3-27b-it:free` | free | free | — | — | — | 131K | USD |
 
 ## Google (Gemini)
 
@@ -1415,8 +1415,8 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `anthropic-claude-3.7-sonnet` | $3.00 | $15.00 | 1K | USD |
 | `openai-o3` | $2.00 | $8.00 | 100K | USD |
 | `openai-o3-mini` | $1.10 | $4.40 | 100K | USD |
-| `deepseek-r1-distill-llama-70b` | $0.99 | $0.99 | 8K | USD |
 | `anthropic-claude-3.5-haiku` | $0.80 | $4.00 | 1K | USD |
+| `deepseek-r1-distill-llama-70b` | $0.70 | $0.80 | 8K | USD |
 | `llama3.3-70b-instruct` | $0.65 | $0.65 | 2K | USD |
 | `mistral-nemo-instruct-2407` | $0.30 | $0.30 | 512 | USD |
 | `llama3-8b-instruct` | $0.20 | $0.20 | 512 | USD |
@@ -1541,7 +1541,7 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `qwen2.5-coder-7b` | $0.060 | $0.12 | 8K | USD |
 | `deepseek-coder-6.7b` | $0.060 | $0.12 | 4K | USD |
 | `codellama-7b` | $0.060 | $0.12 | 4K | USD |
-| `qwen3-8b` | $0.040 | $0.14 | 8K | USD |
+| `qwen3-8b` | $0.050 | $0.40 | 8K | USD |
 | `llama-3.2-3b` | $0.040 | $0.080 | 8K | USD |
 | `llama-3.1-8b` | $0.030 | $0.050 | 8K | USD |
 | `gemma3-4b` | $0.030 | $0.080 | 8K | USD |
