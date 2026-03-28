@@ -5,7 +5,7 @@ import pytest
 from unittest.mock import Mock, patch
 
 from scripts.config import config
-from scripts.fetch.google import GoogleFetcher, _parse_paid_price, _first_dollar
+from scripts.fetch.google import GoogleFetcher, _parse_paid_price, _first_dollar, _parse_per_image_price
 
 
 @pytest.fixture
@@ -53,6 +53,27 @@ class TestParsePaidPrice:
         price, boundary = _parse_paid_price("$0.50 (text) | $3.00 (audio)")
         assert price == pytest.approx(0.50)
         assert boundary is None
+
+
+class TestParsePerImagePrice:
+    def test_simple_per_image(self):
+        assert _parse_per_image_price("$0.039 per image") == pytest.approx(0.039)
+
+    def test_per_1k2k_image(self):
+        assert _parse_per_image_price("$0.134 per 1K/2K image") == pytest.approx(0.134)
+
+    def test_per_4k_image(self):
+        assert _parse_per_image_price("$0.24 per 4K image") == pytest.approx(0.24)
+
+    def test_returns_first_price_in_multiline(self):
+        cell = "$0.134 per 1K/2K image\n$0.24 per 4K image"
+        assert _parse_per_image_price(cell) == pytest.approx(0.134)
+
+    def test_per_token_cell_returns_none(self):
+        assert _parse_per_image_price("$120.00 (text and thinking)") is None
+
+    def test_no_price_returns_none(self):
+        assert _parse_per_image_price("Not available") is None
 
 
 class TestFirstDollar:
@@ -159,8 +180,86 @@ _NO_OUTPUT_TABLE = """
 </table>
 """
 
+# Image-only output model (e.g. Gemini 2.5 Flash Image): output is per-image fee
+_IMAGE_GEN_TABLE = """
+<table>
+  <thead>
+    <tr><th></th><th>Free Tier</th><th>Paid Tier, per 1M tokens in USD</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Input price</td><td>Free of charge</td><td>$0.30 (text / image)</td></tr>
+    <tr><td>Output price</td><td>Free of charge</td><td>$0.039 per image</td></tr>
+  </tbody>
+</table>
+"""
+
+# Mixed text+image output model (e.g. Gemini 3 Pro Image Preview):
+# separate rows for text output and image output
+_PRO_IMAGE_TABLE = """
+<table>
+  <thead>
+    <tr><th></th><th>Free Tier</th><th>Paid Tier, per 1M tokens in USD</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Input price</td><td>Free</td><td>$2.00 (text/image)</td></tr>
+    <tr><td>Output price (text and thinking)</td><td>Free</td><td>$12.00</td></tr>
+    <tr><td>Output price (images)</td><td>Free</td>
+        <td>$0.134 per 1K/2K image
+$0.24 per 4K image</td></tr>
+  </tbody>
+</table>
+"""
+
 
 _GGL_EP = "generativelanguage.googleapis.com"
+
+
+class TestImageGenerationPricing:
+    """Image generation models have per-image output fees, not per-token output."""
+
+    def test_image_only_output_extracted(self, fetcher):
+        """Flash Image: $0.039 per image → image_output_price=0.039."""
+        entry = fetcher._parse_model_section("Gemini 2.5 Flash Image", _IMAGE_GEN_TABLE)
+        assert entry is not None
+        ep = entry["endpoints"][_GGL_EP]
+        assert ep["pricing"]["image_output_price"] == pytest.approx(0.039)
+
+    def test_image_only_output_price_is_zero(self, fetcher):
+        """Flash Image: no text output → output_price=0.0."""
+        entry = fetcher._parse_model_section("Gemini 2.5 Flash Image", _IMAGE_GEN_TABLE)
+        ep = entry["endpoints"][_GGL_EP]
+        assert ep["pricing"]["output_price"] == 0.0
+
+    def test_image_only_input_price_preserved(self, fetcher):
+        """Flash Image: input_price=$0.30 still captured."""
+        entry = fetcher._parse_model_section("Gemini 2.5 Flash Image", _IMAGE_GEN_TABLE)
+        ep = entry["endpoints"][_GGL_EP]
+        assert ep["pricing"]["input_price"] == pytest.approx(0.30)
+
+    def test_pro_image_text_output_preserved(self, fetcher):
+        """Pro Image Preview: text output_price=$12.00 still captured."""
+        entry = fetcher._parse_model_section("Gemini 3 Pro Image Preview", _PRO_IMAGE_TABLE)
+        assert entry is not None
+        ep = entry["endpoints"][_GGL_EP]
+        assert ep["pricing"]["output_price"] == pytest.approx(12.0)
+
+    def test_pro_image_image_output_price(self, fetcher):
+        """Pro Image Preview: image_output_price=$0.134 (1K/2K base price)."""
+        entry = fetcher._parse_model_section("Gemini 3 Pro Image Preview", _PRO_IMAGE_TABLE)
+        ep = entry["endpoints"][_GGL_EP]
+        assert ep["pricing"]["image_output_price"] == pytest.approx(0.134)
+
+    def test_pro_image_input_price(self, fetcher):
+        """Pro Image Preview: input_price=$2.00."""
+        entry = fetcher._parse_model_section("Gemini 3 Pro Image Preview", _PRO_IMAGE_TABLE)
+        ep = entry["endpoints"][_GGL_EP]
+        assert ep["pricing"]["input_price"] == pytest.approx(2.0)
+
+    def test_regular_model_no_image_output_price(self, fetcher):
+        """Regular text model has no image_output_price."""
+        entry = fetcher._parse_model_section("Gemini 2.5 Flash", _FLAT_TABLE)
+        ep = entry["endpoints"][_GGL_EP]
+        assert "image_output_price" not in ep["pricing"]
 
 
 class TestParseModelSection:

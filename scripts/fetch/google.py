@@ -29,6 +29,12 @@ _DOLLAR_RE = re.compile(r"\$([0-9]+(?:\.[0-9]+)?)")
 # Tier boundary tokens from "prompts <= 200k tokens" / "prompts > 128k tokens"
 _TIER_BOUNDARY_RE = re.compile(r"(?:<=|<)\s*([0-9]+)k\s*tokens", re.IGNORECASE)
 
+# Per-image fee: "$0.039 per image", "$0.134 per 1K/2K image", "$0.24 per 4K image"
+_PER_IMAGE_RE = re.compile(
+    r"\$([0-9]+(?:\.[0-9]+)?)\s+per\s+(?:[0-9]+[Kk](?:/[0-9]+[Kk])?\s+)?image",
+    re.IGNORECASE,
+)
+
 # Models to skip — image/video/audio/embedding generation, not LLMs
 _SKIP_MODEL_PREFIXES = (
     "imagen",
@@ -84,6 +90,20 @@ def _parse_table(table_html: str) -> List[List[str]]:
 def _first_dollar(text: str) -> Optional[float]:
     """Extract the first dollar amount from text, or None."""
     m = _DOLLAR_RE.search(text)
+    return float(m.group(1)) if m else None
+
+
+def _parse_per_image_price(cell_text: str) -> Optional[float]:
+    """
+    Extract the first per-image fee from an output price cell.
+
+    Handles:
+      "$0.039 per image"           → 0.039
+      "$0.134 per 1K/2K image"     → 0.134  (base/smallest resolution)
+      "$0.24 per 4K image"         → 0.24
+      "$120.00 (text and thinking)" → None   (per-token, not per-image)
+    """
+    m = _PER_IMAGE_RE.search(cell_text)
     return float(m.group(1)) if m else None
 
 
@@ -198,28 +218,54 @@ class GoogleFetcher(BaseFetcher):
             return None
 
         input_cell: Optional[str] = None
-        output_cell: Optional[str] = None
+        output_cell: Optional[str] = None        # text / thinking output (per-token)
+        image_output_cell: Optional[str] = None  # image output (per-image fee)
         cache_cell: Optional[str] = None
 
         for row in rows:
             if len(row) <= paid_col:
                 continue
             label = row[0].lower()
+            cell = row[paid_col]
 
             if "input price" in label and input_cell is None:
-                input_cell = row[paid_col]
-            elif "output price" in label and output_cell is None:
-                output_cell = row[paid_col]
+                input_cell = cell
+            elif "output price" in label:
+                if "image" in label and image_output_cell is None:
+                    # Explicit "Output price (images)" row
+                    image_output_cell = cell
+                elif output_cell is None:
+                    if _parse_per_image_price(cell) is not None:
+                        # Cell value is "N per image" — image generation output
+                        if image_output_cell is None:
+                            image_output_cell = cell
+                    else:
+                        output_cell = cell
             elif "context caching price" in label and cache_cell is None:
-                cache_cell = row[paid_col]
+                cache_cell = cell
 
-        if not input_cell or not output_cell:
+        if not input_cell:
+            return None
+
+        # Parse image output price from whichever cell we found
+        image_output_price: Optional[float] = None
+        if image_output_cell:
+            image_output_price = _parse_per_image_price(image_output_cell)
+
+        # Need either text output or image output to build a useful entry
+        if not output_cell and image_output_price is None:
             return None
 
         input_price, input_boundary = _parse_paid_price(input_cell)
-        output_price, output_boundary = _parse_paid_price(output_cell)
+        output_price: Optional[float] = None
+        output_boundary: Optional[int] = None
+        if output_cell:
+            output_price, output_boundary = _parse_paid_price(output_cell)
 
-        if input_price is None or output_price is None:
+        if input_price is None:
+            return None
+        # Text output is optional for image-generation models (no text output)
+        if output_price is None and image_output_price is None:
             return None
 
         metadata = {
@@ -227,10 +273,13 @@ class GoogleFetcher(BaseFetcher):
             "family": self._extract_family(display_name),
         }
 
+        # Image-only output models (e.g. Flash Image) have no text output_price
+        effective_output_price = output_price if output_price is not None else 0.0
+
         flat_pricing: Dict[str, Any]
         tiered_pricing = None
 
-        if input_boundary is not None:
+        if input_boundary is not None and output_cell is not None:
             all_input_prices = [float(p) for p in _DOLLAR_RE.findall(input_cell)]
             all_output_prices = [float(p) for p in _DOLLAR_RE.findall(output_cell)]
 
@@ -256,9 +305,16 @@ class GoogleFetcher(BaseFetcher):
                 # Top-level pricing uses tier-1 prices (cheapest / most common)
                 flat_pricing = {"input_price": tier1_in, "output_price": tier1_out}
             else:
-                flat_pricing = {"input_price": input_price, "output_price": output_price}
+                flat_pricing = {"input_price": input_price, "output_price": effective_output_price}
         else:
-            flat_pricing = {"input_price": input_price, "output_price": output_price}
+            flat_pricing = {"input_price": input_price, "output_price": effective_output_price}
+
+        if image_output_price is not None:
+            flat_pricing["image_output_price"] = image_output_price
+            logger.debug(
+                f"Google image model: {display_name!r} "
+                f"image_output_price={image_output_price}"
+            )
 
         # Context caching
         cache_pricing = None

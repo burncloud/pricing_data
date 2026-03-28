@@ -71,6 +71,11 @@
             "$ref": "#/definitions/PricingTier"
           },
           "description": "Tiered pricing (e.g. price differs by context length)"
+        },
+        "image_output_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Flat fee per generated output image, in USD (for image generation models). E.g. $0.039/image for Gemini Flash Image."
         }
       }
     },

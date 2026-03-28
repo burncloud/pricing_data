@@ -1,0 +1,156 @@
+{
+  "_schema": "manual_overrides/2.0",
+  "_note": "Human-verified prices. Priority 200 — beats ALL automated sources. Never edit without visiting the official URL and confirming the price yourself.",
+  "_workflow": "Discrepancy found? 1) Visit official_url  2) Confirm price  3) Add entry here  4) Commit",
+  "models": {
+    "deepseek-chat": {
+      "_verified_at": "2026-03-28",
+      "_verified_source": "https://api-docs.deepseek.com/quick_start/pricing",
+      "_notes": "deepseek-chat = DeepSeek-V3.2 (non-thinking). Official: $0.028 cache-hit input, $0.28 cache-miss input, $0.42 output. OpenRouter alias routes to an older version at $0.32/$0.89 — do NOT use openrouter for this model's canonical price.",
+      "endpoints": {
+        "api.deepseek.com": {
+          "base_url": "https://api.deepseek.com/v1",
+          "currency": "USD",
+          "pricing": {
+            "input_price": 0.28,
+            "output_price": 0.42
+          },
+          "cache_pricing": {
+            "cache_read_input_price": 0.028
+          }
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "family": "deepseek-chat"
+      }
+    },
+    "deepseek-reasoner": {
+      "_verified_at": "2026-03-28",
+      "_verified_source": "https://api-docs.deepseek.com/quick_start/pricing",
+      "_notes": "deepseek-reasoner = DeepSeek-V3.2 (thinking mode). Same pricing as deepseek-chat per official table (colspan=2). $0.028 cache-hit input, $0.28 cache-miss input, $0.42 output.",
+      "endpoints": {
+        "api.deepseek.com": {
+          "base_url": "https://api.deepseek.com/v1",
+          "currency": "USD",
+          "pricing": {
+            "input_price": 0.28,
+            "output_price": 0.42
+          },
+          "cache_pricing": {
+            "cache_read_input_price": 0.028
+          }
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "family": "deepseek-reasoner"
+      }
+    },
+    "gemini-3-pro-image-preview": {
+      "_verified_at": "2026-03-28",
+      "_verified_source": "https://ai.google.dev/pricing",
+      "_notes": "Image generation model. Text+image input: $2.00/MTok. Text/thinking output: $12.00/MTok (captured in output_price). Image output: $0.134/img (1K/2K) or $0.24/img (4K) — captured in image_output_price. Batch: 50% off.",
+      "endpoints": {
+        "generativelanguage.googleapis.com": {
+          "base_url": "https://generativelanguage.googleapis.com",
+          "currency": "USD",
+          "pricing": {
+            "input_price": 2.00,
+            "output_price": 12.00,
+            "image_output_price": 0.134
+          },
+          "batch_pricing": {
+            "input_price": 1.00,
+            "output_price": 6.00
+          }
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemini-3"
+      }
+    },
+    "gemini-2.5-flash-image": {
+      "_verified_at": "2026-03-28",
+      "_verified_source": "https://ai.google.dev/pricing",
+      "_notes": "Image generation model. Text+image input: $0.30/MTok. No text output — images only at $0.039/img (output_price=0, image_output_price=0.039). Batch: $0.15/MTok input, $0.0195/img output.",
+      "endpoints": {
+        "generativelanguage.googleapis.com": {
+          "base_url": "https://generativelanguage.googleapis.com",
+          "currency": "USD",
+          "pricing": {
+            "input_price": 0.30,
+            "output_price": 0.0,
+            "image_output_price": 0.039
+          },
+          "batch_pricing": {
+            "input_price": 0.15,
+            "output_price": 0.0
+          }
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemini-2.5"
+      }
+    },
+    "gemini-3.1-flash-image-preview": {
+      "_verified_at": "2026-03-28",
+      "_verified_source": "https://ai.google.dev/pricing",
+      "_notes": "Image generation model (Flash variant of Gemini 3.1). Text+image input: $0.50/MTok. Text output: $3.00/MTok. Check if image_output_price applies — verify on official page before adding.",
+      "endpoints": {
+        "generativelanguage.googleapis.com": {
+          "base_url": "https://generativelanguage.googleapis.com",
+          "currency": "USD",
+          "pricing": {
+            "input_price": 0.50,
+            "output_price": 3.00
+          }
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemini-3.1"
+      }
+    },
+    "gemini-2.5-flash-preview-tts": {
+      "_verified_at": "2026-03-28",
+      "_verified_source": "https://ai.google.dev/pricing",
+      "_notes": "TTS model. Official: $0.50 text input / $10.00 audio output per MTok. LiteLLM has stale data ($0.30/$2.50) — likely from an earlier Preview pricing. Output is AUDIO at $10.00, not text at $2.50.",
+      "endpoints": {
+        "generativelanguage.googleapis.com": {
+          "base_url": "https://generativelanguage.googleapis.com",
+          "currency": "USD",
+          "pricing": {
+            "input_price": 0.50,
+            "output_price": 10.00
+          }
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemini-2.5"
+      }
+    },
+    "gemini-2.5-pro-preview-tts": {
+      "_verified_at": "2026-03-28",
+      "_verified_source": "https://ai.google.dev/pricing",
+      "_notes": "TTS model. Official: $1.00 text input / $20.00 audio output per MTok. LiteLLM mistakenly uses standard Gemini 2.5 Pro prices ($1.25/$10.00). Input is WRONG by 25%; output is WRONG by -50%.",
+      "endpoints": {
+        "generativelanguage.googleapis.com": {
+          "base_url": "https://generativelanguage.googleapis.com",
+          "currency": "USD",
+          "pricing": {
+            "input_price": 1.00,
+            "output_price": 20.00
+          }
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemini-2.5"
+      }
+    }
+  }
+}

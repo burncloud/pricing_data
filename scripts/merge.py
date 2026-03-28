@@ -190,6 +190,10 @@ class PricingMerger:
                     "input_price": winner_ep["pricing"]["input_price"],
                     "output_price": winner_ep["pricing"].get("output_price") or 0.0,
                 }
+                # Pass through modality-specific pricing fields from winner
+                for pricing_field in ("image_output_price",):
+                    if pricing_field in winner_ep["pricing"]:
+                        entry[pricing_field] = winner_ep["pricing"][pricing_field]
 
                 for field in ("cache_pricing", "batch_pricing", "tiered_pricing"):
                     if field in winner_ep:
@@ -202,6 +206,13 @@ class PricingMerger:
                             entry[field] = copy.deepcopy(ep_data[field])
                             logger.debug(
                                 f"Field-merged {model_id}[{currency}].{field} from {src_name}"
+                            )
+                    # Also fill missing modality pricing from lower-priority sources
+                    for pricing_field in ("image_output_price",):
+                        if pricing_field not in entry and pricing_field in ep_data.get("pricing", {}):
+                            entry[pricing_field] = ep_data["pricing"][pricing_field]
+                            logger.debug(
+                                f"Field-merged {model_id}[{currency}].{pricing_field} from {src_name}"
                             )
 
                     # Price drift check within same currency
