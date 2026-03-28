@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 env:
   PYTHON_VERSION: '3.11'
@@ -15,7 +14,7 @@ env:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -32,150 +31,101 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest requests
+          pip install requests
 
-      - name: Create sources directory
-        run: |
-          DATE=$(date +%Y-%m-%d)
-          mkdir -p sources/$DATE
-          echo "DATE=$DATE" >> $GITHUB_ENV
-
-      - name: Fetch from OpenRouter
-        env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      - name: Fetch and update pricing
         run: |
           python3 << 'PYEOF'
           import json
           import requests
-          import os
-          from datetime import datetime, timezone
-
-          api_key = os.environ.get('OPENROUTER_API_KEY', '')
-          date = os.environ.get('DATE', datetime.now().strftime('%Y-%m-%d'))
-
-          if not api_key:
-              print('No OPENROUTER_API_KEY set, skipping fetch')
-              exit(0)
-
-          try:
-              headers = {
-                  'Authorization': f'Bearer {api_key}',
-                  'Accept': 'application/json'
-              }
-              resp = requests.get('https://openrouter.ai/api/v1/models', headers=headers, timeout=30)
-              resp.raise_for_status()
-              data = resp.json()
-
-              models = {}
-              for m in data.get('data', []):
-                  model_id = m.get('id', '')
-                  normalized = model_id.split('/', 1)[1] if '/' in model_id else model_id
-
-                  pricing = m.get('pricing', {})
-                  prompt = pricing.get('prompt')
-                  completion = pricing.get('completion')
-
-                  if prompt and completion:
-                      models[normalized] = {
-                          'pricing': {
-                              'USD': {
-                                  'input_price': float(prompt) * 1000000,
-                                  'output_price': float(completion) * 1000000,
-                                  'unit': 'per_million_tokens',
-                                  'source': 'openrouter'
-                              }
-                          },
-                          'metadata': {
-                              'provider': model_id.split('/')[0] if '/' in model_id else 'unknown',
-                              'context_window': m.get('context_length')
-                          }
-                      }
-
-              result = {
-                  'source': 'openrouter',
-                  'fetched_at': datetime.now(timezone.utc).isoformat(),
-                  'status': 'success',
-                  'models_count': len(models),
-                  'models': models
-              }
-
-              os.makedirs(f'sources/{date}', exist_ok=True)
-              with open(f'sources/{date}/openrouter.json', 'w') as f:
-                  json.dump(result, f, indent=2)
-
-              print(f'Fetched {len(models)} models from OpenRouter')
-          except Exception as e:
-              print(f'Fetch failed: {e}')
-          PYEOF
-        continue-on-error: true
-
-      - name: Merge pricing data
-        run: |
-          python3 << 'PYEOF'
-          import json
-          import os
           from datetime import datetime, timezone
           from pathlib import Path
 
-          date = os.environ.get('DATE', datetime.now().strftime('%Y-%m-%d'))
-          sources_dir = Path(f'sources/{date}')
+          print("Fetching pricing data from OpenRouter (public API)...")
 
-          all_models = {}
+          resp = requests.get(
+              'https://openrouter.ai/api/v1/models',
+              headers={'Accept': 'application/json'},
+              timeout=60
+          )
+          resp.raise_for_status()
+          data = resp.json()
 
-          if sources_dir.exists():
-              for src_file in sources_dir.glob('*.json'):
-                  try:
-                      with open(src_file) as f:
-                          data = json.load(f)
-                      if data.get('status') == 'success' and data.get('models'):
-                          all_models.update(data['models'])
-                          print(f'Loaded {len(data["models"])} models from {src_file.name}')
-                  except Exception as e:
-                      print(f'Failed to load {src_file}: {e}')
-
-          if not all_models:
-              if Path('pricing.json').exists():
-                  print('No new data fetched, keeping existing pricing.json')
-                  with open('pricing.json') as f:
-                      existing = json.load(f)
-                  print(f'Existing pricing.json has {len(existing.get("models", {}))} models')
-                  exit(0)
+          models = {}
+          for m in data.get('data', []):
+              model_id = m.get('id', '')
+              if '/' in model_id:
+                  normalized = model_id.split('/', 1)[1]
               else:
-                  print('No data available and no existing pricing.json')
-                  exit(1)
+                  normalized = model_id
+
+              pricing = m.get('pricing', {})
+              prompt = pricing.get('prompt')
+              completion = pricing.get('completion')
+
+              if prompt is not None and completion is not None:
+                  models[normalized] = {
+                      'pricing': {
+                          'USD': {
+                              'input_price': round(float(prompt) * 1_000_000, 6),
+                              'output_price': round(float(completion) * 1_000_000, 6),
+                              'unit': 'per_million_tokens',
+                              'source': 'openrouter'
+                          }
+                      },
+                      'metadata': {
+                          'provider': model_id.split('/')[0] if '/' in model_id else 'unknown',
+                          'context_window': m.get('context_length'),
+                          'supports_vision': 'image' in str(m.get('architecture', {}).get('modality', '')).lower()
+                      }
+                  }
+
+          # Load existing data if available
+          existing_models = {}
+          if Path('pricing.json').exists():
+              with open('pricing.json') as f:
+                  existing = json.load(f)
+              existing_models = existing.get('models', {})
+
+          # Check for changes
+          if models == existing_models:
+              print(f"No changes detected ({len(models)} models)")
+              exit(0)
 
           result = {
               'schema_version': '1.0',
               'updated_at': datetime.now(timezone.utc).isoformat(),
               'source': 'burncloud-official',
-              'models': all_models
+              'models': models
           }
 
           with open('pricing.json', 'w') as f:
               json.dump(result, f, indent=2, ensure_ascii=False)
 
-          print(f'Merged {len(all_models)} models to pricing.json')
-
-      - name: Run tests
-        run: pytest tests/ -v --tb=short || echo "Some tests failed"
-        continue-on-error: true
+          print(f"Updated {len(models)} models")
+          print(f"New models: {set(models.keys()) - set(existing_models.keys()) or 'None'}")
+          print(f"Removed models: {set(existing_models.keys()) - set(models.keys()) or 'None'}")
+          PYEOF
 
       - name: Check for changes
         id: changes
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -A
-          if git diff --staged --quiet; then
+          if git diff --quiet pricing.json; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "### Changes detected" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            git diff --stat pricing.json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Commit and push
         if: steps.changes.outputs.has_changes == 'true'
         run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add pricing.json
           git commit -m "chore: update pricing data - $(date +%Y-%m-%d)"
           git push
 
@@ -185,7 +135,7 @@ jobs:
           echo "## Pricing Update Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
-            echo "✅ **Changes committed**" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Changes committed and pushed**" >> $GITHUB_STEP_SUMMARY
           else
             echo "ℹ️ **No changes detected**" >> $GITHUB_STEP_SUMMARY
           fi
