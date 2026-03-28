@@ -119,12 +119,20 @@ class BaseFetcher(ABC):
             # Parse models
             models = self._parse_models(response)
 
+            # raw_response is best-effort (HTML fetchers won't have JSON bodies)
+            raw_response = None
+            if hasattr(response, "json"):
+                try:
+                    raw_response = response.json()
+                except Exception:
+                    pass
+
             return FetchResult(
                 source=self.fetcher_config.name,
                 success=True,
                 fetched_at=datetime.now(timezone.utc).isoformat(),
                 models=models,
-                raw_response=response.json() if hasattr(response, 'json') else None,
+                raw_response=raw_response,
                 models_count=len(models),
             )
 

@@ -11,7 +11,12 @@ from datetime import date
 from typing import Optional
 
 from scripts.config import config
+from scripts.fetch.anthropic import AnthropicFetcher
+from scripts.fetch.deepseek import DeepSeekFetcher
+from scripts.fetch.google import GoogleFetcher
 from scripts.fetch.litellm import LiteLLMFetcher
+from scripts.fetch.manual_overrides import ManualOverridesFetcher
+from scripts.fetch.openai import OpenAIFetcher
 from scripts.fetch.openrouter import OpenRouterFetcher
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -29,8 +34,13 @@ def fetch_all(date_str: Optional[str] = None) -> int:
         date_str = date.today().isoformat()
 
     fetchers = [
-        OpenRouterFetcher(config),
-        LiteLLMFetcher(config),
+        ManualOverridesFetcher(config),  # priority 200, human-verified (local file)
+        OpenAIFetcher(config),           # priority 100, Playwright
+        AnthropicFetcher(config),        # priority 100, plain HTTP
+        GoogleFetcher(config),           # priority 100, plain HTTP
+        DeepSeekFetcher(config),         # priority 100, plain HTTP
+        OpenRouterFetcher(config),       # priority 50
+        LiteLLMFetcher(config),          # priority 70
     ]
 
     any_failed = False

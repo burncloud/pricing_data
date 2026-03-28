@@ -157,6 +157,9 @@ class OpenRouterFetcher(BaseFetcher):
             }
 
             return pricing
+        except (ValueError, TypeError) as e:
+            logger.debug(f"Skipping {model_id}: invalid price value — {e}")
+            return {}
 
     def _extract_cache_pricing(self, pricing_data: Dict[str, Any]) -> Dict[str, Any]:
         """Extract cache pricing as a top-level field (separate from pricing)."""

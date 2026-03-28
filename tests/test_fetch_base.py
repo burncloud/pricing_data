@@ -230,5 +230,8 @@ class TestFetcherErrorHandling:
 
         result = fetcher.fetch()
 
-        assert result.success is False
-        assert "json" in result.error.lower()
+        # raw_response is best-effort: a JSONDecodeError there should NOT fail the
+        # fetch (HTML-based fetchers have responses that are not JSON). The fetch
+        # succeeds and raw_response is silently set to None.
+        assert result.success is True
+        assert result.raw_response is None

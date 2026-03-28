@@ -96,6 +96,34 @@ class Config:
         self.feed_file = self.repo_root / "feed.xml"
 
         self.fetchers = {
+            "openai": FetcherConfig(
+                name="openai",
+                url="https://openai.com/api/pricing",
+                timeout=60.0,   # Playwright needs more time than plain HTTP
+                max_retries=1,  # No retry for browser automation
+                requires_auth=False,
+            ),
+            "anthropic": FetcherConfig(
+                name="anthropic",
+                url="https://docs.anthropic.com/en/docs/about-claude/models/overview",
+                timeout=30.0,
+                max_retries=3,
+                requires_auth=False,
+            ),
+            "google": FetcherConfig(
+                name="google",
+                url="https://ai.google.dev/pricing",
+                timeout=30.0,
+                max_retries=3,
+                requires_auth=False,
+            ),
+            "deepseek": FetcherConfig(
+                name="deepseek",
+                url="https://api-docs.deepseek.com/quick_start/pricing",
+                timeout=30.0,
+                max_retries=3,
+                requires_auth=False,
+            ),
             "openrouter": FetcherConfig(
                 name="openrouter",
                 url="https://openrouter.ai/api/v1/models",
