@@ -64,7 +64,7 @@ jobs:
               completion = pricing.get('completion')
 
               if prompt is not None and completion is not None:
-                  models[normalized] = {
+                  model_data = {
                       'pricing': {
                           'USD': {
                               'input_price': round(float(prompt) * 1_000_000, 6),
@@ -79,6 +79,46 @@ jobs:
                           'supports_vision': 'image' in str(m.get('architecture', {}).get('modality', '')).lower()
                       }
                   }
+
+                  # Cache pricing
+                  cache_read = pricing.get('input_cache_read')
+                  cache_write = pricing.get('input_cache_write')
+                  if cache_read is not None:
+                      model_data['cache_pricing'] = {
+                          'USD': {
+                              'cache_read_input_price': round(float(cache_read) * 1_000_000, 6) if cache_read else None,
+                              'cache_write_input_price': round(float(cache_write) * 1_000_000, 6) if cache_write else None,
+                              'unit': 'per_million_tokens'
+                          }
+                      }
+
+                  # Multimodal pricing
+                  image_price = pricing.get('image')
+                  audio_price = pricing.get('audio')
+                  video_price = pricing.get('video')
+                  per_image = pricing.get('per_image')
+                  if any([image_price, audio_price, video_price, per_image]):
+                      model_data['multimodal_pricing'] = {
+                          'USD': {
+                              'image_input_price': round(float(image_price) * 1_000_000, 6) if image_price else None,
+                              'audio_input_price': round(float(audio_price) * 1_000_000, 6) if audio_price else None,
+                              'video_input_price': round(float(video_price) * 1_000_000, 6) if video_price else None,
+                              'per_image_price': float(per_image) if per_image else None,
+                              'unit': 'per_million_tokens'
+                          }
+                      }
+
+                  # Reasoning pricing (for models like DeepSeek R1)
+                  reasoning = pricing.get('internal_reasoning')
+                  if reasoning is not None:
+                      model_data['reasoning_pricing'] = {
+                          'USD': {
+                              'reasoning_output_price': round(float(reasoning) * 1_000_000, 6),
+                              'unit': 'per_million_tokens'
+                          }
+                      }
+
+                  models[normalized] = model_data
 
           # Load existing data if available
           existing_models = {}

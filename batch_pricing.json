@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-03-28T00:00:00Z",
+  "description": "Batch API pricing for LLM providers. Batch APIs offer discounted rates for asynchronous processing of large volumes. Typically 50% discount with 24-hour turnaround.",
+  "notes": [
+    "Batch pricing is not available through OpenRouter",
+    "This table is manually maintained based on official provider documentation",
+    "Batch requests are asynchronous with typical 24-hour turnaround",
+    "Submit PR to update pricing when providers change their rates"
+  ],
+  "providers": {
+    "openai": {
+      "discount_rate": 0.5,
+      "notes": "50% discount on all GPT models via Batch API",
+      "turnaround": "24 hours",
+      "models": {
+        "gpt-4o": {
+          "batch_input_price": 1.25,
+          "batch_output_price": 5.0
+        },
+        "gpt-4o-mini": {
+          "batch_input_price": 0.075,
+          "batch_output_price": 0.3
+        },
+        "gpt-4-turbo": {
+          "batch_input_price": 5.0,
+          "batch_output_price": 15.0
+        },
+        "gpt-4": {
+          "batch_input_price": 15.0,
+          "batch_output_price": 30.0
+        },
+        "gpt-3.5-turbo": {
+          "batch_input_price": 0.25,
+          "batch_output_price": 0.5
+        },
+        "o1": {
+          "batch_input_price": 7.5,
+          "batch_output_price": 30.0
+        },
+        "o1-mini": {
+          "batch_input_price": 0.55,
+          "batch_output_price": 2.2
+        },
+        "o1-preview": {
+          "batch_input_price": 7.5,
+          "batch_output_price": 30.0
+        }
+      },
+      "documentation": "https://platform.openai.com/docs/api-reference/batch"
+    },
+    "anthropic": {
+      "discount_rate": 0.5,
+      "notes": "50% discount on Claude models via Messages Batch API",
+      "turnaround": "24 hours",
+      "models": {
+        "claude-3.5-sonnet": {
+          "batch_input_price": 1.5,
+          "batch_output_price": 7.5
+        },
+        "claude-3.5-haiku": {
+          "batch_input_price": 0.4,
+          "batch_output_price": 1.0
+        },
+        "claude-3-opus": {
+          "batch_input_price": 7.5,
+          "batch_output_price": 37.5
+        },
+        "claude-3-sonnet": {
+          "batch_input_price": 1.5,
+          "batch_output_price": 7.5
+        },
+        "claude-3-haiku": {
+          "batch_input_price": 0.125,
+          "batch_output_price": 0.375
+        }
+      },
+      "documentation": "https://docs.anthropic.com/claude/reference/batch-endpoints"
+    },
+    "google": {
+      "discount_rate": 0.5,
+      "notes": "50% discount on Gemini via Batch API",
+      "turnaround": "24 hours",
+      "models": {
+        "gemini-1.5-pro": {
+          "batch_input_price": 1.25,
+          "batch_output_price": 5.0
+        },
+        "gemini-1.5-flash": {
+          "batch_input_price": 0.09375,
+          "batch_output_price": 0.1875
+        },
+        "gemini-1.0-pro": {
+          "batch_input_price": 0.25,
+          "batch_output_price": 0.5
+        }
+      },
+      "documentation": "https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/batch-prediction"
+    },
+    "deepseek": {
+      "discount_rate": null,
+      "notes": "DeepSeek does not currently offer batch pricing. Standard rates apply.",
+      "turnaround": null,
+      "models": {},
+      "documentation": "https://platform.deepseek.com/docs"
+    },
+    "mistral": {
+      "discount_rate": null,
+      "notes": "Mistral does not currently offer batch pricing via API. Standard rates apply.",
+      "turnaround": null,
+      "models": {},
+      "documentation": "https://docs.mistral.ai/"
+    }
+  },
+  "contribution_guidelines": {
+    "how_to_update": "Submit a PR with updated pricing when providers change their batch rates",
+    "verification": "Include link to official documentation confirming the pricing change",
+    "maintainer": "burncloud team"
+  }
+}
