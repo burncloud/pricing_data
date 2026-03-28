@@ -41,12 +41,12 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
           DATE=$(date +%Y-%m-%d)
-          python scripts/fetch_all.py "$DATE"
+          python -m scripts.fetch_all "$DATE"
 
       - name: Merge pricing data
         run: |
           DATE=$(date +%Y-%m-%d)
-          python scripts/merge.py "$DATE"
+          python -m scripts.merge "$DATE"
 
       - name: Check for changes
         id: changes
