@@ -5,7 +5,28 @@ import os
 from dataclasses import dataclass, field
 from datetime import timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, FrozenSet, List, Optional, Tuple
+
+
+@dataclass
+class ProviderPricingRules:
+    """
+    Ratio-based derived pricing rules for a provider.
+
+    Used when a provider's cache/batch prices are a fixed ratio of base prices,
+    as documented in their official pricing docs (e.g. Zhipu's 50% cache discount).
+
+    Source: https://docs.bigmodel.cn/cn/guide/capabilities/cache.md
+            https://docs.bigmodel.cn/cn/guide/tools/batch.md
+    """
+    # cache_read_input_price = input_price * cache_read_ratio
+    cache_read_ratio: Optional[float] = None
+    # batch prices = base prices * batch_discount
+    batch_discount: Optional[float] = None
+    # Models that support batch API (None = all models)
+    batch_supported_models: Optional[FrozenSet[str]] = None
+    # Models that support cache (None = all models)
+    cache_supported_models: Optional[FrozenSet[str]] = None
 
 
 @dataclass
@@ -91,6 +112,25 @@ class Config:
     fetchers: Dict[str, FetcherConfig] = field(init=False)
 
     def __post_init__(self):
+        # Ratio-based derived pricing rules per provider.
+        # Populated from official provider docs — update when docs change.
+        self.provider_pricing_rules: Dict[str, ProviderPricingRules] = {
+            # Zhipu (智谱): cache read = 50%, batch = 50% of base prices.
+            # Source: docs.bigmodel.cn/cn/guide/capabilities/cache.md
+            #         docs.bigmodel.cn/cn/guide/tools/batch.md
+            "zhipu": ProviderPricingRules(
+                cache_read_ratio=0.5,
+                batch_discount=0.5,
+                batch_supported_models=frozenset({
+                    "glm-4-plus", "glm-4-air-250414", "glm-4-flashx-250414",
+                    "glm-4-long", "glm-4v-plus-0111", "glm-4v-plus",
+                    "glm-4-0520", "glm-4", "glm-4v",
+                }),
+                # Cache: "支持所有主流模型" (all mainstream models)
+                cache_supported_models=None,
+            ),
+        }
+
         self.data_dir = self.repo_root
         self.pricing_file = self.repo_root / "pricing.json"
         self.schema_file = self.repo_root / "schema.json"
@@ -235,6 +275,42 @@ class Config:
     def get_source_priority(self, source: str) -> int:
         """Get priority for a source. Higher = more authoritative."""
         return self.source_priority.get(source, 0)
+
+    def get_derived_pricing(
+        self,
+        provider: str,
+        model_id: str,
+        input_price: float,
+        output_price: float,
+    ) -> Tuple[Optional[Dict[str, Any]], Optional[Dict[str, Any]]]:
+        """
+        Derive cache_pricing and batch_pricing from base prices using provider rules.
+
+        Free models (input_price == 0 and output_price == 0) receive no derived pricing.
+        Returns (cache_pricing, batch_pricing) — either may be None.
+        """
+        rules = self.provider_pricing_rules.get(provider)
+        if not rules:
+            return None, None
+
+        cache_pricing = None
+        if rules.cache_read_ratio is not None and input_price > 0:
+            supported = rules.cache_supported_models
+            if supported is None or model_id in supported:
+                cache_pricing = {
+                    "cache_read_input_price": round(input_price * rules.cache_read_ratio, 6)
+                }
+
+        batch_pricing = None
+        if rules.batch_discount is not None and (input_price > 0 or output_price > 0):
+            supported = rules.batch_supported_models
+            if supported is None or model_id in supported:
+                batch_pricing = {
+                    "input_price": round(input_price * rules.batch_discount, 6),
+                    "output_price": round(output_price * rules.batch_discount, 6),
+                }
+
+        return cache_pricing, batch_pricing
 
     def get_today_sources_dir(self, date_str: str) -> Path:
         """Get sources directory for a specific date."""

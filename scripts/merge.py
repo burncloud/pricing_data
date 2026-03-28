@@ -1,11 +1,18 @@
 """
 Merge pricing data from multiple sources into pricing.json.
 
+Output format: v3.0 — currency-keyed pricing per model.
+  pricing.json → model → pricing → { "USD": {...}, "CNY": {...} }
+
 Priority order (higher = more authoritative):
 1. Original providers (OpenAI, Anthropic, etc.) - priority 100
 2. Chinese providers (Zhipu, Aliyun, etc.) - priority 100
 3. Aggregators (OpenRouter) - priority 50
 4. Manual entries - priority 10
+
+Quality checks:
+- Price drift: warn when same currency has >1% price difference across sources
+- Completeness: warn when one currency has batch/cache pricing but another doesn't
 """
 import copy
 import json
@@ -57,12 +64,11 @@ class PricingMerger:
         if not all_sources:
             raise ValueError("No source data found")
 
-        # Merge with priority resolution
+        # Merge with priority resolution → currency-keyed output
         merged_models = self._merge_with_priority(all_sources, warnings)
 
-        # Build output structure (field names must match burncloud PricingConfig)
         output = {
-            "version": "2.0",
+            "version": "3.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "source": "burncloud-official",
             "models": merged_models,
@@ -98,8 +104,6 @@ class PricingMerger:
                     data = json.load(f)
 
                 if data.get("status") == "success" and data.get("models"):
-                    # Guard: skip source if it has suspiciously few models
-                    # (protects against OpenRouter returning empty/broken response)
                     model_count = len(data["models"])
                     min_models = config.min_models_guard.get(source_file.stem, 0)
                     if min_models > 0 and model_count < min_models:
@@ -126,18 +130,23 @@ class PricingMerger:
         warnings: List[str]
     ) -> Dict[str, Any]:
         """
-        Merge models from all sources using priority resolution.
+        Merge models from all sources into currency-keyed pricing (v3.0).
 
-        When the same model appears in multiple sources:
-        1. Use the highest-priority source as the base structure
-        2. Merge endpoints: lower-priority sources can contribute endpoint keys
-           the winner doesn't have (e.g. CNY from bigmodel.cn + USD from z.ai)
-        3. Log warnings for price conflicts on the same endpoint key
+        For each model:
+        - Group all endpoint entries by currency
+        - Highest-priority source wins base pricing per currency
+        - Lower-priority sources contribute missing batch_pricing / cache_pricing
+        - Warn on price drift within the same currency
+        - Warn on completeness gaps across currencies (batch/cache present in one
+          currency but absent in another)
         """
         merged = {}
-        model_sources: Dict[str, List[Tuple[str, Dict[str, Any], int]]] = {}
 
-        # Group models by normalized ID
+        # model_id → { currency → [(source_name, ep_data, priority), ...] }
+        model_currency_sources: Dict[str, Dict[str, List[Tuple[str, Dict, int]]]] = {}
+        # model_id → [(source_name, metadata, priority), ...]
+        model_metadata: Dict[str, List[Tuple[str, Dict, int]]] = {}
+
         for source in sources:
             source_name = source["name"]
             priority = config.get_source_priority(source_name)
@@ -145,192 +154,129 @@ class PricingMerger:
             for model_id, model_data in source["data"]["models"].items():
                 normalized_id = self._normalize_model_id(model_id, source_name)
 
-                if normalized_id not in model_sources:
-                    model_sources[normalized_id] = []
+                if normalized_id not in model_currency_sources:
+                    model_currency_sources[normalized_id] = {}
+                    model_metadata[normalized_id] = []
 
-                model_sources[normalized_id].append((source_name, model_data, priority))
+                if model_data.get("metadata"):
+                    model_metadata[normalized_id].append(
+                        (source_name, model_data["metadata"], priority)
+                    )
 
-        # Resolve each model
-        for normalized_id, source_list in model_sources.items():
-            # Sort by priority (descending)
-            source_list.sort(key=lambda x: x[2], reverse=True)
+                for ep_key, ep_data in model_data.get("endpoints", {}).items():
+                    currency = ep_data.get("currency", "USD")
+                    if currency not in model_currency_sources[normalized_id]:
+                        model_currency_sources[normalized_id][currency] = []
+                    model_currency_sources[normalized_id][currency].append(
+                        (source_name, ep_data, priority)
+                    )
 
-            # Use highest priority source as base structure
-            primary_source, primary_data, _ = source_list[0]
-            merged[normalized_id] = copy.deepcopy(primary_data)
+        for model_id, currency_map in model_currency_sources.items():
+            pricing: Dict[str, Any] = {}
 
-            if len(source_list) > 1:
-                # Endpoint-level merge: lower-priority sources can contribute
-                # endpoint keys the winner doesn't have (e.g. CNY bigmodel.cn
-                # endpoint alongside USD api.openai.com endpoint).
-                self._merge_endpoints(normalized_id, merged, source_list)
+            for currency, source_list in currency_map.items():
+                source_list.sort(key=lambda x: x[2], reverse=True)
 
-            # Normalize AFTER endpoint merging so all endpoints are cleaned
-            # (stray 'unit'/'source' fields, null output_price, field renames)
-            merged[normalized_id] = self._normalize_model_format(merged[normalized_id])
+                winner_name, winner_ep, _ = source_list[0]
+                entry: Dict[str, Any] = {
+                    "input_price": winner_ep["pricing"]["input_price"],
+                    "output_price": winner_ep["pricing"].get("output_price") or 0.0,
+                }
 
-            # Check for price conflicts on shared endpoint keys
-            if len(source_list) > 1:
-                self._check_price_conflicts(normalized_id, source_list, warnings)
+                for field in ("cache_pricing", "batch_pricing", "tiered_pricing"):
+                    if field in winner_ep:
+                        entry[field] = copy.deepcopy(winner_ep[field])
 
-            # Track source
-            if "metadata" not in merged[normalized_id]:
-                merged[normalized_id]["metadata"] = {}
-            merged[normalized_id]["metadata"]["_merged_from"] = primary_source
+                # Lower-priority sources contribute missing optional fields only
+                for src_name, ep_data, _ in source_list[1:]:
+                    for field in ("cache_pricing", "batch_pricing", "tiered_pricing"):
+                        if field not in entry and field in ep_data:
+                            entry[field] = copy.deepcopy(ep_data[field])
+                            logger.debug(
+                                f"Field-merged {model_id}[{currency}].{field} from {src_name}"
+                            )
+
+                    # Price drift check within same currency
+                    base_input = entry["input_price"]
+                    other_input = ep_data["pricing"].get("input_price")
+                    if base_input and other_input:
+                        drift = abs(base_input - other_input) / base_input
+                        if drift > config.price_drift_warning_threshold:
+                            warning = (
+                                f"Price drift for {model_id} [{currency}]: "
+                                f"{winner_name}={base_input} vs {src_name}={other_input} "
+                                f"({drift * 100:.1f}%)"
+                            )
+                            warnings.append(warning)
+                            logger.warning(warning)
+
+                # Normalize cache_pricing field names
+                if "cache_pricing" in entry:
+                    cache = entry["cache_pricing"]
+                    cache.pop("unit", None)
+                    if "cache_write_input_price" in cache:
+                        cache["cache_creation_input_price"] = cache.pop("cache_write_input_price")
+
+                pricing[currency] = entry
+
+            # Quality check: completeness across currencies
+            self._check_pricing_completeness(model_id, pricing, warnings)
+
+            # Metadata: highest priority source wins
+            meta_list = model_metadata.get(model_id, [])
+            if meta_list:
+                meta_list.sort(key=lambda x: x[2], reverse=True)
+                metadata = copy.deepcopy(meta_list[0][1])
+                metadata["_merged_from"] = meta_list[0][0]
+            else:
+                metadata = {"_merged_from": "unknown"}
+
+            merged[model_id] = {
+                "pricing": pricing,
+                "metadata": metadata,
+            }
 
         return merged
 
-    def _merge_endpoints(
+    def _check_pricing_completeness(
         self,
         model_id: str,
-        merged: Dict[str, Any],
-        source_list: List[Tuple[str, Dict[str, Any], int]],
+        pricing: Dict[str, Any],
+        warnings: List[str],
     ) -> None:
         """
-        Merge endpoint entries across sources.
+        Quality check: if one currency has batch_pricing or cache_pricing but
+        another currency for the same model doesn't, emit a warning.
 
-        Two rules applied in order for each lower-priority source:
-
-        1. Same endpoint key → field-level merge.
-           If the canonical endpoint already exists, lower-priority sources can
-           contribute optional fields it is missing (batch_pricing, tiered_pricing,
-           cache_pricing).  They never overwrite existing fields.
-           This is how LiteLLM's batch/tiered data ends up on api.openai.com.
-
-        2. New endpoint key → add the whole endpoint.
-           Distinct real deployment platforms (e.g. open.bigmodel.cn + z.ai for
-           the same Zhipu model) are kept as separate endpoint entries.
-
-        Example after redesign:
-            source A (priority 100, api.openai.com with pricing + cache_pricing)
-            source B (priority 70,  api.openai.com with pricing + batch_pricing)
-            result: api.openai.com with pricing + cache_pricing + batch_pricing
+        This flags gaps in data collection — e.g. USD has batch_pricing from
+        LiteLLM but CNY batch pricing was never fetched.
         """
-        seen_endpoints: Dict[str, int] = {}
+        currencies = list(pricing.keys())
+        if len(currencies) < 2:
+            return
 
-        # Seed with what the winner already contributed
-        winner_priority = source_list[0][2]
-        for ep_key in merged[model_id].get("endpoints", {}):
-            seen_endpoints[ep_key] = winner_priority
+        for field in ("batch_pricing", "cache_pricing"):
+            currencies_with = [c for c in currencies if field in pricing[c]]
+            currencies_without = [c for c in currencies if field not in pricing[c]]
 
-        # Walk lower-priority sources in priority order
-        for src_name, src_data, src_priority in source_list[1:]:
-            for ep_key, ep_data in src_data.get("endpoints", {}).items():
-                if ep_key not in seen_endpoints:
-                    # New endpoint key — distinct real deployment platform
-                    if "endpoints" not in merged[model_id]:
-                        merged[model_id]["endpoints"] = {}
-                    merged[model_id]["endpoints"][ep_key] = copy.deepcopy(ep_data)
-                    seen_endpoints[ep_key] = src_priority
-                    logger.debug(
-                        f"Endpoint-merged {model_id}.endpoints.{ep_key} from {src_name} "
-                        f"(priority {src_priority})"
-                    )
-                else:
-                    # Same endpoint key — merge missing optional fields only
-                    existing_ep = merged[model_id]["endpoints"][ep_key]
-                    for field in ("batch_pricing", "tiered_pricing", "cache_pricing"):
-                        if field not in existing_ep and field in ep_data:
-                            existing_ep[field] = copy.deepcopy(ep_data[field])
-                            logger.debug(
-                                f"Field-merged {model_id}.endpoints.{ep_key}.{field} "
-                                f"from {src_name} (priority {src_priority})"
-                            )
+            if currencies_with and currencies_without:
+                warning = (
+                    f"Incomplete pricing for {model_id}: "
+                    f"{field} present in {currencies_with} but missing in {currencies_without}"
+                )
+                warnings.append(warning)
+                logger.warning(warning)
 
     def _normalize_model_id(self, model_id: str, source: str) -> str:
         """
         Normalize model ID for merging.
 
         - OpenRouter: remove provider prefix (openai/gpt-4o -> gpt-4o)
-        - Chinese providers: keep as-is (qwen-max, glm-4)
-        - Original providers: keep as-is
+        - All others: keep as-is
         """
         if source == "openrouter" and "/" in model_id:
             return model_id.split("/", 1)[1]
         return model_id
-
-    def _check_price_conflicts(
-        self,
-        model_id: str,
-        source_list: List[Tuple[str, Dict[str, Any], int]],
-        warnings: List[str]
-    ) -> None:
-        """
-        Check for price conflicts on shared endpoint keys across sources.
-
-        For each endpoint key that appears in more than one source, compare
-        the pricing.input_price and batch_pricing.input_price for drift.
-        """
-        # Collect endpoint-keyed prices: {ep_key: [(source_name, pricing, batch_pricing), ...]}
-        ep_sources: Dict[str, List[Tuple[str, Dict, Dict]]] = {}
-        for source_name, model_data, _ in source_list:
-            for ep_key, ep_data in model_data.get("endpoints", {}).items():
-                if ep_key not in ep_sources:
-                    ep_sources[ep_key] = []
-                ep_sources[ep_key].append((
-                    source_name,
-                    ep_data.get("pricing", {}),
-                    ep_data.get("batch_pricing", {}),
-                ))
-
-        for ep_key, ep_list in ep_sources.items():
-            if len(ep_list) < 2:
-                continue
-
-            base_source, base_pricing, base_batch = ep_list[0]
-            other_source, other_pricing, other_batch = ep_list[1]
-
-            for label, base_p, other_p in [
-                ("Price", base_pricing, other_pricing),
-                ("Batch price", base_batch, other_batch),
-            ]:
-                base_input = base_p.get("input_price")
-                other_input = other_p.get("input_price")
-                if base_input and other_input:
-                    drift = abs(base_input - other_input) / base_input
-                    if drift > config.price_drift_warning_threshold:
-                        warning = (
-                            f"{label} drift detected for {model_id} [{ep_key}]: "
-                            f"{base_source}={base_input} vs {other_source}={other_input} "
-                            f"({drift*100:.1f}% difference)"
-                        )
-                        warnings.append(warning)
-                        logger.warning(warning)
-
-    def _normalize_model_format(self, model: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Normalize a model entry to burncloud PricingConfig format (endpoint-keyed).
-
-        Fixes per endpoint entry:
-        - null output_price → 0.0
-        - cache_write_input_price → cache_creation_input_price
-        - Remove stray 'unit' or 'source' fields from pricing dicts
-        """
-        model = copy.deepcopy(model)
-
-        for ep_key, ep_data in model.get("endpoints", {}).items():
-            if not isinstance(ep_data, dict):
-                continue
-
-            # Normalize flat pricing
-            pricing = ep_data.get("pricing", {})
-            if isinstance(pricing, dict):
-                pricing.pop("unit", None)
-                pricing.pop("source", None)
-                if pricing.get("output_price") is None:
-                    logger.warning(f"output_price is null for {ep_key}, setting to 0.0")
-                    pricing["output_price"] = 0.0
-                elif pricing.get("output_price") == 0.0:
-                    logger.debug(f"output_price is 0.0 for {ep_key} — may be incomplete data")
-
-            # Fix cache_pricing field names
-            cache_pricing = ep_data.get("cache_pricing", {})
-            if isinstance(cache_pricing, dict):
-                cache_pricing.pop("unit", None)
-                if "cache_write_input_price" in cache_pricing:
-                    cache_pricing["cache_creation_input_price"] = cache_pricing.pop("cache_write_input_price")
-
-        return model
 
     def _validate(self, data: Dict[str, Any]) -> None:
         """Validate merged data against schema."""
@@ -365,8 +311,6 @@ def main(date_str: Optional[str] = None) -> int:
     Returns:
         0 on success (warnings are logged but non-blocking), 1 on error
     """
-    import sys
-
     if date_str is None:
         from datetime import date
         date_str = date.today().isoformat()
@@ -375,13 +319,12 @@ def main(date_str: Optional[str] = None) -> int:
         merger = PricingMerger()
         data, warnings = merger.merge_all(date_str)
 
-        # Save
         output_path = merger.save(data)
 
         print(f"✅ Merged {len(data['models'])} models to {output_path}")
 
         if warnings:
-            print(f"\n⚠️  {len(warnings)} price drift warning(s) — check sources:")
+            print(f"\n⚠️  {len(warnings)} warning(s):")
             for warning in warnings:
                 print(f"   - {warning}")
             print("Continuing — warnings are informational, not blocking.")
