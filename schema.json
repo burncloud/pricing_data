@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pricing.burn.cloud/schema.json",
+  "title": "LLM Pricing Data Schema",
+  "description": "Schema for LLM API pricing data",
+  "type": "object",
+  "required": ["schema_version", "updated_at", "source", "models"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version (e.g., '1.0')"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last update"
+    },
+    "source": {
+      "type": "string",
+      "description": "Data source identifier"
+    },
+    "models": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/Model"
+      }
+    }
+  },
+  "definitions": {
+    "Model": {
+      "type": "object",
+      "required": ["pricing", "metadata"],
+      "properties": {
+        "pricing": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Pricing"
+          },
+          "description": "Pricing by currency (USD, CNY)"
+        },
+        "cache_pricing": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CachePricing"
+          },
+          "description": "Prompt caching pricing by currency"
+        },
+        "batch_pricing": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/BatchPricing"
+          },
+          "description": "Batch API pricing by currency"
+        },
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        }
+      }
+    },
+    "Pricing": {
+      "type": "object",
+      "required": ["input_price", "output_price"],
+      "properties": {
+        "input_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per unit for input tokens"
+        },
+        "output_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per unit for output tokens"
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["per_million_tokens", "per_thousand_tokens", "per_token"],
+          "default": "per_million_tokens",
+          "description": "Pricing unit"
+        },
+        "source": {
+          "type": "string",
+          "description": "Data source for this pricing (e.g., 'openai', 'openrouter')"
+        }
+      }
+    },
+    "CachePricing": {
+      "type": "object",
+      "properties": {
+        "cache_read_input_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price for reading from cache"
+        },
+        "cache_creation_input_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price for creating cache entry"
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["per_million_tokens", "per_thousand_tokens", "per_token"],
+          "default": "per_million_tokens"
+        }
+      }
+    },
+    "BatchPricing": {
+      "type": "object",
+      "properties": {
+        "batch_input_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Batch API input price"
+        },
+        "batch_output_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Batch API output price"
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["per_million_tokens", "per_thousand_tokens", "per_token"],
+          "default": "per_million_tokens"
+        }
+      }
+    },
+    "Metadata": {
+      "type": "object",
+      "required": ["provider", "family"],
+      "properties": {
+        "context_window": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum context length in tokens"
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum output tokens"
+        },
+        "supports_vision": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether model supports image input"
+        },
+        "supports_function_calling": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether model supports function calling"
+        },
+        "supports_json_mode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether model supports JSON mode"
+        },
+        "provider": {
+          "type": "string",
+          "description": "Provider name (e.g., 'openai', 'anthropic', 'zhipu')"
+        },
+        "family": {
+          "type": "string",
+          "description": "Model family (e.g., 'gpt-4o', 'claude-3.5', 'qwen')"
+        },
+        "release_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Model release date"
+        },
+        "deprecated": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether model is deprecated"
+        },
+        "sunset_date": {
+          "type": ["string", "null"],
+          "format": "date",
+          "description": "Date when deprecated model will be removed"
+        }
+      }
+    }
+  }
+}

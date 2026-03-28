@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# gstack
+.gstack/
+
+# History (generated)
+history/
+
+# Sources (generated daily)
+sources/
+
+# Output files (generated)
+comparison.json
+daily-summary.xml
+pricing-updates.xml
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

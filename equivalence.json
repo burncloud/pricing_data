@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "updated_at": "2026-03-28T00:00:00Z",
+  "description": "Model equivalence mapping for API failover. Models in the same group are considered functionally equivalent for cost-optimized routing.",
+  "equivalence_groups": [
+    {
+      "id": "frontier-reasoning",
+      "description": "Top-tier reasoning models",
+      "capability_tier": "frontier",
+      "models": [
+        {"id": "gpt-4o", "provider": "openai", "notes": "Best overall performance"},
+        {"id": "gpt-4-turbo", "provider": "openai", "notes": "Previous flagship"},
+        {"id": "claude-3.5-sonnet", "provider": "anthropic", "notes": "Excellent coding"},
+        {"id": "claude-3-opus", "provider": "anthropic", "notes": "Best reasoning"},
+        {"id": "gemini-1.5-pro", "provider": "google", "notes": "Long context"},
+        {"id": "deepseek-r1", "provider": "deepseek", "notes": "Strong reasoning, lower cost"}
+      ]
+    },
+    {
+      "id": "fast-cheap",
+      "description": "Fast, cost-effective models for simple tasks",
+      "capability_tier": "efficient",
+      "models": [
+        {"id": "gpt-4o-mini", "provider": "openai", "notes": "Best value"},
+        {"id": "claude-3.5-haiku", "provider": "anthropic", "notes": "Fast and cheap"},
+        {"id": "gemini-1.5-flash", "provider": "google", "notes": "Very fast"},
+        {"id": "gpt-3.5-turbo", "provider": "openai", "notes": "Legacy but reliable"},
+        {"id": "deepseek-chat", "provider": "deepseek", "notes": "Best price"}
+      ]
+    },
+    {
+      "id": "vision-capable",
+      "description": "Models with vision/image understanding",
+      "capability_tier": "multimodal",
+      "models": [
+        {"id": "gpt-4o", "provider": "openai", "notes": ""},
+        {"id": "gpt-4o-mini", "provider": "openai", "notes": ""},
+        {"id": "gpt-4-turbo", "provider": "openai", "notes": ""},
+        {"id": "claude-3.5-sonnet", "provider": "anthropic", "notes": ""},
+        {"id": "claude-3-opus", "provider": "anthropic", "notes": ""},
+        {"id": "gemini-1.5-pro", "provider": "google", "notes": "Native multimodal"},
+        {"id": "gemini-1.5-flash", "provider": "google", "notes": "Native multimodal"},
+        {"id": "llama-3.2-11b-vision", "provider": "meta", "notes": "Open source"},
+        {"id": "pixtral-12b", "provider": "mistral", "notes": "Open source"}
+      ]
+    },
+    {
+      "id": "long-context",
+      "description": "Models with 128K+ context window",
+      "capability_tier": "long-context",
+      "models": [
+        {"id": "gemini-1.5-pro", "provider": "google", "notes": "1M+ context"},
+        {"id": "gemini-1.5-flash", "provider": "google", "notes": "1M+ context"},
+        {"id": "claude-3.5-sonnet", "provider": "anthropic", "notes": "200K context"},
+        {"id": "gpt-4o", "provider": "openai", "notes": "128K context"},
+        {"id": "gpt-4-turbo", "provider": "openai", "notes": "128K context"}
+      ]
+    },
+    {
+      "id": "chinese-frontier",
+      "description": "Top-tier Chinese models",
+      "capability_tier": "regional",
+      "region": "china",
+      "models": [
+        {"id": "qwen-max", "provider": "aliyun", "notes": "Best Chinese capability"},
+        {"id": "glm-4", "provider": "zhipu", "notes": "Strong all-around"},
+        {"id": "ernie-4.0-8k", "provider": "baidu", "notes": "Baidu flagship"},
+        {"id": "moonshot-v1-8k", "provider": "moonshot", "notes": "Good long context"}
+      ]
+    },
+    {
+      "id": "code-specialized",
+      "description": "Models optimized for code generation",
+      "capability_tier": "specialized",
+      "models": [
+        {"id": "claude-3.5-sonnet", "provider": "anthropic", "notes": "Best coding"},
+        {"id": "gpt-4o", "provider": "openai", "notes": "Excellent coding"},
+        {"id": "deepseek-coder", "provider": "deepseek", "notes": "Specialized for code"},
+        {"id": "codestral", "provider": "mistral", "notes": "Code-focused"}
+      ]
+    },
+    {
+      "id": "open-source",
+      "description": "Open source models (Apache/MIT license)",
+      "capability_tier": "open",
+      "models": [
+        {"id": "llama-3.1-70b", "provider": "meta", "notes": "Best open source"},
+        {"id": "llama-3.1-8b", "provider": "meta", "notes": "Fast open source"},
+        {"id": "mistral-7b", "provider": "mistral", "notes": "Efficient"},
+        {"id": "mixtral-8x7b", "provider": "mistral", "notes": "MoE architecture"},
+        {"id": "qwen2-72b", "provider": "aliyun", "notes": "Chinese open source"}
+      ]
+    }
+  ],
+  "contribution_guidelines": {
+    "how_to_contribute": "Submit a PR with your proposed equivalence mapping. Include: model IDs, provider, and rationale for why models are equivalent.",
+    "review_criteria": [
+      "Similar capability level (frontier, efficient, specialized)",
+      "Compatible context windows",
+      "Comparable performance on benchmarks",
+      "Same multimodal capabilities if applicable"
+    ],
+    "maintainer": "burncloud team"
+  }
+}
