@@ -29,7 +29,9 @@ def fetch_all(date_str: Optional[str] = None) -> int:
     Run all fetchers and save results.
 
     Returns:
-        0 if all fetchers succeeded, 1 if any fetcher failed (but still saves others).
+        Always 0 — partial fetcher failures are acceptable (logged as ⚠️/❌).
+        The merge step is the real quality gate. Individual fetcher errors
+        should not block the pipeline when other fetchers succeeded.
     """
     if date_str is None:
         date_str = date.today().isoformat()
@@ -45,7 +47,7 @@ def fetch_all(date_str: Optional[str] = None) -> int:
         LiteLLMFetcher(config),          # priority 70
     ]
 
-    any_failed = False
+    failed_fetchers = []
     for fetcher in fetchers:
         name = fetcher.fetcher_config.name
         try:
@@ -57,14 +59,18 @@ def fetch_all(date_str: Optional[str] = None) -> int:
                 print(f"✅ {name}: {result.models_count} models")
             else:
                 print(f"⚠️  {name}: fetch failed — {result.error}")
-                any_failed = True
+                failed_fetchers.append(name)
 
         except Exception as e:
             logger.exception(f"Unexpected error running {name} fetcher")
             print(f"❌ {name}: unexpected error — {e}")
-            any_failed = True
+            failed_fetchers.append(name)
 
-    return 1 if any_failed else 0
+    if failed_fetchers:
+        print(f"\n⚠️  {len(failed_fetchers)} fetcher(s) failed: {', '.join(failed_fetchers)}")
+        print("Continuing — merge step will use all available sources.")
+
+    return 0
 
 
 if __name__ == "__main__":
