@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://pricing.burn.cloud/schema.json",
   "title": "LLM Pricing Data Schema",
-  "description": "Schema for LLM API pricing data (currency-keyed format v3.0)",
+  "description": "Schema for LLM API pricing data (currency-keyed format v4.0)",
   "type": "object",
   "required": ["version", "updated_at", "source", "models"],
   "properties": {
@@ -30,18 +30,9 @@
   "definitions": {
     "Model": {
       "type": "object",
-      "required": ["pricing", "metadata"],
-      "properties": {
-        "pricing": {
-          "type": "object",
-          "description": "Pricing keyed by currency code (e.g. USD, CNY). Each key holds the canonical price from the highest-priority official source for that currency.",
-          "additionalProperties": {
-            "$ref": "#/definitions/CurrencyPricing"
-          }
-        },
-        "metadata": {
-          "$ref": "#/definitions/Metadata"
-        }
+      "description": "Pricing keyed by currency code (e.g. USD, CNY). Each key holds the canonical price from the highest-priority official source for that currency.",
+      "additionalProperties": {
+        "$ref": "#/definitions/CurrencyPricing"
       }
     },
     "CurrencyPricing": {
@@ -133,60 +124,6 @@
           "type": "number",
           "minimum": 0,
           "description": "Output price per 1M tokens for this tier"
-        }
-      }
-    },
-    "Metadata": {
-      "type": "object",
-      "required": ["provider"],
-      "properties": {
-        "context_window": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "Maximum context length in tokens"
-        },
-        "max_output_tokens": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "Maximum output tokens"
-        },
-        "supports_vision": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether model supports image input"
-        },
-        "supports_function_calling": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether model supports function calling"
-        },
-        "supports_json_mode": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether model supports JSON mode"
-        },
-        "provider": {
-          "type": "string",
-          "description": "Provider name (e.g., 'openai', 'anthropic', 'zhipu')"
-        },
-        "family": {
-          "type": "string",
-          "description": "Model family (e.g., 'gpt-4o', 'claude-3.5', 'qwen')"
-        },
-        "release_date": {
-          "type": "string",
-          "format": "date",
-          "description": "Model release date"
-        },
-        "deprecated": {
-          "type": "boolean",
-          "default": false,
-          "description": "Whether model is deprecated"
-        },
-        "sunset_date": {
-          "type": ["string", "null"],
-          "format": "date",
-          "description": "Date when deprecated model will be removed"
         }
       }
     }

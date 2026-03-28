@@ -68,7 +68,7 @@ class PricingMerger:
         merged_models = self._merge_with_priority(all_sources, warnings)
 
         output = {
-            "version": "3.0",
+            "version": "4.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "source": "burncloud-official",
             "models": merged_models,
@@ -144,7 +144,7 @@ class PricingMerger:
 
         # model_id → { currency → [(source_name, ep_data, priority), ...] }
         model_currency_sources: Dict[str, Dict[str, List[Tuple[str, Dict, int]]]] = {}
-        # model_id → [(source_name, metadata, priority), ...]
+        # model_id → [(source_name, metadata, priority), ...] (internal only, for provider resolution)
         model_metadata: Dict[str, List[Tuple[str, Dict, int]]] = {}
 
         for source in sources:
@@ -260,19 +260,7 @@ class PricingMerger:
             # Quality check: completeness across currencies
             self._check_pricing_completeness(model_id, pricing, warnings)
 
-            # Metadata: highest priority source wins
-            meta_list = model_metadata.get(model_id, [])
-            if meta_list:
-                meta_list.sort(key=lambda x: x[2], reverse=True)
-                metadata = copy.deepcopy(meta_list[0][1])
-                metadata["_merged_from"] = meta_list[0][0]
-            else:
-                metadata = {"_merged_from": "unknown"}
-
-            merged[model_id] = {
-                "pricing": pricing,
-                "metadata": metadata,
-            }
+            merged[model_id] = pricing
 
         return merged
 
