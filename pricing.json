@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "updated_at": "2026-03-28T08:40:04.490860+00:00",
+  "updated_at": "2026-03-28T09:56:04.099158+00:00",
   "source": "burncloud-official",
   "models": {
     "deepseek-chat": {
@@ -32,8 +32,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.32,
-            "output_price": 0.89,
-            "source": "openrouter"
+            "output_price": 0.89
           }
         }
       },
@@ -173,8 +172,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 12.0,
-            "source": "openrouter"
+            "output_price": 12.0
           }
         }
       },
@@ -210,8 +208,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.25,
-            "output_price": 1.5,
-            "source": "openrouter"
+            "output_price": 1.5
           }
         }
       },
@@ -269,8 +266,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.5,
-            "output_price": 3.0,
-            "source": "openrouter"
+            "output_price": 3.0
           }
         }
       },
@@ -306,8 +302,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.5,
-            "output_price": 3.0,
-            "source": "openrouter"
+            "output_price": 3.0
           }
         }
       },
@@ -344,8 +339,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 12.0,
-            "source": "openrouter"
+            "output_price": 12.0
           }
         }
       },
@@ -394,8 +388,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.25,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -431,8 +424,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.3,
-            "output_price": 2.5,
-            "source": "openrouter"
+            "output_price": 2.5
           }
         }
       },
@@ -468,8 +460,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.1,
-            "output_price": 0.4,
-            "source": "openrouter"
+            "output_price": 0.4
           }
         }
       },
@@ -539,8 +530,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.3,
-            "output_price": 2.5,
-            "source": "openrouter"
+            "output_price": 2.5
           }
         }
       },
@@ -1746,8 +1736,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.039,
-            "output_price": 0.19,
-            "source": "openrouter"
+            "output_price": 0.19
           }
         }
       },
@@ -2501,8 +2490,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.15,
-            "output_price": 0.6,
-            "source": "openrouter"
+            "output_price": 0.6
           }
         }
       },
@@ -2548,8 +2536,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -2576,8 +2563,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.0375,
-            "output_price": 0.15,
-            "source": "openrouter"
+            "output_price": 0.15
           }
         }
       },
@@ -2623,8 +2609,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.04,
-            "output_price": 4.16,
-            "source": "openrouter"
+            "output_price": 4.16
           }
         }
       },
@@ -2651,8 +2636,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.26,
-            "output_price": 0.78,
-            "source": "openrouter"
+            "output_price": 0.78
           }
         }
       },
@@ -2736,8 +2720,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.0325,
-            "output_price": 0.13,
-            "source": "openrouter"
+            "output_price": 0.13
           }
         }
       },
@@ -2821,8 +2804,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.09,
-            "output_price": 1.1,
-            "source": "openrouter"
+            "output_price": 1.1
           }
         }
       },
@@ -2849,8 +2831,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.0975,
-            "output_price": 0.78,
-            "source": "openrouter"
+            "output_price": 0.78
           }
         }
       },
@@ -2877,8 +2858,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.2,
-            "output_price": 0.88,
-            "source": "openrouter"
+            "output_price": 0.88
           }
         }
       },
@@ -2905,8 +2885,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.26,
-            "output_price": 2.6,
-            "source": "openrouter"
+            "output_price": 2.6
           }
         }
       },
@@ -2933,8 +2912,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.104,
-            "output_price": 0.416,
-            "source": "openrouter"
+            "output_price": 0.416
           }
         }
       },
@@ -4786,8 +4764,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.7,
-            "output_price": 2.5,
-            "source": "openrouter"
+            "output_price": 2.5
           }
         }
       },
@@ -4833,8 +4810,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.26,
-            "output_price": 0.38,
-            "source": "openrouter"
+            "output_price": 0.38
           }
         }
       },
@@ -6612,8 +6588,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.1,
-            "output_price": 0.4,
-            "source": "openrouter"
+            "output_price": 0.4
           }
         }
       },
@@ -6640,8 +6615,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.075,
-            "output_price": 0.3,
-            "source": "openrouter"
+            "output_price": 0.3
           }
         }
       },
@@ -6690,8 +6664,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.1,
-            "output_price": 0.4,
-            "source": "openrouter"
+            "output_price": 0.4
           }
         }
       },
@@ -6802,8 +6775,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 12.0,
-            "source": "openrouter"
+            "output_price": 12.0
           }
         }
       },
@@ -7094,8 +7066,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.08,
-            "output_price": 0.16,
-            "source": "openrouter"
+            "output_price": 0.16
           }
         }
       },
@@ -7742,8 +7713,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.5,
-            "output_price": 1.5,
-            "source": "openrouter"
+            "output_price": 1.5
           }
         }
       },
@@ -7808,8 +7778,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 3.0,
-            "output_price": 4.0,
-            "source": "openrouter"
+            "output_price": 4.0
           }
         }
       },
@@ -7836,8 +7805,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.5,
-            "output_price": 2.0,
-            "source": "openrouter"
+            "output_price": 2.0
           }
         }
       },
@@ -7864,8 +7832,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 30.0,
-            "output_price": 60.0,
-            "source": "openrouter"
+            "output_price": 60.0
           }
         }
       },
@@ -7911,8 +7878,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 30.0,
-            "output_price": 60.0,
-            "source": "openrouter"
+            "output_price": 60.0
           }
         }
       },
@@ -7958,8 +7924,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 10.0,
-            "output_price": 30.0,
-            "source": "openrouter"
+            "output_price": 30.0
           }
         }
       },
@@ -7986,8 +7951,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 10.0,
-            "output_price": 30.0,
-            "source": "openrouter"
+            "output_price": 30.0
           }
         }
       },
@@ -8033,8 +7997,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 10.0,
-            "output_price": 30.0,
-            "source": "openrouter"
+            "output_price": 30.0
           }
         }
       },
@@ -8065,8 +8028,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 8.0,
-            "source": "openrouter"
+            "output_price": 8.0
           }
         }
       },
@@ -8120,8 +8082,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.4,
-            "output_price": 1.6,
-            "source": "openrouter"
+            "output_price": 1.6
           }
         }
       },
@@ -8175,8 +8136,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.1,
-            "output_price": 0.4,
-            "source": "openrouter"
+            "output_price": 0.4
           }
         }
       },
@@ -8230,8 +8190,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -8262,8 +8221,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 5.0,
-            "output_price": 15.0,
-            "source": "openrouter"
+            "output_price": 15.0
           }
         }
       },
@@ -8294,8 +8252,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -8326,8 +8283,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -8354,8 +8310,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -8420,8 +8375,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -8486,8 +8440,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.6,
-            "output_price": 2.4,
-            "source": "openrouter"
+            "output_price": 2.4
           }
         }
       },
@@ -8556,8 +8509,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.15,
-            "output_price": 0.6,
-            "source": "openrouter"
+            "output_price": 0.6
           }
         }
       },
@@ -8588,8 +8540,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.15,
-            "output_price": 0.6,
-            "source": "openrouter"
+            "output_price": 0.6
           }
         }
       },
@@ -8696,8 +8647,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.15,
-            "output_price": 0.6,
-            "source": "openrouter"
+            "output_price": 0.6
           }
         }
       },
@@ -8843,8 +8793,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -8946,8 +8895,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.25,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -8974,8 +8922,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.25,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -9040,8 +8987,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.75,
-            "output_price": 14.0,
-            "source": "openrouter"
+            "output_price": 14.0
           }
         }
       },
@@ -9125,8 +9071,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 21.0,
-            "output_price": 168.0,
-            "source": "openrouter"
+            "output_price": 168.0
           }
         }
       },
@@ -9176,8 +9121,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 15.0,
-            "source": "openrouter"
+            "output_price": 15.0
           }
         }
       },
@@ -9231,8 +9175,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 30.0,
-            "output_price": 180.0,
-            "source": "openrouter"
+            "output_price": 180.0
           }
         }
       },
@@ -9286,8 +9229,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.75,
-            "output_price": 4.5,
-            "source": "openrouter"
+            "output_price": 4.5
           }
         }
       },
@@ -9318,8 +9260,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.2,
-            "output_price": 1.25,
-            "source": "openrouter"
+            "output_price": 1.25
           }
         }
       },
@@ -9350,8 +9291,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 15.0,
-            "output_price": 120.0,
-            "source": "openrouter"
+            "output_price": 120.0
           }
         }
       },
@@ -9420,8 +9360,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.25,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -9467,8 +9406,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.25,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -9495,8 +9433,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.25,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -9523,8 +9460,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.25,
-            "output_price": 10.0,
-            "source": "openrouter"
+            "output_price": 10.0
           }
         }
       },
@@ -9551,8 +9487,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.25,
-            "output_price": 2.0,
-            "source": "openrouter"
+            "output_price": 2.0
           }
         }
       },
@@ -9579,8 +9514,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.75,
-            "output_price": 14.0,
-            "source": "openrouter"
+            "output_price": 14.0
           }
         }
       },
@@ -9607,8 +9541,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.75,
-            "output_price": 14.0,
-            "source": "openrouter"
+            "output_price": 14.0
           }
         }
       },
@@ -9635,8 +9568,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.25,
-            "output_price": 2.0,
-            "source": "openrouter"
+            "output_price": 2.0
           }
         }
       },
@@ -9682,8 +9614,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.05,
-            "output_price": 0.4,
-            "source": "openrouter"
+            "output_price": 0.4
           }
         }
       },
@@ -9877,8 +9808,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.7,
-            "output_price": 0.8,
-            "source": "openrouter"
+            "output_price": 0.8
           }
         }
       },
@@ -10089,8 +10019,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.035,
-            "output_price": 0.14,
-            "source": "openrouter"
+            "output_price": 0.14
           }
         }
       },
@@ -10117,8 +10046,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.06,
-            "output_price": 0.24,
-            "source": "openrouter"
+            "output_price": 0.24
           }
         }
       },
@@ -10145,8 +10073,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.5,
-            "output_price": 12.5,
-            "source": "openrouter"
+            "output_price": 12.5
           }
         }
       },
@@ -10173,8 +10100,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.8,
-            "output_price": 3.2,
-            "source": "openrouter"
+            "output_price": 3.2
           }
         }
       },
@@ -10579,8 +10505,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 8.0,
-            "source": "openrouter"
+            "output_price": 8.0
           }
         }
       },
@@ -10721,8 +10646,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.45,
-            "output_price": 2.15,
-            "source": "openrouter"
+            "output_price": 2.15
           }
         }
       },
@@ -11544,8 +11468,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.3,
-            "output_price": 0.9,
-            "source": "openrouter"
+            "output_price": 0.9
           }
         }
       },
@@ -11724,8 +11647,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.4,
-            "output_price": 2.0,
-            "source": "openrouter"
+            "output_price": 2.0
           }
         }
       },
@@ -11904,8 +11826,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 6.0,
-            "source": "openrouter"
+            "output_price": 6.0
           }
         }
       },
@@ -11932,8 +11853,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 6.0,
-            "source": "openrouter"
+            "output_price": 6.0
           }
         }
       },
@@ -11998,8 +11918,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.5,
-            "output_price": 1.5,
-            "source": "openrouter"
+            "output_price": 1.5
           }
         }
       },
@@ -12387,8 +12306,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 6.0,
-            "source": "openrouter"
+            "output_price": 6.0
           }
         }
       },
@@ -12529,8 +12447,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.445,
-            "output_price": 2.22,
-            "source": "openrouter"
+            "output_price": 2.22
           }
         }
       },
@@ -12652,8 +12569,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.47,
-            "output_price": 2.0,
-            "source": "openrouter"
+            "output_price": 2.0
           }
         }
       },
@@ -12889,8 +12805,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.8,
-            "output_price": 1.2,
-            "source": "openrouter"
+            "output_price": 1.2
           }
         }
       },
@@ -12917,8 +12832,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.9,
-            "output_price": 1.9,
-            "source": "openrouter"
+            "output_price": 1.9
           }
         }
       },
@@ -13382,8 +13296,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 15.0,
-            "output_price": 60.0,
-            "source": "openrouter"
+            "output_price": 60.0
           }
         }
       },
@@ -13433,8 +13346,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 150.0,
-            "output_price": 600.0,
-            "source": "openrouter"
+            "output_price": 600.0
           }
         }
       },
@@ -13484,8 +13396,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 8.0,
-            "source": "openrouter"
+            "output_price": 8.0
           }
         }
       },
@@ -13535,8 +13446,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 10.0,
-            "output_price": 40.0,
-            "source": "openrouter"
+            "output_price": 40.0
           }
         }
       },
@@ -13586,8 +13496,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.1,
-            "output_price": 4.4,
-            "source": "openrouter"
+            "output_price": 4.4
           }
         }
       },
@@ -13637,8 +13546,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 20.0,
-            "output_price": 80.0,
-            "source": "openrouter"
+            "output_price": 80.0
           }
         }
       },
@@ -13688,8 +13596,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.1,
-            "output_price": 4.4,
-            "source": "openrouter"
+            "output_price": 4.4
           }
         }
       },
@@ -13739,8 +13646,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 8.0,
-            "source": "openrouter"
+            "output_price": 8.0
           }
         }
       },
@@ -16316,8 +16222,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.03,
-            "output_price": 0.11,
-            "source": "openrouter"
+            "output_price": 0.11
           }
         }
       },
@@ -16551,8 +16456,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.4,
-            "output_price": 0.4,
-            "source": "openrouter"
+            "output_price": 0.4
           }
         }
       },
@@ -16579,8 +16483,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.02,
-            "output_price": 0.05,
-            "source": "openrouter"
+            "output_price": 0.05
           }
         }
       },
@@ -16626,8 +16529,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.54,
-            "output_price": 0.54,
-            "source": "openrouter"
+            "output_price": 0.54
           }
         }
       },
@@ -16730,8 +16632,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.0,
-            "output_price": 1.0,
-            "source": "openrouter"
+            "output_price": 1.0
           }
         }
       },
@@ -16757,8 +16658,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 8.0,
-            "source": "openrouter"
+            "output_price": 8.0
           }
         }
       },
@@ -16822,8 +16722,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 3.0,
-            "output_price": 15.0,
-            "source": "openrouter"
+            "output_price": 15.0
           }
         }
       },
@@ -16868,8 +16767,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 2.0,
-            "output_price": 8.0,
-            "source": "openrouter"
+            "output_price": 8.0
           }
         }
       },
@@ -20703,8 +20601,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.25,
-            "output_price": 1.25,
-            "source": "openrouter"
+            "output_price": 1.25
           }
         }
       },
@@ -20826,8 +20723,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 15.0,
-            "output_price": 75.0,
-            "source": "openrouter"
+            "output_price": 75.0
           }
         }
       },
@@ -20957,8 +20853,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 3.0,
-            "output_price": 15.0,
-            "source": "openrouter"
+            "output_price": 15.0
           }
         }
       },
@@ -21483,8 +21378,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.4,
-            "output_price": 2.0,
-            "source": "openrouter"
+            "output_price": 2.0
           }
         }
       },
@@ -22294,8 +22188,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 3.0,
-            "output_price": 15.0,
-            "source": "openrouter"
+            "output_price": 15.0
           }
         }
       },
@@ -22322,8 +22215,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 3.0,
-            "output_price": 15.0,
-            "source": "openrouter"
+            "output_price": 15.0
           }
         }
       },
@@ -22407,8 +22299,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.3,
-            "output_price": 0.5,
-            "source": "openrouter"
+            "output_price": 0.5
           }
         }
       },
@@ -22435,8 +22326,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.3,
-            "output_price": 0.5,
-            "source": "openrouter"
+            "output_price": 0.5
           }
         }
       },
@@ -22539,8 +22429,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 3.0,
-            "output_price": 15.0,
-            "source": "openrouter"
+            "output_price": 15.0
           }
         }
       },
@@ -22936,8 +22825,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.2,
-            "output_price": 1.5,
-            "source": "openrouter"
+            "output_price": 1.5
           }
         }
       },
@@ -23048,8 +22936,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.72,
-            "output_price": 2.3,
-            "source": "openrouter"
+            "output_price": 2.3
           }
         }
       },
@@ -23100,8 +22987,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.39,
-            "output_price": 1.75,
-            "source": "openrouter"
+            "output_price": 1.75
           }
         }
       },
@@ -23126,8 +23012,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.39,
-            "output_price": 1.9,
-            "source": "openrouter"
+            "output_price": 1.9
           }
         }
       },
@@ -23153,8 +23038,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.6,
-            "output_price": 2.2,
-            "source": "openrouter"
+            "output_price": 2.2
           }
         }
       },
@@ -23180,8 +23064,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.6,
-            "output_price": 1.8,
-            "source": "openrouter"
+            "output_price": 1.8
           }
         }
       },
@@ -23233,8 +23116,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.13,
-            "output_price": 0.85,
-            "source": "openrouter"
+            "output_price": 0.85
           }
         }
       },
@@ -29013,8 +28895,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.05,
-            "output_price": 0.4,
-            "source": "openrouter"
+            "output_price": 0.4
           }
         }
       },
@@ -29709,8 +29590,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 1.2,
-            "output_price": 4.0,
-            "source": "openrouter"
+            "output_price": 4.0
           }
         }
       },
@@ -30397,8 +30277,7 @@
           "currency": "USD",
           "pricing": {
             "input_price": 0.06,
-            "output_price": 0.4,
-            "source": "openrouter"
+            "output_price": 0.4
           }
         }
       },

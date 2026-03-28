@@ -157,13 +157,17 @@ class PricingMerger:
 
             # Use highest priority source as base structure
             primary_source, primary_data, _ = source_list[0]
-            merged[normalized_id] = self._normalize_model_format(primary_data)
+            merged[normalized_id] = copy.deepcopy(primary_data)
 
             if len(source_list) > 1:
                 # Endpoint-level merge: lower-priority sources can contribute
                 # endpoint keys the winner doesn't have (e.g. CNY bigmodel.cn
                 # endpoint alongside USD api.openai.com endpoint).
                 self._merge_endpoints(normalized_id, merged, source_list)
+
+            # Normalize AFTER endpoint merging so all endpoints are cleaned
+            # (stray 'unit'/'source' fields, null output_price, field renames)
+            merged[normalized_id] = self._normalize_model_format(merged[normalized_id])
 
             # Check for price conflicts on shared endpoint keys
             if len(source_list) > 1:
