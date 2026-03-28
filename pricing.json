@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updated_at": "2026-03-28T05:59:37.113088+00:00",
+  "updated_at": "2026-03-28T06:34:54.239123+00:00",
   "source": "burncloud-official",
   "models": {
     "gemini-3-pro": {
@@ -17492,16 +17492,19 @@
     },
     "glm-5": {
       "pricing": {
+        "CNY": {
+          "input_price": 4.0,
+          "output_price": 18.0
+        },
         "USD": {
           "input_price": 1.0,
           "output_price": 3.2
         }
       },
       "metadata": {
-        "provider": "zai",
-        "family": "zai",
-        "max_output_tokens": 128000,
-        "_merged_from": "litellm"
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
       }
     },
     "glm-5-code": {
@@ -17520,16 +17523,19 @@
     },
     "glm-4.7": {
       "pricing": {
+        "CNY": {
+          "input_price": 2.0,
+          "output_price": 8.0
+        },
         "USD": {
           "input_price": 0.6,
           "output_price": 2.2
         }
       },
       "metadata": {
-        "provider": "zai",
-        "family": "zai",
-        "max_output_tokens": 128000,
-        "_merged_from": "litellm"
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
       }
     },
     "glm-4.6": {
@@ -17590,16 +17596,19 @@
     },
     "glm-4.5-air": {
       "pricing": {
+        "CNY": {
+          "input_price": 0.8,
+          "output_price": 2.0
+        },
         "USD": {
           "input_price": 0.2,
           "output_price": 1.1
         }
       },
       "metadata": {
-        "provider": "zai",
-        "family": "zai",
-        "max_output_tokens": 32000,
-        "_merged_from": "litellm"
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
       }
     },
     "glm-4.5-airx": {
@@ -22701,6 +22710,10 @@
     },
     "glm-5-turbo": {
       "pricing": {
+        "CNY": {
+          "input_price": 5.0,
+          "output_price": 22.0
+        },
         "USD": {
           "input_price": 1.2,
           "output_price": 4.0,
@@ -22708,15 +22721,10 @@
         }
       },
       "metadata": {
-        "provider": "z-ai",
+        "provider": "zhipu",
         "family": "glm",
-        "context_window": 202752,
-        "supports_vision": false,
-        "supports_function_calling": false,
-        "max_output_tokens": 131072,
-        "_merged_from": "openrouter"
-      },
-      "source_id": "z-ai/glm-5-turbo"
+        "_merged_from": "zhipu"
+      }
     },
     "grok-4.20-multi-agent-beta": {
       "pricing": {
@@ -23318,6 +23326,10 @@
     },
     "glm-4.7-flash": {
       "pricing": {
+        "CNY": {
+          "input_price": 0.0,
+          "output_price": 0.0
+        },
         "USD": {
           "input_price": 0.06,
           "output_price": 0.4,
@@ -23325,14 +23337,10 @@
         }
       },
       "metadata": {
-        "provider": "z-ai",
+        "provider": "zhipu",
         "family": "glm",
-        "context_window": 202752,
-        "supports_vision": false,
-        "supports_function_calling": false,
-        "_merged_from": "openrouter"
-      },
-      "source_id": "z-ai/glm-4.7-flash"
+        "_merged_from": "zhipu"
+      }
     },
     "olmo-3.1-32b-instruct": {
       "pricing": {
@@ -26806,6 +26814,162 @@
         "_merged_from": "openrouter"
       },
       "source_id": "gryphe/mythomax-l2-13b"
+    },
+    "glm-4.7-flashx": {
+      "pricing": {
+        "CNY": {
+          "input_price": 0.5,
+          "output_price": 3.0
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-4-plus": {
+      "pricing": {
+        "CNY": {
+          "input_price": 5.0,
+          "output_price": 5.0
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-4-air-250414": {
+      "pricing": {
+        "CNY": {
+          "input_price": 0.5,
+          "output_price": 0.5
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-4-airx": {
+      "pricing": {
+        "CNY": {
+          "input_price": 10.0,
+          "output_price": 10.0
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-4-long": {
+      "pricing": {
+        "CNY": {
+          "input_price": 1.0,
+          "output_price": 1.0
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-4-assistant": {
+      "pricing": {
+        "CNY": {
+          "input_price": 5.0,
+          "output_price": 5.0
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-z1-air": {
+      "pricing": {
+        "CNY": {
+          "input_price": 0.5,
+          "output_price": 0.5
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-z1-airx": {
+      "pricing": {
+        "CNY": {
+          "input_price": 5.0,
+          "output_price": 5.0
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-z1-flashx": {
+      "pricing": {
+        "CNY": {
+          "input_price": 0.1,
+          "output_price": 0.1
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-4-flashx-250414": {
+      "pricing": {
+        "CNY": {
+          "input_price": 0.1,
+          "output_price": 0.1
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-4-flash-250414": {
+      "pricing": {
+        "CNY": {
+          "input_price": 0.0,
+          "output_price": 0.0
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
+    },
+    "glm-z1-flash": {
+      "pricing": {
+        "CNY": {
+          "input_price": 0.0,
+          "output_price": 0.0
+        }
+      },
+      "metadata": {
+        "provider": "zhipu",
+        "family": "glm",
+        "_merged_from": "zhipu"
+      }
     }
   }
 }

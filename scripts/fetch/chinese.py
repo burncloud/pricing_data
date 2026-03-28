@@ -131,59 +131,199 @@ class ZhipuFetcher(BaseFetcher):
     # Parsing
     # ------------------------------------------------------------------
 
+    # ------------------------------------------------------------------
+    # Parsing (two section formats on bigmodel.cn)
+    # ------------------------------------------------------------------
+
+    # Section B — 模型推理 (standard models):
+    #   Columns: model | desc | context | 单价 | Batch API
+    #   Price format: "5 元 / 百万Tokens"
+    #   Free model format: "免费" (no "元 / 百万Tokens" suffix)
+    _STANDARD_PRICE_PAT = re.compile(
+        r"(\d+(?:\.\d+)?)\s*元\s*/\s*百万Tokens"
+    )
+
     def _parse_page_text(self, text: str) -> Dict[str, Any]:
         """
-        Extract GLM model pricing from page text.
+        Extract GLM model pricing from bigmodel.cn page text (rendered by Playwright).
 
-        bigmodel.cn shows a table with columns roughly:
-            模型名称 | 输入价格 | 输出价格  (CNY per thousand tokens)
+        bigmodel.cn has two sections:
 
-        We look for lines that contain a GLM model name followed by two prices.
+        A) 旗舰模型 (pos ~91 to ~1087):
+           Separate input/output price columns. Prices: "4元", "0.5元", "免费".
+           Tiered models: take first tier.  Unit: CNY / million tokens.
+
+        B) 模型推理 (pos ~1087 to ~2166):
+           Single 单价 column: "5 元 / 百万Tokens".
+           input = output = 单价.  Free models: "免费".
         """
         models: Dict[str, Any] = {}
 
-        # Patterns seen on bigmodel.cn pricing pages (flexible — tolerate whitespace):
-        #   GLM-4-Flash   0.0001   0.0001
-        #   GLM-4         0.1      0.1
-        # Prices may be in formats: 0.1 / 0.0001 / 0.00001
-        # Unit is CNY / thousand tokens on the page — multiply by 1000 for per-million.
-        pattern = re.compile(
-            r"(GLM[-\w]+)"           # model name
-            r"[\s\S]{0,200}?"        # loose match for cells between name and prices
-            r"([\d]+\.[\d]+)"        # input price (always has decimal)
-            r"\s+"
-            r"([\d]+\.[\d]+)",       # output price
-            re.IGNORECASE,
-        )
+        # Locate section boundaries (positions are approximate — tolerate ±500 chars).
+        flagship_start = text.find("旗舰模型")
+        standard_start = text.find("模型推理")
+        search_end = text.find("模型微调")
 
-        seen_models = set()
-        for m in pattern.finditer(text):
-            raw_name = m.group(1).strip()
-            input_per_k = float(m.group(2))
-            output_per_k = float(m.group(3))
+        if flagship_start != -1 and standard_start != -1:
+            flagship_text = text[flagship_start:standard_start]
+            standard_text = text[standard_start:search_end if search_end != -1 else len(text)]
+        else:
+            # Fallback: treat entire page as standard section
+            flagship_text = ""
+            standard_text = text
 
-            model_id = raw_name.lower()
-            if model_id in seen_models:
-                continue
-            seen_models.add(model_id)
+        # --- Section A: flagship models ---
+        models.update(self._parse_flagship_section(flagship_text))
 
-            input_per_m = round(input_per_k * _PER_THOUSAND_TO_PER_MILLION, 6)
-            output_per_m = round(output_per_k * _PER_THOUSAND_TO_PER_MILLION, 6)
-
-            models[model_id] = {
-                "pricing": {
-                    "CNY": {
-                        "input_price": input_per_m,
-                        "output_price": output_per_m,
-                    }
-                },
-                "metadata": {
-                    "provider": "zhipu",
-                    "family": "glm",
-                },
-            }
-            logger.debug(
-                f"Zhipu: {model_id} CNY input={input_per_m} output={output_per_m} /MTok"
-            )
+        # --- Section B: standard models ---
+        for model_id, entry in self._parse_standard_section(standard_text).items():
+            if model_id not in models:
+                models[model_id] = entry
 
         return models
+
+    # ---- Section A parser ----
+
+    def _parse_flagship_section(self, text: str) -> Dict[str, Any]:
+        """
+        Parse 旗舰模型 section line by line.
+
+        Strategy:
+        - Find model name lines (match ^GLM-…)
+        - For each model, collect lines until next model
+        - Extract first two price tokens: "Nelem" or "免费" (not "限时免费")
+        - First price = input, second = output
+        """
+        models: Dict[str, Any] = {}
+
+        # Normalised (non-empty, non-tab) lines
+        lines = [l.strip() for l in text.split("\n")]
+        lines = [l for l in lines if l and l != "\t"]
+
+        model_name_pat = re.compile(r"^(GLM-[\w.-]+)")
+        price_pat = re.compile(r"^(\d+(?:\.\d+)?)元$")
+
+        current_model: Optional[str] = None
+        prices: list = []
+
+        def _flush(name: str, prices: list) -> None:
+            if len(prices) >= 2:
+                model_id = name.lower()
+                models[model_id] = self._make_entry(prices[0], prices[1])
+                logger.debug(
+                    f"Zhipu flagship: {model_id} CNY {prices[0]}/{prices[1]}"
+                )
+
+        for line in lines:
+            name_m = model_name_pat.match(line)
+            if name_m:
+                # New model — flush the previous one
+                if current_model:
+                    _flush(current_model, prices)
+                current_model = name_m.group(1)
+                prices = []
+                continue
+
+            if current_model is None:
+                continue
+
+            # Skip tier descriptions and cache labels
+            if "输入长度" in line or "输出长度" in line:
+                continue
+            if "限时免费" in line:
+                continue
+            # Free price
+            if line == "免费":
+                prices.append(0.0)
+                continue
+            # Numeric price like "4元" or "0.5元"
+            p_m = price_pat.match(line)
+            if p_m:
+                prices.append(float(p_m.group(1)))
+
+        # Flush last model
+        if current_model:
+            _flush(current_model, prices)
+
+        return models
+
+    # ---- Section B parser ----
+
+    def _parse_standard_section(self, text: str) -> Dict[str, Any]:
+        """
+        Parse 模型推理 section.
+
+        For each GLM model, find the first price in "N 元 / 百万Tokens" format
+        (or "免费" on its own line) and use it as input = output price.
+        """
+        models: Dict[str, Any] = {}
+        lines = [l.strip() for l in text.split("\n")]
+        lines = [l for l in lines if l and l != "\t"]
+
+        model_name_pat = re.compile(r"^(GLM-[\w.-]+)$")
+        price_pat = self._STANDARD_PRICE_PAT
+
+        current_model: Optional[str] = None
+        found_price: Optional[float] = None
+
+        for line in lines:
+            name_m = model_name_pat.match(line)
+            if name_m:
+                # Flush previous if we had a price
+                if current_model and found_price is not None:
+                    model_id = current_model.lower()
+                    if model_id not in models:
+                        models[model_id] = self._make_entry(found_price, found_price)
+                        logger.debug(
+                            f"Zhipu standard: {model_id} CNY {found_price}/{found_price}"
+                        )
+                current_model = name_m.group(1)
+                found_price = None
+                continue
+
+            if current_model is None or found_price is not None:
+                continue
+
+            # Match "N 元 / 百万Tokens"
+            pm = price_pat.search(line)
+            if pm:
+                found_price = float(pm.group(1))
+                continue
+
+            # Match bare "免费"
+            if line == "免费":
+                found_price = 0.0
+
+        # Flush last
+        if current_model and found_price is not None:
+            model_id = current_model.lower()
+            if model_id not in models:
+                models[model_id] = self._make_entry(found_price, found_price)
+
+        return models
+
+    def _parse_yuan(self, raw: Optional[str]) -> Optional[float]:
+        """Convert price string to float. '免费' → 0.0."""
+        if raw is None:
+            return None
+        raw = raw.strip()
+        if raw == "免费":
+            return 0.0
+        try:
+            return float(raw)
+        except ValueError:
+            return None
+
+    def _make_entry(self, input_price: float, output_price: float) -> Dict[str, Any]:
+        return {
+            "pricing": {
+                "CNY": {
+                    "input_price": round(input_price, 6),
+                    "output_price": round(output_price, 6),
+                }
+            },
+            "metadata": {
+                "provider": "zhipu",
+                "family": "glm",
+            },
+        }
