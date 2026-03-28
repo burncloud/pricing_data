@@ -8,12 +8,14 @@ on:
       - 'tests/**'
       - 'requirements.txt'
       - 'manual_overrides.json'
+      - 'schema.json'
   pull_request:
     paths:
       - 'scripts/**'
       - 'tests/**'
       - 'requirements.txt'
       - 'manual_overrides.json'
+      - 'schema.json'
 
 env:
   PYTHON_VERSION: '3.11'

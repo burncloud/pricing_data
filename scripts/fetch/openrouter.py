@@ -148,6 +148,12 @@ class OpenRouterFetcher(BaseFetcher):
             input_price = float(prompt_price) * self.PRICE_MULTIPLIER
             output_price = float(completion_price) * self.PRICE_MULTIPLIER
 
+            # OpenRouter uses -1 per-token as a sentinel for "no fixed price"
+            # (e.g., openrouter/auto, bodybuilder). Skip these.
+            if input_price < 0 or output_price < 0:
+                logger.debug(f"Skipping {model_id}: negative price (OpenRouter sentinel value)")
+                return {}
+
             pricing = {
                 "USD": {
                     "input_price": round(input_price, 6),
