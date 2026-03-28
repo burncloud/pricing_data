@@ -51,7 +51,17 @@
           "additionalProperties": {
             "$ref": "#/definitions/BatchPricing"
           },
-          "description": "Batch API pricing by currency"
+          "description": "Batch API pricing by currency (same structure as pricing)"
+        },
+        "tiered_pricing": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/PricingTier"
+            }
+          },
+          "description": "Tiered pricing by currency (e.g. price differs by context length)"
         },
         "metadata": {
           "$ref": "#/definitions/Metadata"
@@ -95,21 +105,43 @@
     },
     "BatchPricing": {
       "type": "object",
+      "required": ["input_price", "output_price"],
       "properties": {
-        "batch_input_price": {
+        "input_price": {
           "type": "number",
           "minimum": 0,
-          "description": "Batch API input price"
+          "description": "Batch API input price per 1M tokens"
         },
-        "batch_output_price": {
+        "output_price": {
           "type": "number",
           "minimum": 0,
-          "description": "Batch API output price"
+          "description": "Batch API output price per 1M tokens"
+        }
+      }
+    },
+    "PricingTier": {
+      "type": "object",
+      "required": ["tier_start", "input_price", "output_price"],
+      "properties": {
+        "tier_start": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Inclusive start of token range for this tier"
         },
-        "unit": {
-          "type": "string",
-          "enum": ["per_million_tokens", "per_thousand_tokens", "per_token"],
-          "default": "per_million_tokens"
+        "tier_end": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Exclusive end of token range (omitted for the last/open-ended tier)"
+        },
+        "input_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Input price per 1M tokens for this tier"
+        },
+        "output_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Output price per 1M tokens for this tier"
         }
       }
     },

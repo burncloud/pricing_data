@@ -31,121 +31,19 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests
+          pip install requests jsonschema
 
-      - name: Fetch and update pricing
+      - name: Fetch pricing data
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          python3 << 'PYEOF'
-          import json
-          import requests
-          from datetime import datetime, timezone
-          from pathlib import Path
+          DATE=$(date +%Y-%m-%d)
+          python scripts/fetch_all.py "$DATE"
 
-          print("Fetching pricing data from OpenRouter (public API)...")
-
-          resp = requests.get(
-              'https://openrouter.ai/api/v1/models',
-              headers={'Accept': 'application/json'},
-              timeout=60
-          )
-          resp.raise_for_status()
-          data = resp.json()
-
-          models = {}
-          for m in data.get('data', []):
-              model_id = m.get('id', '')
-              if '/' in model_id:
-                  normalized = model_id.split('/', 1)[1]
-              else:
-                  normalized = model_id
-
-              pricing = m.get('pricing', {})
-              prompt = pricing.get('prompt')
-              completion = pricing.get('completion')
-
-              if prompt is not None and completion is not None:
-                  model_data = {
-                      'pricing': {
-                          'USD': {
-                              'input_price': round(float(prompt) * 1_000_000, 6),
-                              'output_price': round(float(completion) * 1_000_000, 6),
-                              'unit': 'per_million_tokens',
-                              'source': 'openrouter'
-                          }
-                      },
-                      'metadata': {
-                          'provider': model_id.split('/')[0] if '/' in model_id else 'unknown',
-                          'context_window': m.get('context_length'),
-                          'supports_vision': 'image' in str(m.get('architecture', {}).get('modality', '')).lower()
-                      }
-                  }
-
-                  # Cache pricing
-                  cache_read = pricing.get('input_cache_read')
-                  cache_write = pricing.get('input_cache_write')
-                  if cache_read is not None:
-                      model_data['cache_pricing'] = {
-                          'USD': {
-                              'cache_read_input_price': round(float(cache_read) * 1_000_000, 6) if cache_read else None,
-                              'cache_write_input_price': round(float(cache_write) * 1_000_000, 6) if cache_write else None,
-                              'unit': 'per_million_tokens'
-                          }
-                      }
-
-                  # Multimodal pricing
-                  image_price = pricing.get('image')
-                  audio_price = pricing.get('audio')
-                  video_price = pricing.get('video')
-                  per_image = pricing.get('per_image')
-                  if any([image_price, audio_price, video_price, per_image]):
-                      model_data['multimodal_pricing'] = {
-                          'USD': {
-                              'image_input_price': round(float(image_price) * 1_000_000, 6) if image_price else None,
-                              'audio_input_price': round(float(audio_price) * 1_000_000, 6) if audio_price else None,
-                              'video_input_price': round(float(video_price) * 1_000_000, 6) if video_price else None,
-                              'per_image_price': float(per_image) if per_image else None,
-                              'unit': 'per_million_tokens'
-                          }
-                      }
-
-                  # Reasoning pricing (for models like DeepSeek R1)
-                  reasoning = pricing.get('internal_reasoning')
-                  if reasoning is not None:
-                      model_data['reasoning_pricing'] = {
-                          'USD': {
-                              'reasoning_output_price': round(float(reasoning) * 1_000_000, 6),
-                              'unit': 'per_million_tokens'
-                          }
-                      }
-
-                  models[normalized] = model_data
-
-          # Load existing data if available
-          existing_models = {}
-          if Path('pricing.json').exists():
-              with open('pricing.json') as f:
-                  existing = json.load(f)
-              existing_models = existing.get('models', {})
-
-          # Check for changes
-          if models == existing_models:
-              print(f"No changes detected ({len(models)} models)")
-              exit(0)
-
-          result = {
-              'schema_version': '1.0',
-              'updated_at': datetime.now(timezone.utc).isoformat(),
-              'source': 'burncloud-official',
-              'models': models
-          }
-
-          with open('pricing.json', 'w') as f:
-              json.dump(result, f, indent=2, ensure_ascii=False)
-
-          print(f"Updated {len(models)} models")
-          print(f"New models: {set(models.keys()) - set(existing_models.keys()) or 'None'}")
-          print(f"Removed models: {set(existing_models.keys()) - set(models.keys()) or 'None'}")
-          PYEOF
+      - name: Merge pricing data
+        run: |
+          DATE=$(date +%Y-%m-%d)
+          python scripts/merge.py "$DATE"
 
       - name: Check for changes
         id: changes
@@ -165,7 +63,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add pricing.json
+          git add pricing.json sources/
           git commit -m "chore: update pricing data - $(date +%Y-%m-%d)"
           git push
 

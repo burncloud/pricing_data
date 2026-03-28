@@ -158,6 +158,19 @@ class PricingMerger:
             primary_source, primary_data, _ = source_list[0]
             merged[normalized_id] = self._normalize_model_format(primary_data)
 
+            # Field-level enrichment: copy batch_pricing / tiered_pricing from any
+            # lower-priority source if the winning entry lacks them.
+            # This ensures batch/tiered data from LiteLLM (70) is preserved even
+            # when a direct provider fetcher (100) wins the base pricing.
+            if len(source_list) > 1:
+                for _src_name, src_data, _src_priority in source_list[1:]:
+                    for field in ("batch_pricing", "tiered_pricing"):
+                        if field not in merged[normalized_id] and field in src_data:
+                            merged[normalized_id][field] = copy.deepcopy(src_data[field])
+                            logger.debug(
+                                f"Field-enriched {normalized_id}.{field} from {_src_name}"
+                            )
+
             # Check for price conflicts
             if len(source_list) > 1:
                 self._check_price_conflicts(normalized_id, source_list, warnings)
@@ -187,12 +200,29 @@ class PricingMerger:
         source_list: List[Tuple[str, Dict[str, Any], int]],
         warnings: List[str]
     ) -> None:
-        """Check for price conflicts between sources."""
+        """Check for price conflicts between sources (standard and batch pricing)."""
+        self._check_pricing_field_conflicts(
+            model_id, source_list, warnings, field="pricing"
+        )
+        self._check_pricing_field_conflicts(
+            model_id, source_list, warnings, field="batch_pricing"
+        )
+
+    def _check_pricing_field_conflicts(
+        self,
+        model_id: str,
+        source_list: List[Tuple[str, Dict[str, Any], int]],
+        warnings: List[str],
+        field: str,
+    ) -> None:
+        """Check for input_price drift in a given pricing field across sources."""
         prices = []
 
         for source_name, model_data, _ in source_list:
-            pricing = model_data.get("pricing", {})
+            pricing = model_data.get(field, {})
             for currency, price_info in pricing.items():
+                if not isinstance(price_info, dict):
+                    continue
                 input_price = price_info.get("input_price")
                 output_price = price_info.get("output_price")
                 if input_price is not None:
@@ -213,8 +243,9 @@ class PricingMerger:
         if base_input and other_input:
             drift = abs(base_input - other_input) / base_input
             if drift > config.price_drift_warning_threshold:
+                label = "Batch price" if field == "batch_pricing" else "Price"
                 warning = (
-                    f"Price drift detected for {model_id}: "
+                    f"{label} drift detected for {model_id}: "
                     f"{base_source}={base_input} vs {other_source}={other_input} "
                     f"({drift*100:.1f}% difference)"
                 )

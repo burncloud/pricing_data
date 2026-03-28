@@ -54,7 +54,8 @@ class Config:
     # (protects against broken fetches returning near-empty responses)
     # Set to 0 to disable for a source
     min_models_guard: Dict[str, int] = field(default_factory=lambda: {
-        "openrouter": 50,  # OpenRouter normally has 300+ models
+        "openrouter": 50,   # OpenRouter normally has 300+ models
+        "litellm": 500,     # LiteLLM normally has 2500+ models
     })
 
     # Source priority (higher = more authoritative)
@@ -75,6 +76,8 @@ class Config:
         "minimax": 100,
         # Aggregators (lower priority)
         "openrouter": 50,
+        # LiteLLM community aggregator (beats OpenRouter, below direct providers)
+        "litellm": 70,
         # Manual overrides (highest priority — human-verified data)
         "manual_overrides": 200,
         "manual": 10,
@@ -100,6 +103,13 @@ class Config:
                 max_retries=3,
                 requires_auth=True,
                 auth_env_var="OPENROUTER_API_KEY",
+            ),
+            "litellm": FetcherConfig(
+                name="litellm",
+                url="https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
+                timeout=30.0,
+                max_retries=3,
+                requires_auth=False,
             ),
             "zhipu": FetcherConfig(
                 name="zhipu",

@@ -577,3 +577,284 @@ class TestMinModelsGuard:
             result, _ = merger.merge_all("2024-01-01")
 
         assert len(result["models"]) == 50
+
+
+class TestFieldLevelEnrichment:
+    """Field-level enrichment: batch/tiered pricing copied from lower-priority source."""
+
+    def test_batch_pricing_enriched_from_lower_source(self, tmp_path):
+        """Winner (openai priority 100) lacks batch_pricing; litellm (70) has it → enriched."""
+        openai_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "openai.json", "w") as f:
+            json.dump(openai_data, f)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        model = result["models"]["gpt-4o"]
+        # openai wins base pricing
+        assert model["metadata"]["_merged_from"] == "openai"
+        # batch_pricing enriched from litellm
+        assert "batch_pricing" in model
+        assert model["batch_pricing"]["USD"]["input_price"] == pytest.approx(1.25)
+
+    def test_tiered_pricing_enriched_from_lower_source(self, tmp_path):
+        """Winner lacks tiered_pricing; lower source has it → enriched."""
+        openai_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "tiered_pricing": {
+                        "USD": [
+                            {"tier_start": 0, "tier_end": 128000, "input_price": 2.5, "output_price": 10.0},
+                            {"tier_start": 128000, "input_price": 5.0, "output_price": 10.0},
+                        ]
+                    },
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "openai.json", "w") as f:
+            json.dump(openai_data, f)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        model = result["models"]["gpt-4o"]
+        assert "tiered_pricing" in model
+        assert len(model["tiered_pricing"]["USD"]) == 2
+
+    def test_winner_batch_pricing_not_overwritten(self, tmp_path):
+        """If winner already has batch_pricing, lower source doesn't overwrite it."""
+        openai_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "batch_pricing": {"USD": {"input_price": 0.99, "output_price": 3.0}},  # different
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "openai.json", "w") as f:
+            json.dump(openai_data, f)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        # openai's batch_pricing wins (1.25), not litellm's (0.99)
+        assert result["models"]["gpt-4o"]["batch_pricing"]["USD"]["input_price"] == pytest.approx(1.25)
+
+
+class TestBatchDriftDetection:
+    """Batch pricing drift detection extension to _check_price_conflicts."""
+
+    def test_batch_price_drift_warning(self, tmp_path):
+        """When two sources have conflicting batch_pricing, a warning is emitted."""
+        # openai priority 100, litellm priority 70
+        openai_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "batch_pricing": {"USD": {"input_price": 0.50, "output_price": 5.0}},  # 60% drift
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "openai.json", "w") as f:
+            json.dump(openai_data, f)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, warnings = merger.merge_all("2024-01-01")
+
+        batch_warnings = [w for w in warnings if "Batch price" in w and "gpt-4o" in w]
+        assert len(batch_warnings) == 1
+        assert "60" in batch_warnings[0] or "0.5" in batch_warnings[0]
+
+    def test_no_batch_drift_warning_below_threshold(self, tmp_path):
+        """Batch price drift under 1% does not emit a warning."""
+        openai_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "batch_pricing": {"USD": {"input_price": 1.255, "output_price": 5.0}},  # 0.4%
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "openai.json", "w") as f:
+            json.dump(openai_data, f)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, warnings = merger.merge_all("2024-01-01")
+
+        batch_warnings = [w for w in warnings if "Batch price" in w and "gpt-4o" in w]
+        assert len(batch_warnings) == 0
+
+
+class TestLiteLLMMergeIntegration:
+    """LiteLLM (priority 70) wins over OpenRouter (50) for overlapping models."""
+
+    def test_litellm_wins_over_openrouter(self, tmp_path):
+        openrouter_data = {
+            "status": "success",
+            "models": {
+                "openai/gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
+                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "openrouter.json", "w") as f:
+            json.dump(openrouter_data, f)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        model = result["models"]["gpt-4o"]
+        assert model["metadata"]["_merged_from"] == "litellm"
+        assert "batch_pricing" in model
+        assert model["batch_pricing"]["USD"]["input_price"] == pytest.approx(1.25)
+
+    def test_litellm_only_model_included(self, tmp_path):
+        """Model only in LiteLLM (not OpenRouter) still appears in output."""
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "doubao-pro-32k-240828": {
+                    "pricing": {"USD": {"input_price": 0.8, "output_price": 1.0}},
+                    "metadata": {"provider": "volcengine"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        assert "doubao-pro-32k-240828" in result["models"]
