@@ -363,7 +363,7 @@ def main(date_str: Optional[str] = None) -> int:
     Main entry point for merge script.
 
     Returns:
-        0 on success, 1 on error, 2 on warnings
+        0 on success (warnings are logged but non-blocking), 1 on error
     """
     import sys
 
@@ -381,10 +381,10 @@ def main(date_str: Optional[str] = None) -> int:
         print(f"✅ Merged {len(data['models'])} models to {output_path}")
 
         if warnings:
-            print(f"\n⚠️  {len(warnings)} warnings:")
+            print(f"\n⚠️  {len(warnings)} price drift warning(s) — check sources:")
             for warning in warnings:
                 print(f"   - {warning}")
-            return 2
+            print("Continuing — warnings are informational, not blocking.")
 
         return 0
 
