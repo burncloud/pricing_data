@@ -189,16 +189,22 @@ class PricingMerger:
         """
         Merge endpoint entries across sources.
 
-        Rule: for each endpoint key (api.openai.com, open.bigmodel.cn, …), keep
-        whichever source has the highest priority.  A lower-priority source can
-        contribute an endpoint the winner does not have — it never overwrites an
-        existing endpoint entry.
+        Two rules applied in order for each lower-priority source:
 
-        Example:
-            source A (priority 100, api.openai.com/USD only)
-            source B (priority 70,  openrouter.ai/USD)
-            source C (priority 100, open.bigmodel.cn/CNY only)
-            result: all three endpoint keys present
+        1. Same endpoint key → field-level merge.
+           If the canonical endpoint already exists, lower-priority sources can
+           contribute optional fields it is missing (batch_pricing, tiered_pricing,
+           cache_pricing).  They never overwrite existing fields.
+           This is how LiteLLM's batch/tiered data ends up on api.openai.com.
+
+        2. New endpoint key → add the whole endpoint.
+           Distinct real deployment platforms (e.g. open.bigmodel.cn + z.ai for
+           the same Zhipu model) are kept as separate endpoint entries.
+
+        Example after redesign:
+            source A (priority 100, api.openai.com with pricing + cache_pricing)
+            source B (priority 70,  api.openai.com with pricing + batch_pricing)
+            result: api.openai.com with pricing + cache_pricing + batch_pricing
         """
         seen_endpoints: Dict[str, int] = {}
 
@@ -207,10 +213,11 @@ class PricingMerger:
         for ep_key in merged[model_id].get("endpoints", {}):
             seen_endpoints[ep_key] = winner_priority
 
-        # Walk sources in priority order; add endpoints the winner didn't have
+        # Walk lower-priority sources in priority order
         for src_name, src_data, src_priority in source_list[1:]:
             for ep_key, ep_data in src_data.get("endpoints", {}).items():
                 if ep_key not in seen_endpoints:
+                    # New endpoint key — distinct real deployment platform
                     if "endpoints" not in merged[model_id]:
                         merged[model_id]["endpoints"] = {}
                     merged[model_id]["endpoints"][ep_key] = copy.deepcopy(ep_data)
@@ -219,6 +226,16 @@ class PricingMerger:
                         f"Endpoint-merged {model_id}.endpoints.{ep_key} from {src_name} "
                         f"(priority {src_priority})"
                     )
+                else:
+                    # Same endpoint key — merge missing optional fields only
+                    existing_ep = merged[model_id]["endpoints"][ep_key]
+                    for field in ("batch_pricing", "tiered_pricing", "cache_pricing"):
+                        if field not in existing_ep and field in ep_data:
+                            existing_ep[field] = copy.deepcopy(ep_data[field])
+                            logger.debug(
+                                f"Field-merged {model_id}.endpoints.{ep_key}.{field} "
+                                f"from {src_name} (priority {src_priority})"
+                            )
 
     def _normalize_model_id(self, model_id: str, source: str) -> str:
         """

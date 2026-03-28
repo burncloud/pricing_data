@@ -40,7 +40,7 @@ class TestBasicPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        ep = models["gpt-4o"]["endpoints"]["litellm"]
+        ep = models["gpt-4o"]["endpoints"]["api.openai.com"]
         assert "gpt-4o" in models
         assert ep["pricing"]["input_price"] == pytest.approx(2.5)
         assert ep["pricing"]["output_price"] == pytest.approx(10.0)
@@ -86,7 +86,7 @@ class TestBatchPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        ep = models["gpt-4o"]["endpoints"]["litellm"]
+        ep = models["gpt-4o"]["endpoints"]["api.openai.com"]
         assert "batch_pricing" in ep
         bp = ep["batch_pricing"]
         assert bp["input_price"] == pytest.approx(1.25)
@@ -102,7 +102,7 @@ class TestBatchPricing:
         }
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
-        assert "batch_pricing" not in models["gpt-4o"]["endpoints"]["litellm"]
+        assert "batch_pricing" not in models["gpt-4o"]["endpoints"]["api.openai.com"]
 
     def test_batch_pricing_partial_fields_skipped(self, fetcher):
         """Only one of the two batch fields present — no batch_pricing."""
@@ -117,7 +117,7 @@ class TestBatchPricing:
         }
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
-        assert "batch_pricing" not in models["gpt-4o"]["endpoints"]["litellm"]
+        assert "batch_pricing" not in models["gpt-4o"]["endpoints"]["api.openai.com"]
 
 
 # ---------------------------------------------------------------------------
@@ -209,7 +209,7 @@ class TestInlineTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["claude-3-5-sonnet"]["endpoints"]["litellm"]["tiered_pricing"]
+        tiers = models["claude-3-5-sonnet"]["endpoints"]["api.anthropic.com"]["tiered_pricing"]
         assert len(tiers) == 2
         assert tiers[0] == {"tier_start": 0, "tier_end": 128000, "input_price": pytest.approx(3.0), "output_price": pytest.approx(15.0)}
         assert tiers[1] == {"tier_start": 128000, "input_price": pytest.approx(6.0), "output_price": pytest.approx(15.0)}
@@ -228,7 +228,7 @@ class TestInlineTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["gemini-1.5-pro"]["endpoints"]["litellm"]["tiered_pricing"]
+        tiers = models["gemini-1.5-pro"]["endpoints"]["generativelanguage.googleapis.com"]["tiered_pricing"]
         assert len(tiers) == 3
         assert tiers[0]["tier_start"] == 0
         assert tiers[0]["tier_end"] == 128000
@@ -250,7 +250,7 @@ class TestInlineTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["gemini-1.5-pro"]["endpoints"]["litellm"]["tiered_pricing"]
+        tiers = models["gemini-1.5-pro"]["endpoints"]["generativelanguage.googleapis.com"]["tiered_pricing"]
         for tier in tiers:
             assert tier["output_price"] == pytest.approx(5.0)
 

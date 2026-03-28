@@ -5,7 +5,7 @@ OpenRouter provides pricing data for 100+ models via their /api/v1/models endpoi
 Prices are returned per-token and need to be converted to per-million.
 """
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import requests
 
@@ -13,6 +13,34 @@ from scripts.config import Config
 from scripts.fetch.base import BaseFetcher, FetchResult
 
 logger = logging.getLogger(__name__)
+
+# Map OpenRouter provider prefix (from model_id like "openai/gpt-4o") → (endpoint_key, base_url).
+# OpenRouter is a data source / routing layer, not a provider endpoint.
+# Models for known providers are filed under the real API so prices merge correctly.
+# Unknown providers fall back to endpoint_key="openrouter.ai".
+_OR_PROVIDER_ENDPOINT: Dict[str, Tuple[str, str]] = {
+    "openai":       ("api.openai.com",                   "https://api.openai.com/v1"),
+    "anthropic":    ("api.anthropic.com",                "https://api.anthropic.com"),
+    "google":       ("generativelanguage.googleapis.com", "https://generativelanguage.googleapis.com"),
+    "deepseek":     ("api.deepseek.com",                 "https://api.deepseek.com/v1"),
+    "mistralai":    ("api.mistral.ai",                   "https://api.mistral.ai/v1"),
+    "x-ai":         ("api.x.ai",                         "https://api.x.ai/v1"),
+    "meta-llama":   ("api.llama-api.com",                "https://api.llama-api.com"),
+    "cohere":       ("api.cohere.ai",                    "https://api.cohere.ai/v2"),
+    "perplexity":   ("api.perplexity.ai",                "https://api.perplexity.ai"),
+    "together":     ("api.together.xyz",                 "https://api.together.xyz/v1"),
+    "fireworks":    ("api.fireworks.ai",                 "https://api.fireworks.ai/inference/v1"),
+    "deepinfra":    ("api.deepinfra.com",                "https://api.deepinfra.com/v1/openai"),
+    "groq":         ("api.groq.com",                     "https://api.groq.com/openai/v1"),
+    "cerebras":     ("api.cerebras.ai",                  "https://api.cerebras.ai/v1"),
+    "qwen":         ("dashscope.aliyuncs.com",           "https://dashscope.aliyuncs.com/compatible-mode/v1"),
+    "zhipuai":      ("open.bigmodel.cn",                 "https://open.bigmodel.cn/api/paas/v4"),
+    "moonshot":     ("api.moonshot.cn",                  "https://api.moonshot.cn/v1"),
+    "minimax":      ("api.minimax.chat",                 "https://api.minimax.chat/v1"),
+    "sambanova":    ("api.sambanova.ai",                 "https://api.sambanova.ai/v1"),
+    "nebius":       ("api.studio.nebius.ai",             "https://api.studio.nebius.ai/v1"),
+    "novita":       ("api.novita.ai",                    "https://api.novita.ai/v3/openai"),
+}
 
 
 class OpenRouterFetcher(BaseFetcher):
@@ -102,8 +130,17 @@ class OpenRouterFetcher(BaseFetcher):
             # Extract cache pricing
             cache_pricing = self._extract_cache_pricing(pricing_data) or None
 
-            endpoint_entry = self._build_endpoint_entry(pricing, cache_pricing=cache_pricing)
-            models[normalized_id] = self._build_model_entry(endpoint_entry, metadata)
+            # Use real provider endpoint key instead of "openrouter.ai"
+            or_provider = model_id.split("/", 1)[0] if "/" in model_id else ""
+            ep_key, ep_base_url = _OR_PROVIDER_ENDPOINT.get(
+                or_provider, ("openrouter.ai", "https://openrouter.ai/api/v1")
+            )
+
+            endpoint_entry = self._build_endpoint_entry(
+                pricing, cache_pricing=cache_pricing,
+                base_url=ep_base_url,
+            )
+            models[normalized_id] = self._build_model_entry(endpoint_entry, metadata, endpoint_key=ep_key)
 
         return models
 

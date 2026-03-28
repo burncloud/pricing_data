@@ -7,7 +7,7 @@ batch_pricing and tiered_pricing data not available from OpenRouter.
 Source: https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json
 """
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 
@@ -31,6 +31,45 @@ _SKIP_PROVIDERS = frozenset({
     "watson",
     "watsonx",
 })
+
+# Map litellm_provider → (endpoint_key, base_url).
+# LiteLLM is a data source, not an endpoint.  Models should be filed under the
+# real provider API so that batch/tiered pricing merges into the canonical endpoint.
+# Providers absent from this map fall back to endpoint_key="litellm" (long tail).
+_PROVIDER_TO_ENDPOINT: Dict[str, Tuple[str, str]] = {
+    "openai":                      ("api.openai.com",                       "https://api.openai.com/v1"),
+    "anthropic":                   ("api.anthropic.com",                    "https://api.anthropic.com"),
+    "gemini":                      ("generativelanguage.googleapis.com",     "https://generativelanguage.googleapis.com"),
+    "google":                      ("generativelanguage.googleapis.com",     "https://generativelanguage.googleapis.com"),
+    "deepseek":                    ("api.deepseek.com",                     "https://api.deepseek.com/v1"),
+    "mistral":                     ("api.mistral.ai",                       "https://api.mistral.ai/v1"),
+    "cohere":                      ("api.cohere.ai",                        "https://api.cohere.ai/v2"),
+    "cohere_chat":                 ("api.cohere.ai",                        "https://api.cohere.ai/v2"),
+    "together_ai":                 ("api.together.xyz",                     "https://api.together.xyz/v1"),
+    "fireworks_ai":                ("api.fireworks.ai",                     "https://api.fireworks.ai/inference/v1"),
+    "perplexity":                  ("api.perplexity.ai",                    "https://api.perplexity.ai"),
+    "xai":                         ("api.x.ai",                             "https://api.x.ai/v1"),
+    "zhipuai":                     ("open.bigmodel.cn",                     "https://open.bigmodel.cn/api/paas/v4"),
+    "moonshot":                    ("api.moonshot.cn",                      "https://api.moonshot.cn/v1"),
+    "minimax":                     ("api.minimax.chat",                     "https://api.minimax.chat/v1"),
+    "deepinfra":                   ("api.deepinfra.com",                    "https://api.deepinfra.com/v1/openai"),
+    "novita":                      ("api.novita.ai",                        "https://api.novita.ai/v3/openai"),
+    "meta_llama":                  ("api.llama-api.com",                    "https://api.llama-api.com"),
+    "ollama":                      ("localhost",                             "http://localhost:11434"),
+    "sambanova":                   ("api.sambanova.ai",                     "https://api.sambanova.ai/v1"),
+    "replicate":                   ("api.replicate.com",                    "https://api.replicate.com/v1"),
+    "databricks":                  ("api.databricks.com",                   "https://api.databricks.com"),
+    "anyscale":                    ("api.anyscale.com",                     "https://api.anyscale.com/v1"),
+    "voyage":                      ("api.voyageai.com",                     "https://api.voyageai.com/v1"),
+    "groq":                        ("api.groq.com",                         "https://api.groq.com/openai/v1"),
+    "cerebras":                    ("api.cerebras.ai",                      "https://api.cerebras.ai/v1"),
+    "nvidia_nim":                  ("integrate.api.nvidia.com",             "https://integrate.api.nvidia.com/v1"),
+    "nebius":                      ("api.studio.nebius.ai",                 "https://api.studio.nebius.ai/v1"),
+    "lambda_ai":                   ("api.lambdalabs.com",                   "https://api.lambdalabs.com/v1"),
+    "huggingface":                 ("api.huggingface.co",                   "https://api-inference.huggingface.co"),
+    "cloudflare":                  ("api.cloudflare.com",                   "https://api.cloudflare.com/client/v4"),
+    "dashscope":                   ("dashscope.aliyuncs.com",               "https://dashscope.aliyuncs.com/compatible-mode/v1"),
+}
 
 # Multiplier: LiteLLM stores cost per token, we want per million tokens
 _PER_TOKEN_TO_PER_MILLION = 1_000_000
@@ -170,12 +209,15 @@ class LiteLLMFetcher(BaseFetcher):
         if isinstance(entry.get("max_output_tokens"), int) and entry["max_output_tokens"] > 0:
             metadata["max_output_tokens"] = entry["max_output_tokens"]
 
+        litellm_provider = entry.get("litellm_provider", "")
+        ep_key, ep_base_url = _PROVIDER_TO_ENDPOINT.get(litellm_provider, ("litellm", ""))
         endpoint_entry = self._build_endpoint_entry(
             flat_pricing,
             batch_pricing=batch_pricing,
             tiered_pricing=tiered_pricing,
+            base_url=ep_base_url or None,
         )
-        return self._build_model_entry(endpoint_entry, metadata)
+        return self._build_model_entry(endpoint_entry, metadata, endpoint_key=ep_key)
 
     def _parse_explicit_tiered(
         self,

@@ -189,6 +189,8 @@ class BaseFetcher(ABC):
         cache_pricing: Optional[Dict[str, Any]] = None,
         batch_pricing: Optional[Dict[str, Any]] = None,
         tiered_pricing: Optional[Any] = None,
+        base_url: Optional[str] = None,
+        currency: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Build a single endpoint entry for the endpoint-keyed model structure.
@@ -198,13 +200,15 @@ class BaseFetcher(ABC):
             cache_pricing: optional flat cache pricing dict
             batch_pricing: optional flat batch pricing dict
             tiered_pricing: optional tiered pricing structure
+            base_url: override the fetcher config base_url (for dynamic endpoint keys)
+            currency: override the fetcher config currency (for dynamic endpoint keys)
 
         Returns:
             {"base_url": ..., "currency": ..., "pricing": ..., ...}
         """
         entry: Dict[str, Any] = {
-            "base_url": self.fetcher_config.base_url,
-            "currency": self.fetcher_config.currency,
+            "base_url": base_url if base_url is not None else self.fetcher_config.base_url,
+            "currency": currency if currency is not None else self.fetcher_config.currency,
             "pricing": pricing,
         }
         if cache_pricing is not None:
@@ -219,6 +223,7 @@ class BaseFetcher(ABC):
         self,
         endpoint_entry: Dict[str, Any],
         metadata: Dict[str, Any],
+        endpoint_key: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Build a full model entry with endpoint-keyed pricing.
@@ -226,12 +231,14 @@ class BaseFetcher(ABC):
         Args:
             endpoint_entry: result of _build_endpoint_entry()
             metadata: provider metadata dict
+            endpoint_key: override the fetcher config endpoint_key (for dynamic routing)
 
         Returns:
             {"endpoints": {endpoint_key: endpoint_entry}, "metadata": metadata}
         """
+        key = endpoint_key if endpoint_key is not None else self.fetcher_config.endpoint_key
         return {
-            "endpoints": {self.fetcher_config.endpoint_key: endpoint_entry},
+            "endpoints": {key: endpoint_entry},
             "metadata": metadata,
         }
 
