@@ -106,11 +106,18 @@ class OpenRouterFetcher(BaseFetcher):
             # Extract metadata
             metadata = self._extract_metadata(model_data)
 
-            models[normalized_id] = {
+            model_entry: Dict[str, Any] = {
                 "pricing": pricing,
                 "metadata": metadata,
                 "source_id": model_id,  # Keep original ID for reference
             }
+
+            # Extract cache pricing as top-level field (burncloud format)
+            cache_pricing = self._extract_cache_pricing(pricing_data)
+            if cache_pricing:
+                model_entry["cache_pricing"] = cache_pricing
+
+            models[normalized_id] = model_entry
 
         return models
 
@@ -145,25 +152,29 @@ class OpenRouterFetcher(BaseFetcher):
                 "USD": {
                     "input_price": round(input_price, 6),
                     "output_price": round(output_price, 6),
-                    "unit": "per_million_tokens",
                     "source": "openrouter",
                 }
             }
 
-            # Extract cache pricing if available
-            cache_read = pricing_data.get("cache_read")
-            cache_write = pricing_data.get("cache_write")
-
-            if cache_read is not None or cache_write is not None:
-                pricing["cache_pricing"] = {
-                    "USD": {
-                        "cache_read_input_price": round(float(cache_read or 0) * self.PRICE_MULTIPLIER, 6),
-                        "cache_creation_input_price": round(float(cache_write or 0) * self.PRICE_MULTIPLIER, 6),
-                        "unit": "per_million_tokens",
-                    }
-                }
-
             return pricing
+
+    def _extract_cache_pricing(self, pricing_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract cache pricing as a top-level field (separate from pricing)."""
+        cache_read = pricing_data.get("cache_read")
+        cache_write = pricing_data.get("cache_write")
+
+        if cache_read is None and cache_write is None:
+            return {}
+
+        try:
+            return {
+                "USD": {
+                    "cache_read_input_price": round(float(cache_read or 0) * self.PRICE_MULTIPLIER, 6),
+                    "cache_creation_input_price": round(float(cache_write or 0) * self.PRICE_MULTIPLIER, 6),
+                }
+            }
+        except (ValueError, TypeError):
+            return {}
 
         except (ValueError, TypeError) as e:
             logger.warning(f"Failed to parse pricing for {model_id}: {e}")

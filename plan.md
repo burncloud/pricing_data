@@ -358,37 +358,83 @@ pricing_data/
 
 | Review | Trigger | Why | Runs | Status | Findings |
 |--------|---------|-----|------|--------|----------|
-| CEO Review | `/plan-ceo-review` | Scope & strategy | 1 | CLEAN | 4 scope expansions accepted, 2 critical gaps fixed |
-| Codex Review | `/codex review` | Independent 2nd opinion | 0 | — | — |
-| Eng Review | `/plan-eng-review` | Architecture & tests (required) | 0 | — | — |
-| Design Review | `/plan-design-review` | UI/UX gaps | 0 | — | — |
+| CEO Review (Pre-impl) | `/plan-ceo-review` | Scope & strategy | 1 | CLEAN | 4 scope expansions accepted |
+| Eng Review (Pre-impl) | `/plan-eng-review` | Architecture & tests | 2 | CLEAN | 9 issues resolved |
+| Design Review | `/plan-design-review` | UI/UX gaps | 1 | N/A | Backend project |
+| CEO Review (Post-impl) | `/plan-ceo-review` | Implementation audit | 2 | DONE_WITH_GAPS | 347 models, 3 data gaps |
+| QA Black-box | `/qa` | Pricing verification | 1 | DONE_WITH_GAPS | 100% basic, caching/multimodal missing |
+| CEO Review (Standardization) | `/plan-ceo-review` | burncloud 格式对齐 + 手动覆盖机制 | 3 | DONE | 2 critical gaps fixed, manual_overrides added |
+| Eng Review (Format Fix) | `/plan-eng-review` | 测试修复 + 新功能覆盖 | 3 | **CLEARED** | 67/67 pass, 10 new tests, 1 real bug fixed (shallow copy) |
 
-**OUTSIDE VOICE**: Claude subagent identified 7 issues:
-- BLOCKER: Chinese APIs don't expose pricing (need Playwright scraping)
-- HIGH: Unit conversion undocumented (per-token → per-million)
-- HIGH: sources/ structure contradictory (resolved: daily subdirs)
-- HIGH: JS-rendered Chinese pages need Playwright
-- MEDIUM: No staging before main push (resolved: atomic commits)
-- MEDIUM: equivalence.json governance (resolved: PR-based)
-- MEDIUM: OpenRouter rate limits (document in code)
+**VERDICT:** ALL GREEN. 67/67 tests pass. burncloud 格式对齐完成。manual_overrides + min_models_guard 覆盖完整。
 
-**CRITICAL RESOLUTIONS**:
-1. Chinese providers → Playwright web scraping (not API)
-2. Unit conversion → Document multiply by 1,000,000
-3. Safety → Atomic commits (all-or-nothing)
-4. Governance → PR-based with maintainer review
+---
 
-**ACCEPTED SCOPE**:
-- Price history (365-day retention)
-- Model equivalence table (equivalence.json)
-- RSS feed (feed.xml)
-- Rich commit messages
-- Security hardening
-- Playwright for Chinese providers
+## POST-IMPLEMENTATION CEO REVIEW (2026-03-28)
 
-**DEFERRED TO TODOS.md**:
-- Webhook notifications (P2)
-- Cost calculator API (P2)
-- Embeddable badges (P3)
+### What Shipped
 
-**VERDICT**: CEO + ENG CLEARED — ready to implement
+**Scale vs Plan:**
+- Target: 150+ models → **Actual: 347 models (231% of target)**
+- Target: Daily CI → **Actual: Working GitHub Action**
+- Target: Schema validation → **Actual: JSON Schema + 6 test files**
+
+**Infrastructure:**
+- ✅ `.github/workflows/update-pricing.yml` - Daily fetch at UTC 00:00
+- ✅ `pricing.json` - 347 models with basic pricing
+- ✅ `schema.json` - Full schema with cache/batch/multimodal fields
+- ✅ `equivalence.json` - 7 equivalence groups for routing
+- ✅ `history/` - 365-day retention
+- ✅ `sources/` - Daily raw data snapshots
+- ✅ `daily-summary.xml` - RSS feed
+- ✅ `scripts/` - fetch, merge, compare, history, rss modules
+
+### Data Completeness Gaps
+
+| Price Type | Status | Impact | Source Available |
+|------------|--------|--------|------------------|
+| Basic (input/output) | ✅ 100% | Core functionality | OpenRouter API |
+| Caching | ⚠️ 0% | 142 models affected | OpenRouter `input_cache_read/write` |
+| Multimodal | ⚠️ 0% | 145 models affected | OpenRouter `image/audio/video` |
+| Batch | ❌ N/A | Defer indefinitely | OpenRouter doesn't provide |
+| Tiered | ❌ N/A | Defer indefinitely | OpenRouter doesn't provide |
+| Chinese providers | ❌ Blocked | 6 providers pending | Need API keys or Playwright |
+
+### Strategic Assessment
+
+**What's working:**
+1. The OpenRouter-only v1 approach ships value fast
+2. 347 models covers the long tail of LLM APIs
+3. Schema design accommodates future pricing types
+4. Test coverage is solid for core logic
+5. Equivalence table enables cost-optimized routing
+
+**What's missing:**
+1. **Caching prices** - OpenRouter exposes `input_cache_read`/`input_cache_write` for 142 models. This is a 50-90% discount for cached prompts. Users paying full price when cache is available is a real cost leak.
+
+2. **Multimodal prices** - 145 models have separate `image`/`audio`/`video` pricing. If you're building a vision app and using the default text price, you're overpaying or under-estimating costs.
+
+3. **Reasoning prices** - DeepSeek R1 and similar models have `internal_reasoning` pricing separate from output. Not captured.
+
+4. **Chinese providers** - 6 providers configured but blocked on API access. Plan said Playwright, but that's a heavy lift.
+
+### Recommendations
+
+**Quick win (15 min):** Update GitHub Action to capture `input_cache_read`, `input_cache_write`, `image`, `audio`, `internal_reasoning` from OpenRouter API. These fields are already in the response, just not extracted.
+
+**Medium-term:** Add a manual batch pricing table for major providers (OpenAI/Anthropic offer 50% discount on batch APIs). Maintained via PR.
+
+**Long-term:** Chinese providers need a decision. Options:
+1. Wait for API access (if you have accounts, add keys to GitHub Secrets)
+2. Build Playwright scraper (2-3 days of work, fragile maintenance)
+3. Accept OpenRouter as the only source (covers most Chinese models via their proxies)
+
+### Verdict
+
+**SHIPPED WITH GAPS** - Core functionality works. 347 models with accurate basic pricing. Data completeness gaps in caching and multimodal pricing are fixable in 15 minutes. Chinese providers deferred pending business decision on API access vs scraping vs OpenRouter-only.
+
+**Next actions:**
+1. Capture caching + multimodal prices from OpenRouter (quick win)
+2. Decide on Chinese provider strategy
+3. Write README.md (currently empty)
+4. Ship to burncloud integration

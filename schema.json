@@ -4,9 +4,9 @@
   "title": "LLM Pricing Data Schema",
   "description": "Schema for LLM API pricing data",
   "type": "object",
-  "required": ["schema_version", "updated_at", "source", "models"],
+  "required": ["version", "updated_at", "source", "models"],
   "properties": {
-    "schema_version": {
+    "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+$",
       "description": "Schema version (e.g., '1.0')"
@@ -65,18 +65,12 @@
         "input_price": {
           "type": "number",
           "minimum": 0,
-          "description": "Price per unit for input tokens"
+          "description": "Price per 1M tokens for input (USD)"
         },
         "output_price": {
           "type": "number",
           "minimum": 0,
-          "description": "Price per unit for output tokens"
-        },
-        "unit": {
-          "type": "string",
-          "enum": ["per_million_tokens", "per_thousand_tokens", "per_token"],
-          "default": "per_million_tokens",
-          "description": "Pricing unit"
+          "description": "Price per 1M tokens for output (USD)"
         },
         "source": {
           "type": "string",
@@ -90,17 +84,12 @@
         "cache_read_input_price": {
           "type": "number",
           "minimum": 0,
-          "description": "Price for reading from cache"
+          "description": "Price for reading from cache per 1M tokens"
         },
         "cache_creation_input_price": {
-          "type": "number",
+          "type": ["number", "null"],
           "minimum": 0,
-          "description": "Price for creating cache entry"
-        },
-        "unit": {
-          "type": "string",
-          "enum": ["per_million_tokens", "per_thousand_tokens", "per_token"],
-          "default": "per_million_tokens"
+          "description": "Price for creating cache entry per 1M tokens"
         }
       }
     },

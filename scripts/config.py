@@ -50,6 +50,13 @@ class Config:
     # Timezone for timestamps
     timezone: timezone = field(default=timezone.utc)
 
+    # Minimum model count guard — skip source if it returns fewer than this
+    # (protects against broken fetches returning near-empty responses)
+    # Set to 0 to disable for a source
+    min_models_guard: Dict[str, int] = field(default_factory=lambda: {
+        "openrouter": 50,  # OpenRouter normally has 300+ models
+    })
+
     # Source priority (higher = more authoritative)
     source_priority: Dict[str, int] = field(default_factory=lambda: {
         # Original providers (highest priority)
@@ -68,6 +75,8 @@ class Config:
         "minimax": 100,
         # Aggregators (lower priority)
         "openrouter": 50,
+        # Manual overrides (highest priority — human-verified data)
+        "manual_overrides": 200,
         "manual": 10,
     })
 
@@ -75,6 +84,7 @@ class Config:
     fetchers: Dict[str, FetcherConfig] = field(init=False)
 
     def __post_init__(self):
+        self.data_dir = self.repo_root
         self.pricing_file = self.repo_root / "pricing.json"
         self.schema_file = self.repo_root / "schema.json"
         self.equivalence_file = self.repo_root / "equivalence.json"

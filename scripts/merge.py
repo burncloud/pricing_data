@@ -7,6 +7,7 @@ Priority order (higher = more authoritative):
 3. Aggregators (OpenRouter) - priority 50
 4. Manual entries - priority 10
 """
+import copy
 import json
 import logging
 from datetime import datetime, timezone
@@ -59,9 +60,9 @@ class PricingMerger:
         # Merge with priority resolution
         merged_models = self._merge_with_priority(all_sources, warnings)
 
-        # Build output structure
+        # Build output structure (field names must match burncloud PricingConfig)
         output = {
-            "schema_version": "1.0",
+            "version": "1.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "source": "burncloud-official",
             "models": merged_models,
@@ -73,8 +74,23 @@ class PricingMerger:
         return output, warnings
 
     def _collect_sources(self, sources_dir: Path) -> List[Dict[str, Any]]:
-        """Collect all source JSON files."""
+        """Collect all source JSON files, including manual overrides."""
         sources = []
+
+        # Load manual overrides first (highest priority, priority=200)
+        manual_override_path = config.data_dir / "sources" / "manual_overrides.json"
+        if manual_override_path.exists():
+            try:
+                with open(manual_override_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if data.get("models"):
+                    sources.append({
+                        "name": "manual_overrides",
+                        "data": {**data, "status": "success"},
+                    })
+                    logger.info(f"Loaded manual overrides: {len(data['models'])} models")
+            except (json.JSONDecodeError, KeyError) as e:
+                logger.warning(f"Failed to load manual overrides: {e}")
 
         for source_file in sources_dir.glob("*.json"):
             try:
@@ -82,11 +98,22 @@ class PricingMerger:
                     data = json.load(f)
 
                 if data.get("status") == "success" and data.get("models"):
+                    # Guard: skip source if it has suspiciously few models
+                    # (protects against OpenRouter returning empty/broken response)
+                    model_count = len(data["models"])
+                    min_models = config.min_models_guard.get(source_file.stem, 0)
+                    if min_models > 0 and model_count < min_models:
+                        logger.warning(
+                            f"Skipping {source_file.name}: only {model_count} models "
+                            f"(min expected: {min_models}, likely broken fetch)"
+                        )
+                        continue
+
                     sources.append({
                         "name": source_file.stem,
                         "data": data,
                     })
-                    logger.info(f"Loaded source: {source_file.name} ({len(data['models'])} models)")
+                    logger.info(f"Loaded source: {source_file.name} ({model_count} models)")
 
             except (json.JSONDecodeError, KeyError) as e:
                 logger.warning(f"Failed to load {source_file}: {e}")
@@ -129,7 +156,7 @@ class PricingMerger:
 
             # Use highest priority source
             primary_source, primary_data, _ = source_list[0]
-            merged[normalized_id] = primary_data.copy()
+            merged[normalized_id] = self._normalize_model_format(primary_data)
 
             # Check for price conflicts
             if len(source_list) > 1:
@@ -193,6 +220,48 @@ class PricingMerger:
                 )
                 warnings.append(warning)
                 logger.warning(warning)
+
+    def _normalize_model_format(self, model: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Normalize a model entry to burncloud PricingConfig format.
+
+        Fixes:
+        - Remove 'unit' field from pricing (not in CurrencyPricing struct)
+        - Move cache_pricing out of pricing dict to top-level if misplaced
+        - cache_write_input_price → cache_creation_input_price
+        - null output_price → 0.0 (CurrencyPricing.output_price is i64, not Option)
+        - Warn on output_price == 0
+        """
+        model = copy.deepcopy(model)
+
+        # Fix pricing entries
+        pricing = model.get("pricing", {})
+        cache_pricing_from_nested = None
+        for currency, pp in list(pricing.items()):
+            if not isinstance(pp, dict):
+                continue
+            pp.pop("unit", None)
+            if pp.get("output_price") is None:
+                logger.warning(f"output_price is null, setting to 0.0")
+                pp["output_price"] = 0.0
+            elif pp.get("output_price") == 0.0:
+                logger.debug(f"output_price is 0.0 — may be incomplete data")
+            # Move misplaced cache_pricing out of pricing dict
+            if "cache_pricing" in pp:
+                cache_pricing_from_nested = pp.pop("cache_pricing")
+
+        if cache_pricing_from_nested and "cache_pricing" not in model:
+            model["cache_pricing"] = cache_pricing_from_nested
+
+        # Fix cache_pricing field names
+        for currency, cp in model.get("cache_pricing", {}).items():
+            if not isinstance(cp, dict):
+                continue
+            cp.pop("unit", None)
+            if "cache_write_input_price" in cp:
+                cp["cache_creation_input_price"] = cp.pop("cache_write_input_price")
+
+        return model
 
     def _validate(self, data: Dict[str, Any]) -> None:
         """Validate merged data against schema."""

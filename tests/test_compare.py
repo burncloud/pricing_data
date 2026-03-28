@@ -322,7 +322,7 @@ class TestPriceComparator:
             previous_pricing
         )
 
-        with patch.object(config, "output_dir", tmp_path):
+        with patch.object(config, "repo_root", tmp_path):
             result = comparator.compare_with_previous(current_pricing)
             output_path = comparator.save_comparison(result)
 
@@ -387,4 +387,4 @@ class TestMultiCurrencyComparison:
             None
         )
         if cny_change:
-            assert cny_change.input_change_pct == 25.0
+            assert cny_change.input_change_pct == pytest.approx(25.0)

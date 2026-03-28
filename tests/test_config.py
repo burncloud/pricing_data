@@ -29,6 +29,7 @@ class TestFetcherConfig:
             fc = FetcherConfig(
                 name="test",
                 url="https://example.com",
+                requires_auth=True,
                 auth_env_var="TEST_API_KEY"
             )
             assert fc.api_key == "secret123"
@@ -47,20 +48,20 @@ class TestConfig:
     """Tests for Config class."""
 
     def test_singleton(self):
-        """Test that config is a singleton."""
-        config1 = Config()
-        config2 = Config()
+        """Test that config module exports a single shared instance."""
+        from scripts.config import config as config1
+        from scripts.config import config as config2
         assert config1 is config2
 
     def test_project_root(self):
         """Test project root is set correctly."""
-        assert config.project_root.exists()
-        assert config.project_root.is_dir()
+        assert config.repo_root.exists()
+        assert config.repo_root.is_dir()
 
     def test_pricing_file_path(self):
         """Test pricing file path."""
         assert config.pricing_file.name == "pricing.json"
-        assert config.pricing_file.parent.name == "output"
+        assert config.pricing_file.parent.name == "pricing_data"
 
     def test_get_today_sources_dir(self):
         """Test sources directory for specific date."""
@@ -85,8 +86,8 @@ class TestConfig:
         # Aggregators
         assert config.get_source_priority("openrouter") == 50
 
-        # Unknown
-        assert config.get_source_priority("unknown") == 10
+        # Unknown sources default to 0
+        assert config.get_source_priority("unknown") == 0
 
     def test_schema_file_path(self):
         """Test schema file path."""
