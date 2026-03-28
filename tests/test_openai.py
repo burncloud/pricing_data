@@ -1,8 +1,8 @@
 """
 Tests for OpenAIFetcher.
 
-Playwright is not available in unit-test environments. All tests exercise
-the pure-Python parsing helpers or mock _scrape_with_playwright.
+curl_cffi is available in the test environment but all network calls are mocked.
+Tests exercise pure-Python parsing helpers or mock _fetch_html / _parse_html.
 """
 import pytest
 from unittest.mock import patch, MagicMock
@@ -42,6 +42,10 @@ class TestNormalizeDisplayName:
     def test_multi_word_qualifier(self, fetcher):
         assert fetcher._normalize_display_name("GPT-4o mini turbo") == "gpt-4o-mini-turbo"
 
+    def test_new_model_naming(self, fetcher):
+        assert fetcher._normalize_display_name("GPT-5.4") == "gpt-5.4"
+        assert fetcher._normalize_display_name("GPT-5.4 mini") == "gpt-5.4-mini"
+
 
 # ---------------------------------------------------------------------------
 # _extract_family
@@ -52,14 +56,12 @@ class TestExtractFamily:
         assert fetcher._extract_family("GPT-4o") == "gpt-4o"
 
     def test_gpt4o_mini(self, fetcher):
-        # "mini" qualifier stripped from family
         assert fetcher._extract_family("GPT-4o mini") == "gpt-4o"
 
     def test_gpt4o_nano(self, fetcher):
         assert fetcher._extract_family("GPT-4o nano") == "gpt-4o"
 
     def test_o3_mini(self, fetcher):
-        # "o3-mini" → family "o3"
         assert fetcher._extract_family("o3-mini") == "o3"
 
     def test_plain_name(self, fetcher):
@@ -67,83 +69,59 @@ class TestExtractFamily:
 
 
 # ---------------------------------------------------------------------------
-# _parse_model_card
+# _build_model_entry_from_prices
 # ---------------------------------------------------------------------------
 
-class TestParseModelCard:
+class TestBuildModelEntryFromPrices:
     def test_basic_input_output(self, fetcher):
-        card_text = (
-            "GPT-4o\n"
-            "Some description.\n"
-            "Price\n"
-            "Input:\n$2.50 / 1M tokens\n"
-            "Output:\n$10.00 / 1M tokens\n"
+        entry = fetcher._build_model_entry_from_prices(
+            "GPT-4o", {"input": 2.50, "output": 10.00}
         )
-        entry = fetcher._parse_model_card("GPT-4o", card_text)
-
         assert entry is not None
         ep = entry["endpoints"]["api.openai.com"]
         assert ep["pricing"]["input_price"] == pytest.approx(2.50)
         assert ep["pricing"]["output_price"] == pytest.approx(10.00)
 
     def test_with_cached_input(self, fetcher):
-        card_text = (
-            "GPT-4o\n"
-            "Input:\n$2.50 / 1M tokens\n"
-            "Cached input:\n$0.25 / 1M tokens\n"
-            "Output:\n$10.00 / 1M tokens\n"
+        entry = fetcher._build_model_entry_from_prices(
+            "GPT-4o", {"input": 2.50, "cached input": 0.25, "output": 10.00}
         )
-        entry = fetcher._parse_model_card("GPT-4o", card_text)
-
         assert entry is not None
         ep = entry["endpoints"]["api.openai.com"]
         assert "cache_pricing" in ep
         assert ep["cache_pricing"]["cache_read_input_price"] == pytest.approx(0.25)
 
     def test_no_cache_when_absent(self, fetcher):
-        card_text = (
-            "Input:\n$2.50 / 1M tokens\n"
-            "Output:\n$10.00 / 1M tokens\n"
+        entry = fetcher._build_model_entry_from_prices(
+            "GPT-4o", {"input": 2.50, "output": 10.00}
         )
-        entry = fetcher._parse_model_card("GPT-4o", card_text)
         ep = entry["endpoints"]["api.openai.com"]
         assert "cache_pricing" not in ep
 
     def test_missing_output_returns_none(self, fetcher):
-        card_text = "Input:\n$2.50 / 1M tokens\n"
-        entry = fetcher._parse_model_card("GPT-4o", card_text)
+        entry = fetcher._build_model_entry_from_prices("GPT-4o", {"input": 2.50})
         assert entry is None
 
     def test_missing_input_returns_none(self, fetcher):
-        card_text = "Output:\n$10.00 / 1M tokens\n"
-        entry = fetcher._parse_model_card("GPT-4o", card_text)
+        entry = fetcher._build_model_entry_from_prices("GPT-4o", {"output": 10.00})
         assert entry is None
 
     def test_image_only_model_skipped(self, fetcher):
-        """Audio/image pricing uses different format — no $/1M tokens."""
-        card_text = (
-            "GPT-image\n"
-            "$0.000263 per image\n"
-        )
-        entry = fetcher._parse_model_card("GPT-image", card_text)
+        """Non-token pricing has no 'input' or 'output' keys."""
+        entry = fetcher._build_model_entry_from_prices("GPT-image", {})
         assert entry is None
 
     def test_metadata_populated(self, fetcher):
-        card_text = (
-            "Input:\n$2.50 / 1M tokens\n"
-            "Output:\n$10.00 / 1M tokens\n"
+        entry = fetcher._build_model_entry_from_prices(
+            "GPT-4o", {"input": 2.50, "output": 10.00}
         )
-        entry = fetcher._parse_model_card("GPT-4o", card_text)
         assert entry["metadata"]["provider"] == "openai"
         assert entry["metadata"]["family"] == "gpt-4o"
 
-    def test_large_price_with_comma(self, fetcher):
-        """Prices like '$1,000.00 / 1M tokens' should parse correctly."""
-        card_text = (
-            "Input:\n$1,000.00 / 1M tokens\n"
-            "Output:\n$2,000.00 / 1M tokens\n"
+    def test_large_price(self, fetcher):
+        entry = fetcher._build_model_entry_from_prices(
+            "Expensive Model", {"input": 1000.0, "output": 2000.0}
         )
-        entry = fetcher._parse_model_card("Expensive Model", card_text)
         assert entry is not None
         ep = entry["endpoints"]["api.openai.com"]
         assert ep["pricing"]["input_price"] == pytest.approx(1000.0)
@@ -151,94 +129,103 @@ class TestParseModelCard:
 
 
 # ---------------------------------------------------------------------------
-# fetch() — Playwright not installed
+# _parse_html
 # ---------------------------------------------------------------------------
 
-class TestFetchPlaywrightMissing:
-    def test_returns_error_when_playwright_missing(self, fetcher):
-        with patch.dict("sys.modules", {"playwright": None, "playwright.sync_api": None}):
-            # Re-import inside the patch context so the ImportError fires
-            import importlib
-            import scripts.fetch.openai as openai_mod
-            # Simulate the ImportError branch
-            with patch.object(
-                openai_mod,
-                "OpenAIFetcher",
-                wraps=OpenAIFetcher,
-            ):
-                # Directly test the import-guard path
-                with patch("builtins.__import__", side_effect=_playwright_import_guard):
-                    result = fetcher.fetch()
+class TestParseHtml:
+    def _make_html(self, cards: list) -> str:
+        """Build minimal HTML with model cards."""
+        spans = ""
+        for name, prices in cards:
+            price_spans = "".join(
+                f'<span class="whitespace-nowrap">{label}:<br/>${value} / 1M tokens</span>'
+                for label, value in prices.items()
+            )
+            spans += f'<h2 class="text-h4">{name}</h2>{price_spans}'
+        return f"<html><body>{spans}</body></html>"
 
-        assert result.success is False
-        assert "Playwright" in result.error
+    def test_parses_single_model(self, fetcher):
+        html = self._make_html([
+            ("GPT-5.4", {"Input": "2.50", "Cached input": "0.25", "Output": "15.00"}),
+        ])
+        models = fetcher._parse_html(html)
+        assert "gpt-5.4" in models
+        ep = models["gpt-5.4"]["endpoints"]["api.openai.com"]
+        assert ep["pricing"]["input_price"] == pytest.approx(2.50)
+        assert ep["pricing"]["output_price"] == pytest.approx(15.00)
+        assert ep["cache_pricing"]["cache_read_input_price"] == pytest.approx(0.25)
 
-    def test_fetch_error_on_playwright_import(self, fetcher):
-        """When 'from playwright.sync_api import ...' raises ImportError, return error."""
-        original_fetch = OpenAIFetcher.fetch
+    def test_parses_multiple_models(self, fetcher):
+        html = self._make_html([
+            ("GPT-5.4", {"Input": "2.50", "Output": "15.00"}),
+            ("GPT-5.4 mini", {"Input": "0.750", "Output": "4.500"}),
+        ])
+        models = fetcher._parse_html(html)
+        assert len(models) == 2
+        assert "gpt-5.4" in models
+        assert "gpt-5.4-mini" in models
 
-        def mock_fetch(self):
-            try:
-                raise ImportError("No module named 'playwright'")
-            except ImportError:
-                from scripts.fetch.base import FetchResult
-                return FetchResult.error_result(
-                    self.fetcher_config.name,
-                    "Playwright not installed. Run: pip install playwright && playwright install chromium",
-                )
+    def test_skips_non_token_models(self, fetcher):
+        """Model with no $/1M token spans produces no entry."""
+        html = '<h2 class="text-h4">GPT-image-1.5</h2><p>$0.000263 per image</p>'
+        models = fetcher._parse_html(html)
+        assert len(models) == 0
 
-        with patch.object(OpenAIFetcher, "fetch", mock_fetch):
+    def test_empty_html(self, fetcher):
+        models = fetcher._parse_html("<html></html>")
+        assert models == {}
+
+
+# ---------------------------------------------------------------------------
+# fetch() — curl_cffi not installed
+# ---------------------------------------------------------------------------
+
+class TestFetchCurlCffiMissing:
+    def test_returns_error_when_curl_cffi_missing(self, fetcher):
+        with patch.dict("sys.modules", {"curl_cffi": None, "curl_cffi.requests": None}):
             result = fetcher.fetch()
 
         assert result.success is False
-        assert "Playwright" in result.error
-
-
-def _playwright_import_guard(name, *args, **kwargs):
-    if "playwright" in name:
-        raise ImportError(f"No module named '{name}'")
-    return __builtins__.__import__(name, *args, **kwargs)  # type: ignore
+        assert "curl_cffi" in result.error
 
 
 # ---------------------------------------------------------------------------
-# fetch() — mocked _scrape_with_playwright
+# fetch() — mocked _fetch_html / _parse_html
 # ---------------------------------------------------------------------------
 
-class TestFetchWithMockedScrape:
+class TestFetchWithMockedHtml:
     def test_successful_fetch(self, fetcher):
         mock_models = {
-            "gpt-4o": {
-                "endpoints": {"api.openai.com": {"base_url": "https://api.openai.com/v1", "currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
-                "metadata": {"provider": "openai", "family": "gpt-4o"},
-            },
-            "gpt-4o-mini": {
-                "endpoints": {"api.openai.com": {"base_url": "https://api.openai.com/v1", "currency": "USD", "pricing": {"input_price": 0.15, "output_price": 0.60}}},
-                "metadata": {"provider": "openai", "family": "gpt-4o"},
+            "gpt-5.4": {
+                "endpoints": {"api.openai.com": {
+                    "base_url": "https://api.openai.com/v1",
+                    "currency": "USD",
+                    "pricing": {"input_price": 2.5, "output_price": 15.0},
+                }},
+                "metadata": {"provider": "openai", "family": "gpt-5.4"},
             },
         }
 
-        with patch.object(fetcher, "_scrape_with_playwright", return_value=mock_models):
+        with patch.object(fetcher, "_fetch_html", return_value="<html></html>"), \
+             patch.object(fetcher, "_parse_html", return_value=mock_models):
             result = fetcher.fetch()
 
         assert result.success is True
-        assert result.models_count == 2
+        assert result.models_count == 1
         assert result.source == "openai"
-        assert "gpt-4o" in result.models
+        assert "gpt-5.4" in result.models
 
-    def test_empty_scrape_returns_error(self, fetcher):
-        with patch.object(fetcher, "_scrape_with_playwright", return_value={}):
+    def test_empty_parse_returns_error(self, fetcher):
+        with patch.object(fetcher, "_fetch_html", return_value="<html></html>"), \
+             patch.object(fetcher, "_parse_html", return_value={}):
             result = fetcher.fetch()
 
         assert result.success is False
         assert "No models" in result.error
 
-    def test_scrape_exception_returns_error(self, fetcher):
-        with patch.object(
-            fetcher,
-            "_scrape_with_playwright",
-            side_effect=Exception("browser crash"),
-        ):
+    def test_fetch_exception_returns_error(self, fetcher):
+        with patch.object(fetcher, "_fetch_html", side_effect=Exception("connection refused")):
             result = fetcher.fetch()
 
         assert result.success is False
-        assert "browser crash" in result.error
+        assert "connection refused" in result.error

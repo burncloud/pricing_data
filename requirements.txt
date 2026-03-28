@@ -2,8 +2,12 @@
 requests>=2.31.0
 jsonschema>=4.21.0
 
-# Playwright for OpenAI pricing page (Cloudflare-protected, requires browser)
+# Playwright for Zhipu pricing page (bigmodel.cn, requires browser)
 playwright>=1.41.0
+
+# curl_cffi: TLS fingerprint spoofing to bypass Cloudflare for OpenAI pricing page
+# Uses firefox133 impersonation — standard requests/Playwright get 403 in CI
+curl_cffi>=0.7.0
 
 # Testing
 pytest>=8.0.0

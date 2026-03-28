@@ -1,41 +1,46 @@
 """
-OpenAI official pricing page fetcher (Playwright).
+OpenAI official pricing page fetcher.
 
-Scrapes https://openai.com/api/pricing which is protected by Cloudflare
-and requires a real browser to load. Falls back gracefully when Playwright
-is not installed.
+Uses curl_cffi with firefox133 TLS fingerprint spoofing to bypass Cloudflare.
+Standard requests and headless Playwright both get 403 in CI.
 
-NOTE: This page shows flagship models only (~7 currently). It does NOT
-cover the full OpenAI model catalog (gpt-4o, o1, o3-mini, etc.).
+The pricing page (https://openai.com/api/pricing) renders server-side HTML —
+no JS execution needed once Cloudflare is bypassed. Prices are embedded in
+<span class="whitespace-nowrap"> elements inside <h2 class="text-h4"> model cards.
 """
 import logging
 import re
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from html import unescape
+from typing import Any, Dict, Optional, Tuple
 
 from scripts.config import Config
 from scripts.fetch.base import BaseFetcher, FetchResult
 
 logger = logging.getLogger(__name__)
 
-# Matches "Input:\n$2.50 / 1M tokens" or "Cached input:\n$0.25 / 1M tokens"
-# <br> tags in the DOM render as \n in textContent.
-# [^\n:]+ — any chars except newline and colon (prevents greedy cross-line capture)
+# Matches "Input:\n$2.50 / 1M tokens" within a whitespace-nowrap span
 _PRICE_RE = re.compile(
-    r"^([^\n:]+):\s*\n\s*\$([0-9,]+(?:\.[0-9]+)?)\s*/\s*1M\s+tokens",
+    r"^([^:\n]+):\s*\n\s*\$([0-9,]+(?:\.[0-9]+)?)\s*/\s*1M\s+tokens",
     re.MULTILINE | re.IGNORECASE,
 )
+
+# CSS selectors expressed as regex patterns
+_H2_RE = re.compile(r'<h2 class="text-h4">(.*?)</h2>')
+_SPAN_RE = re.compile(r'<span class="whitespace-nowrap">(.*?)</span>', re.DOTALL)
 
 
 class OpenAIFetcher(BaseFetcher):
     """
-    Fetches pricing from https://openai.com/api/pricing using Playwright.
+    Fetches pricing from https://openai.com/api/pricing.
 
-    Cloudflare blocks plain HTTP requests, so we launch a headless Chromium
-    browser to execute JS and pass the bot challenge.
+    OpenAI's pricing page is behind Cloudflare. Standard HTTP requests and
+    headless Playwright both receive 403. curl_cffi with firefox133
+    impersonation successfully bypasses the Cloudflare bot check.
 
     Priority 100 — direct provider tier, same as other first-party fetchers.
-    Only flagship models visible on the page are captured.
+    Only the text-completion models shown on the page are captured (typically
+    3-5 flagship models). The full OpenAI catalog is covered by LiteLLM (p70).
     """
 
     def __init__(self, config: Config):
@@ -43,23 +48,24 @@ class OpenAIFetcher(BaseFetcher):
         super().__init__(config, fetcher_config)
 
     # ------------------------------------------------------------------
-    # Override fetch() — Playwright doesn't fit the requests.Response interface
+    # Override fetch() — curl_cffi doesn't fit the requests.Response interface
     # ------------------------------------------------------------------
 
     def fetch(self) -> FetchResult:
         try:
-            from playwright.sync_api import sync_playwright  # noqa: F401
+            import curl_cffi.requests as cffi_req  # noqa: F401
         except ImportError:
-            logger.warning("Playwright not installed — skipping OpenAI scraper")
+            logger.warning("curl_cffi not installed — skipping OpenAI fetcher")
             return FetchResult.error_result(
                 self.fetcher_config.name,
-                "Playwright not installed. Run: pip install playwright && playwright install chromium",
+                "curl_cffi not installed. Run: pip install curl_cffi",
             )
 
         try:
-            models = self._scrape_with_playwright()
+            html = self._fetch_html()
+            models = self._parse_html(html)
         except Exception as e:
-            logger.exception("OpenAI Playwright scrape failed")
+            logger.exception("OpenAI fetch failed")
             return FetchResult.error_result(self.fetcher_config.name, str(e))
 
         if not models:
@@ -76,84 +82,82 @@ class OpenAIFetcher(BaseFetcher):
             models_count=len(models),
         )
 
-    def _scrape_with_playwright(self) -> Dict[str, Any]:
-        """Launch Chromium, load pricing page, return parsed models dict."""
-        from playwright.sync_api import sync_playwright
+    def _fetch_html(self) -> str:
+        """Fetch OpenAI pricing page HTML using firefox133 TLS impersonation."""
+        import curl_cffi.requests as cffi_req
 
-        with sync_playwright() as pw:
-            browser = pw.chromium.launch(headless=True)
-            try:
-                page = browser.new_page()
-                page.goto(
-                    self.fetcher_config.url,
-                    wait_until="domcontentloaded",
-                    timeout=int(self.fetcher_config.timeout * 1000),
-                )
-                # Wait for price content to render
-                page.wait_for_selector("text=/1M tokens/", timeout=30_000)
+        resp = cffi_req.get(
+            self.fetcher_config.url,
+            impersonate="firefox133",
+            timeout=int(self.fetcher_config.timeout),
+            headers={"Accept-Language": "en-US,en;q=0.9"},
+        )
+        resp.raise_for_status()
+        logger.debug(f"OpenAI: fetched {len(resp.text)} bytes (HTTP {resp.status_code})")
+        return resp.text
 
-                # Extract model cards via JS to avoid ElementHandle juggling
-                raw_cards: List[Dict[str, str]] = page.evaluate(
-                    """
-                    () => {
-                        const results = [];
-                        const headings = document.querySelectorAll('h2.text-h4');
-                        for (const h2 of headings) {
-                            const card = h2.closest('[class*="border"]') || h2.parentElement;
-                            if (!card) continue;
-                            results.push({
-                                name: h2.textContent.trim(),
-                                cardText: card.textContent || '',
-                            });
-                        }
-                        return results;
-                    }
-                    """
-                )
-            finally:
-                browser.close()
+    def _parse_html(self, html: str) -> Dict[str, Any]:
+        """
+        Parse model names and prices from the pricing page HTML.
 
-        models: Dict[str, Any] = {}
-        for card in raw_cards:
-            display_name = card.get("name", "").strip()
-            card_text = card.get("cardText", "")
-            if not display_name:
+        Structure:
+          <h2 class="text-h4">GPT-5.4</h2>
+          ...
+          <span class="whitespace-nowrap">Input:<br/>$2.50 / 1M tokens</span>
+          <span class="whitespace-nowrap">Cached input:<br/>$0.25 / 1M tokens</span>
+          <span class="whitespace-nowrap">Output:<br/>$15.00 / 1M tokens</span>
+        """
+        # Collect (position, model_name) pairs
+        h2_positions = [
+            (m.start(), unescape(m.group(1)).strip())
+            for m in _H2_RE.finditer(html)
+        ]
+
+        # Collect (position, span_text) for price spans
+        span_positions: list[Tuple[int, str]] = []
+        for m in _SPAN_RE.finditer(html):
+            raw = m.group(1)
+            # Convert <br/> to newline BEFORE stripping remaining tags
+            text = re.sub(r"<br\s*/?>", "\n", raw)
+            text = re.sub(r"<[^>]+>", "", text)
+            text = unescape(text).strip()
+            span_positions.append((m.start(), text))
+
+        # Assign each span to the nearest preceding h2
+        card_prices: Dict[str, Dict[str, float]] = {}
+        for span_pos, span_text in span_positions:
+            preceding = [(pos, name) for pos, name in h2_positions if pos < span_pos]
+            if not preceding:
                 continue
+            _, model_name = max(preceding, key=lambda x: x[0])
 
-            entry = self._parse_model_card(display_name, card_text)
+            pm = _PRICE_RE.match(span_text)
+            if pm:
+                label = pm.group(1).strip().lower()
+                value = float(pm.group(2).replace(",", ""))
+                card_prices.setdefault(model_name, {})[label] = value
+
+        # Build FetchResult model entries
+        models: Dict[str, Any] = {}
+        for display_name, prices in card_prices.items():
+            entry = self._build_model_entry_from_prices(display_name, prices)
             if entry is not None:
                 model_id = self._normalize_display_name(display_name)
                 models[model_id] = entry
-                logger.debug(f"OpenAI: parsed {display_name!r} → {model_id!r}")
+                logger.debug(f"OpenAI: parsed {display_name!r} → {model_id!r} {prices}")
 
         logger.info(f"OpenAI: scraped {len(models)} models")
         return models
 
-    # ------------------------------------------------------------------
-    # Parsing helpers (pure functions, easy to unit-test)
-    # ------------------------------------------------------------------
-
-    def _parse_model_card(
-        self, display_name: str, card_text: str
+    def _build_model_entry_from_prices(
+        self, display_name: str, prices: Dict[str, float]
     ) -> Optional[Dict[str, Any]]:
-        """
-        Extract pricing from a model card's text content.
-
-        Returns None if input/output prices cannot be found (e.g. image or
-        audio-only models where pricing is not in $/1M token format).
-        """
-        prices: Dict[str, float] = {}
-        for match in _PRICE_RE.finditer(card_text):
-            label = match.group(1).strip().lower()
-            value = float(match.group(2).replace(",", ""))
-            prices[label] = value
-
         input_price = prices.get("input")
         output_price = prices.get("output")
 
         if input_price is None or output_price is None:
             logger.debug(
-                f"OpenAI: no $/1M input+output for {display_name!r} — skipping "
+                f"OpenAI: no input+output for {display_name!r} — skipping "
                 f"(found labels: {list(prices)})"
             )
             return None
@@ -163,7 +167,6 @@ class OpenAIFetcher(BaseFetcher):
             "family": self._extract_family(display_name),
         }
 
-        # Prompt caching
         cached_price = prices.get("cached input")
         cache_pricing = (
             {"cache_read_input_price": cached_price} if cached_price is not None else None
@@ -178,36 +181,22 @@ class OpenAIFetcher(BaseFetcher):
     @staticmethod
     def _normalize_display_name(display_name: str) -> str:
         """
-        Convert OpenAI display name to a lowercase kebab-case model ID.
-
-        'GPT-4o' → 'gpt-4o'
-        'GPT-4o mini' → 'gpt-4o-mini'
+        'GPT-5.4' → 'gpt-5.4'
+        'GPT-5.4 mini' → 'gpt-5.4-mini'
         'o3-mini' → 'o3-mini'
         """
         name = display_name.lower().strip()
-        # Collapse whitespace to hyphens
         name = re.sub(r"\s+", "-", name)
-        # Strip leading/trailing hyphens
         name = name.strip("-")
         return name
 
     @staticmethod
     def _extract_family(display_name: str) -> str:
-        """
-        Best-effort model family from display name.
-
-        'GPT-4o mini' → 'gpt-4o'
-        'GPT-4o' → 'gpt-4o'
-        'o3-mini' → 'o3'
-        """
         name = display_name.lower().strip()
-        # Split on spaces; keep hyphenated tokens whole
         parts = name.split()
-        # Family = first token (e.g. "gpt-4o", "o3-mini" → "o3")
         if not parts:
             return "openai"
         first = parts[0]
-        # Strip qualifier suffixes like "-mini", "-nano" from the family name
         family = re.sub(r"-(mini|nano|micro|small|large|pro|plus)$", "", first)
         return family
 
