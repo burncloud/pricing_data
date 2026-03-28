@@ -16,6 +16,9 @@ from scripts.fetch.base import BaseFetcher
 
 logger = logging.getLogger(__name__)
 
+# Known non-model entries in the LiteLLM JSON (documentation templates, etc.)
+_SKIP_MODEL_IDS = frozenset({"sample_spec"})
+
 # litellm_provider values that are proxy routes — skip them.
 # The same models appear directly as litellm_provider=anthropic/openai/etc.
 _SKIP_PROVIDERS = frozenset({
@@ -83,6 +86,10 @@ class LiteLLMFetcher(BaseFetcher):
 
         for raw_id, entry in raw.items():
             if not isinstance(entry, dict):
+                continue
+
+            # Skip documentation templates
+            if raw_id in _SKIP_MODEL_IDS:
                 continue
 
             # Skip proxy routes — direct entries cover these models
@@ -162,9 +169,9 @@ class LiteLLMFetcher(BaseFetcher):
             "provider": entry.get("litellm_provider", "unknown"),
             "family": self._extract_family(entry.get("litellm_provider", ""), entry),
         }
-        if entry.get("max_tokens"):
+        if isinstance(entry.get("max_tokens"), int) and entry["max_tokens"] > 0:
             metadata["context_window"] = entry["max_tokens"]
-        if entry.get("max_output_tokens"):
+        if isinstance(entry.get("max_output_tokens"), int) and entry["max_output_tokens"] > 0:
             metadata["max_output_tokens"] = entry["max_output_tokens"]
         model["metadata"] = metadata
 
