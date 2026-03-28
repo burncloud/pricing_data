@@ -4,24 +4,38 @@
 
 **What:** After priority-based source selection, enrich winning model entry with `batch_pricing`/`tiered_pricing` from any lower-priority source that has them.
 
-**Why:** Currently LiteLLM (priority 70) wins over OpenRouter (50) for all overlapping models, so batch_pricing is included correctly. But when direct provider fetchers at priority 100 (Anthropic, OpenAI) are added, they'll overwrite LiteLLM's entry entirely — and `batch_pricing`/`tiered_pricing` will disappear.
+**Why:** Anthropic (priority 100), Google (priority 100), DeepSeek (priority 100) are now live. They win over LiteLLM (priority 70), so LiteLLM's `batch_pricing`/`tiered_pricing` gets silently dropped for any model those fetchers cover.
 
-**Context:** `scripts/merge.py` `_merge_with_priority()` selects the highest-priority source for the full model entry. Adding a field-enrichment pass after selection would copy missing `batch_pricing`/`tiered_pricing` from any source. This is a new codepath with new tests needed.
+**Context:** `scripts/merge.py` `_merge_with_priority()` selects the highest-priority source for the full model entry. A field-enrichment pass after `_merge_endpoints` would copy missing pricing fields from lower-priority sources. New codepath, new tests needed. The `_merge_endpoints` mechanism (already in place) handles endpoint-level merging — this is the pricing-field-level complement.
 
 **Effort:** M (human ~1 day / CC ~15 min)
-**Priority:** P2
-**Depends on:** Direct provider fetchers being added (priority 100)
+**Priority:** P2 — NOW URGENT (Anthropic/Google/DeepSeek at priority 100 are live)
+**Depends on:** Nothing blocking. Anthropic, Google, DeepSeek fetchers are already shipping.
 
 ---
 
-## P3 — Direct Provider Fetchers (Anthropic, OpenAI, Google)
+## P3 — Fix OpenAI Playwright Fetcher
 
-**What:** Write `scripts/fetch/anthropic.py`, `scripts/fetch/openai.py`, `scripts/fetch/google.py` that fetch pricing from official provider documentation/APIs.
+**What:** `scripts/fetch/openai.py` fails in CI with Playwright timeout (`waiting for locator("text=/1M tokens/") to be visible`). OpenAI pricing page structure changed. 144 OpenAI models are currently aggregator-only.
 
-**Why:** LiteLLM batch/tiered data can be 3-5 days stale. Direct fetchers would give same-day accuracy. Also enables the field-level enrichment pattern (P2 above).
+**Why:** OpenAI is the most-referenced provider. Accurate first-party prices matter. Currently relying solely on LiteLLM/OpenRouter for OpenAI pricing.
 
-**Context:** Provider pricing APIs don't exist — this requires HTML scraping of pricing pages OR accepting LiteLLM latency. LiteLLM is community-maintained and has historically been accurate. Direct fetchers are fragile (break on page layout changes).
+**Context:** Anthropic, Google, DeepSeek fetchers are working. OpenAI alone is broken. Options: (a) fix the Playwright selector to match current page structure, (b) switch to scraping the OpenAI pricing API endpoint if one exists, (c) expand manual_overrides.json to cover key OpenAI models with verified prices.
 
-**Effort:** XL (human ~1 week / CC ~60 min, each provider has different page structure)
+**Effort:** M (human ~2h / CC ~20 min)
 **Priority:** P3
-**Depends on:** Nothing. But P2 (field enrichment) should be done first.
+**Depends on:** Nothing.
+
+---
+
+## P4 — Chinese Providers Beyond Zhipu
+
+**What:** Add fetchers for Baidu (文心), Moonshot (Kimi), MiniMax, Qwen/DashScope with direct CNY pricing.
+
+**Why:** These are listed in the design doc as targets. Currently only Zhipu (bigmodel.cn) has a direct fetcher. Other Chinese providers are aggregator-only.
+
+**Context:** Zhipu required Playwright + custom parser. Other providers likely need similar approaches. DashScope has an API. Moonshot has a pricing page.
+
+**Effort:** XL (human ~1 week / CC ~60 min per provider)
+**Priority:** P4
+**Depends on:** Nothing blocking.

@@ -54,11 +54,16 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet pricing.json pricing.md; then
+          # Compare .models content only — updated_at changes every run and is noise.
+          # Two runs with identical prices must NOT produce a commit.
+          PREV=$(git show HEAD:pricing.json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps(d.get('models',{}), sort_keys=True))" 2>/dev/null || echo "{}")
+          CURR=$(python3 -c "import sys,json; d=json.load(open('pricing.json')); print(json.dumps(d.get('models',{}), sort_keys=True))")
+          if [ "$PREV" = "$CURR" ]; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ **No price changes detected**" >> $GITHUB_STEP_SUMMARY
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "### Changes detected" >> $GITHUB_STEP_SUMMARY
+            echo "### Price changes detected" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             git diff --stat pricing.json pricing.md >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY

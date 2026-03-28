@@ -186,14 +186,19 @@ class TestRender:
         assert "Cache Read" in md
 
     def test_cache_column_absent_without_cache_data(self):
+        # Use a model NOT in QUICK_REF_MODELS so the Quick Reference table isn't rendered
         data = _make_data({
-            "gpt-4o": {
+            "some-obscure-model": {
                 "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
                 "metadata": {"provider": "openai", "_merged_from": "litellm"},
             }
         })
         md = render(data)
-        assert "Cache Read" not in md
+        # The provider section (## OpenAI) should not have a Cache Read column
+        openai_section = md[md.index("## OpenAI"):]
+        next_section = openai_section.find("\n## ", 1)
+        provider_table = openai_section[:next_section] if next_section != -1 else openai_section
+        assert "Cache Read" not in provider_table
 
     def test_batch_columns_appear_when_present(self):
         data = _make_data({
@@ -247,4 +252,38 @@ class TestRender:
         })
         md = render(data)
         assert "## Providers" in md
+
+    def test_quick_reference_rendered_for_known_models(self):
+        """Known quick-ref models appear in a ## Quick Reference section."""
+        data = _make_data({
+            "gpt-4o": {
+                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
+                "metadata": {"provider": "openai", "_merged_from": "litellm"},
+            }
+        })
+        md = render(data)
+        assert "## Quick Reference" in md
+        assert "gpt-4o" in md[md.index("## Quick Reference"):md.index("## Providers")]
+
+    def test_quick_reference_absent_when_no_known_models(self):
+        """No quick-ref section when no QUICK_REF_MODELS are present in data."""
+        data = _make_data({
+            "some-obscure-model-xyz": {
+                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 1.0, "output_price": 2.0}}},
+                "metadata": {"provider": "openai", "_merged_from": "litellm"},
+            }
+        })
+        md = render(data)
+        assert "## Quick Reference" not in md
+
+    def test_quick_reference_jump_link_in_header(self):
+        """Header contains jump link to Quick Reference."""
+        data = _make_data({
+            "gpt-4o": {
+                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
+                "metadata": {"provider": "openai", "_merged_from": "litellm"},
+            }
+        })
+        md = render(data)
+        assert "Quick Reference" in md[:500]
         assert "OpenAI" in md

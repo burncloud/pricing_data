@@ -162,6 +162,63 @@ def render(data: Dict) -> str:
         "",
         "> Prices are **per million tokens (MTok)** unless noted.  ",
         "> USD prices in **$**, CNY prices in **¥**.  ",
+        "> Jump to: [Quick Reference](#quick-reference) · [All Providers](#providers)",
+        "",
+    ]
+
+    # ---------------------------------------------------------- quick reference
+    QUICK_REF_MODELS = [
+        # Anthropic
+        "claude-opus-4-6", "claude-sonnet-4-6", "claude-haiku-3-5",
+        # OpenAI
+        "gpt-4o", "gpt-4o-mini", "o3", "o3-mini",
+        # Google
+        "gemini-2.5-pro", "gemini-2.0-flash", "gemini-2.0-flash-lite",
+        # DeepSeek
+        "deepseek-chat", "deepseek-reasoner",
+        # xAI
+        "grok-3", "grok-3-mini",
+        # Mistral
+        "mistral-large-latest", "mistral-small-latest",
+        # Zhipu
+        "glm-4-plus", "glm-4.7-flash",
+        # Meta
+        "llama-3.3-70b-instruct",
+    ]
+    qr_rows = []
+    for mid in QUICK_REF_MODELS:
+        m = models.get(mid)
+        if not m:
+            continue
+        ep_key, ep = pick_canonical_endpoint(m)
+        p = ep.get("pricing", {})
+        if not p.get("input_price"):
+            continue
+        currency = ep.get("currency", "USD")
+        sym = CURRENCY_SYMBOL.get(currency, currency)
+        provider = m.get("metadata", {}).get("provider", "")
+        display_prov = PROVIDER_DISPLAY.get(provider, provider.title())
+        inp = fmt_price(p.get("input_price"), sym)
+        out = fmt_price(p.get("output_price"), sym)
+        cp = ep.get("cache_pricing", {})
+        bp = ep.get("batch_pricing", {})
+        cache = fmt_price(cp.get("cache_read_input_price"), sym) if cp else "—"
+        batch = fmt_price(bp.get("input_price"), sym) if bp else "—"
+        qr_rows.append(f"| `{mid}` | {display_prov} | {inp} | {out} | {cache} | {batch} | {currency} |")
+
+    if qr_rows:
+        lines += [
+            "## Quick Reference",
+            "",
+            "Most-used models across major providers. Cache Read and Batch In are per MTok.",
+            "",
+            "| Model | Provider | Input | Output | Cache Read | Batch In | Currency |",
+            "|-------|----------|------:|-------:|-----------:|---------:|---------|",
+        ]
+        lines += qr_rows
+        lines.append("")
+
+    lines += [
         "> Cache / Batch columns appear only when at least one model in the section offers them.",
         "",
     ]

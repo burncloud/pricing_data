@@ -4,6 +4,32 @@
 
 > Prices are **per million tokens (MTok)** unless noted.  
 > USD prices in **$**, CNY prices in **¥**.  
+> Jump to: [Quick Reference](#quick-reference) · [All Providers](#providers)
+
+## Quick Reference
+
+Most-used models across major providers. Cache Read and Batch In are per MTok.
+
+| Model | Provider | Input | Output | Cache Read | Batch In | Currency |
+|-------|----------|------:|-------:|-----------:|---------:|---------|
+| `claude-opus-4-6` | Anthropic | $5.00 | $25.00 | — | — | USD |
+| `claude-sonnet-4-6` | Anthropic | $3.00 | $15.00 | — | — | USD |
+| `gpt-4o` | OpenAI | $2.50 | $10.00 | — | $1.25 | USD |
+| `gpt-4o-mini` | OpenAI | $0.15 | $0.60 | — | $0.075 | USD |
+| `o3` | OpenAI | $2.00 | $8.00 | — | — | USD |
+| `o3-mini` | OpenAI | $1.10 | $4.40 | — | — | USD |
+| `gemini-2.5-pro` | Google | $1.25 | $10.00 | $0.12 | — | USD |
+| `gemini-2.0-flash` | Google | $0.10 | $0.40 | $0.025 | — | USD |
+| `gemini-2.0-flash-lite` | Google | $0.075 | $0.30 | — | — | USD |
+| `deepseek-chat` | DeepSeek | $0.28 | $0.42 | $0.028 | — | USD |
+| `deepseek-reasoner` | DeepSeek | $0.28 | $0.42 | $0.028 | — | USD |
+| `grok-3` | xAI (Grok) | $3.00 | $15.00 | — | — | USD |
+| `grok-3-mini` | xAI (Grok) | $0.30 | $0.50 | — | — | USD |
+| `mistral-large-latest` | Mistral | $0.50 | $1.50 | — | — | USD |
+| `mistral-small-latest` | Mistral | $0.060 | $0.18 | — | — | USD |
+| `glm-4-plus` | Zhipu AI (智谱) | ¥5.00 | ¥5.00 | — | — | CNY |
+| `llama-3.3-70b-instruct` | Meta (Llama) | $0.10 | $0.32 | — | — | USD |
+
 > Cache / Batch columns appear only when at least one model in the section offers them.
 
 ## Providers
