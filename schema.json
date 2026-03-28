@@ -147,7 +147,7 @@
     },
     "Metadata": {
       "type": "object",
-      "required": ["provider", "family"],
+      "required": ["provider"],
       "properties": {
         "context_window": {
           "type": "integer",
