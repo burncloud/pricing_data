@@ -82,8 +82,9 @@ class TestParseModelCard:
         entry = fetcher._parse_model_card("GPT-4o", card_text)
 
         assert entry is not None
-        assert entry["pricing"]["USD"]["input_price"] == pytest.approx(2.50)
-        assert entry["pricing"]["USD"]["output_price"] == pytest.approx(10.00)
+        ep = entry["endpoints"]["api.openai.com"]
+        assert ep["pricing"]["input_price"] == pytest.approx(2.50)
+        assert ep["pricing"]["output_price"] == pytest.approx(10.00)
 
     def test_with_cached_input(self, fetcher):
         card_text = (
@@ -95,8 +96,9 @@ class TestParseModelCard:
         entry = fetcher._parse_model_card("GPT-4o", card_text)
 
         assert entry is not None
-        assert "cache_pricing" in entry
-        assert entry["cache_pricing"]["USD"]["cache_read_input_price"] == pytest.approx(0.25)
+        ep = entry["endpoints"]["api.openai.com"]
+        assert "cache_pricing" in ep
+        assert ep["cache_pricing"]["cache_read_input_price"] == pytest.approx(0.25)
 
     def test_no_cache_when_absent(self, fetcher):
         card_text = (
@@ -104,7 +106,8 @@ class TestParseModelCard:
             "Output:\n$10.00 / 1M tokens\n"
         )
         entry = fetcher._parse_model_card("GPT-4o", card_text)
-        assert "cache_pricing" not in entry
+        ep = entry["endpoints"]["api.openai.com"]
+        assert "cache_pricing" not in ep
 
     def test_missing_output_returns_none(self, fetcher):
         card_text = "Input:\n$2.50 / 1M tokens\n"
@@ -142,8 +145,9 @@ class TestParseModelCard:
         )
         entry = fetcher._parse_model_card("Expensive Model", card_text)
         assert entry is not None
-        assert entry["pricing"]["USD"]["input_price"] == pytest.approx(1000.0)
-        assert entry["pricing"]["USD"]["output_price"] == pytest.approx(2000.0)
+        ep = entry["endpoints"]["api.openai.com"]
+        assert ep["pricing"]["input_price"] == pytest.approx(1000.0)
+        assert ep["pricing"]["output_price"] == pytest.approx(2000.0)
 
 
 # ---------------------------------------------------------------------------
@@ -204,11 +208,11 @@ class TestFetchWithMockedScrape:
     def test_successful_fetch(self, fetcher):
         mock_models = {
             "gpt-4o": {
-                "pricing": {"USD": {"input_price": 2.5, "output_price": 10.0}},
+                "endpoints": {"api.openai.com": {"base_url": "https://api.openai.com/v1", "currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
                 "metadata": {"provider": "openai", "family": "gpt-4o"},
             },
             "gpt-4o-mini": {
-                "pricing": {"USD": {"input_price": 0.15, "output_price": 0.60}},
+                "endpoints": {"api.openai.com": {"base_url": "https://api.openai.com/v1", "currency": "USD", "pricing": {"input_price": 0.15, "output_price": 0.60}}},
                 "metadata": {"provider": "openai", "family": "gpt-4o"},
             },
         }

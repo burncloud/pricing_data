@@ -18,6 +18,10 @@ class FetcherConfig:
     retry_delays: List[float] = field(default_factory=lambda: [1.0, 2.0, 4.0])
     requires_auth: bool = False
     auth_env_var: Optional[str] = None
+    # Endpoint-keyed pricing fields
+    endpoint_key: str = ""    # domain key used in the "endpoints" dict (e.g. "api.openai.com")
+    base_url: str = ""        # canonical API base URL for that endpoint
+    currency: str = "USD"     # currency for prices from this endpoint
 
     @property
     def api_key(self) -> Optional[str]:
@@ -102,6 +106,9 @@ class Config:
                 timeout=60.0,   # Playwright needs more time than plain HTTP
                 max_retries=1,  # No retry for browser automation
                 requires_auth=False,
+                endpoint_key="api.openai.com",
+                base_url="https://api.openai.com/v1",
+                currency="USD",
             ),
             "anthropic": FetcherConfig(
                 name="anthropic",
@@ -109,6 +116,9 @@ class Config:
                 timeout=30.0,
                 max_retries=3,
                 requires_auth=False,
+                endpoint_key="api.anthropic.com",
+                base_url="https://api.anthropic.com",
+                currency="USD",
             ),
             "google": FetcherConfig(
                 name="google",
@@ -116,6 +126,9 @@ class Config:
                 timeout=30.0,
                 max_retries=3,
                 requires_auth=False,
+                endpoint_key="generativelanguage.googleapis.com",
+                base_url="https://generativelanguage.googleapis.com",
+                currency="USD",
             ),
             "deepseek": FetcherConfig(
                 name="deepseek",
@@ -123,6 +136,9 @@ class Config:
                 timeout=30.0,
                 max_retries=3,
                 requires_auth=False,
+                endpoint_key="api.deepseek.com",
+                base_url="https://api.deepseek.com/v1",
+                currency="USD",
             ),
             "openrouter": FetcherConfig(
                 name="openrouter",
@@ -131,6 +147,9 @@ class Config:
                 max_retries=3,
                 requires_auth=True,
                 auth_env_var="OPENROUTER_API_KEY",
+                endpoint_key="openrouter.ai",
+                base_url="https://openrouter.ai/api/v1",
+                currency="USD",
             ),
             "litellm": FetcherConfig(
                 name="litellm",
@@ -138,14 +157,19 @@ class Config:
                 timeout=30.0,
                 max_retries=3,
                 requires_auth=False,
+                endpoint_key="litellm",
+                base_url="",
+                currency="USD",
             ),
             "zhipu": FetcherConfig(
                 name="zhipu",
-                url="https://open.bigmodel.cn/api/paas/v4/models",
-                timeout=30.0,
-                max_retries=3,
-                requires_auth=True,
-                auth_env_var="ZHIPU_API_KEY",
+                url="https://open.bigmodel.cn/pricing",
+                timeout=45.0,
+                max_retries=2,
+                requires_auth=False,
+                endpoint_key="open.bigmodel.cn",
+                base_url="https://open.bigmodel.cn/api/paas/v4",
+                currency="CNY",
             ),
             "aliyun": FetcherConfig(
                 name="aliyun",
@@ -154,6 +178,9 @@ class Config:
                 max_retries=3,
                 requires_auth=True,
                 auth_env_var="ALIYUN_API_KEY",
+                endpoint_key="dashscope.aliyuncs.com",
+                base_url="https://dashscope.aliyuncs.com/api/v1",
+                currency="CNY",
             ),
             "baidu": FetcherConfig(
                 name="baidu",
@@ -162,6 +189,9 @@ class Config:
                 max_retries=3,
                 requires_auth=True,
                 auth_env_var="BAIDU_API_KEY",
+                endpoint_key="aip.baidubce.com",
+                base_url="https://aip.baidubce.com",
+                currency="CNY",
             ),
             "xunfei": FetcherConfig(
                 name="xunfei",
@@ -170,6 +200,9 @@ class Config:
                 max_retries=3,
                 requires_auth=True,
                 auth_env_var="XUNFEI_API_KEY",
+                endpoint_key="spark-api-open.xf-yun.com",
+                base_url="https://spark-api-open.xf-yun.com/v1",
+                currency="CNY",
             ),
             "moonshot": FetcherConfig(
                 name="moonshot",
@@ -178,6 +211,9 @@ class Config:
                 max_retries=3,
                 requires_auth=True,
                 auth_env_var="MOONSHOT_API_KEY",
+                endpoint_key="api.moonshot.cn",
+                base_url="https://api.moonshot.cn/v1",
+                currency="CNY",
             ),
             "minimax": FetcherConfig(
                 name="minimax",
@@ -186,6 +222,9 @@ class Config:
                 max_retries=3,
                 requires_auth=True,
                 auth_env_var="MINIMAX_API_KEY",
+                endpoint_key="api.minimax.chat",
+                base_url="https://api.minimax.chat/v1",
+                currency="CNY",
             ),
         }
 

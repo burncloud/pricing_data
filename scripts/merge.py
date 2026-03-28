@@ -62,7 +62,7 @@ class PricingMerger:
 
         # Build output structure (field names must match burncloud PricingConfig)
         output = {
-            "version": "1.0",
+            "version": "2.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "source": "burncloud-official",
             "models": merged_models,
@@ -129,9 +129,10 @@ class PricingMerger:
         Merge models from all sources using priority resolution.
 
         When the same model appears in multiple sources:
-        1. Use pricing from highest priority source
-        2. Merge metadata (prefer non-null values)
-        3. Log warnings for price conflicts >1%
+        1. Use the highest-priority source as the base structure
+        2. Merge endpoints: lower-priority sources can contribute endpoint keys
+           the winner doesn't have (e.g. CNY from bigmodel.cn + USD from z.ai)
+        3. Log warnings for price conflicts on the same endpoint key
         """
         merged = {}
         model_sources: Dict[str, List[Tuple[str, Dict[str, Any], int]]] = {}
@@ -159,20 +160,12 @@ class PricingMerger:
             merged[normalized_id] = self._normalize_model_format(primary_data)
 
             if len(source_list) > 1:
-                # Currency-level merge for pricing / cache_pricing / batch_pricing:
-                # For each currency key, keep the highest-priority source that has it.
-                # This lets USD (z.ai / international) and CNY (bigmodel.cn / China)
-                # coexist in the same model entry — neither overwrites the other.
-                for field in ("pricing", "cache_pricing", "batch_pricing"):
-                    self._merge_currencies(normalized_id, merged, source_list, field)
+                # Endpoint-level merge: lower-priority sources can contribute
+                # endpoint keys the winner doesn't have (e.g. CNY bigmodel.cn
+                # endpoint alongside USD api.openai.com endpoint).
+                self._merge_endpoints(normalized_id, merged, source_list)
 
-                # Field-level enrichment: tiered_pricing from lower source if winner lacks it
-                for _src_name, src_data, _src_priority in source_list[1:]:
-                    if "tiered_pricing" not in merged[normalized_id] and "tiered_pricing" in src_data:
-                        merged[normalized_id]["tiered_pricing"] = copy.deepcopy(src_data["tiered_pricing"])
-                        logger.debug(f"Field-enriched {normalized_id}.tiered_pricing from {_src_name}")
-
-            # Check for price conflicts
+            # Check for price conflicts on shared endpoint keys
             if len(source_list) > 1:
                 self._check_price_conflicts(normalized_id, source_list, warnings)
 
@@ -183,51 +176,43 @@ class PricingMerger:
 
         return merged
 
-    def _merge_currencies(
+    def _merge_endpoints(
         self,
         model_id: str,
         merged: Dict[str, Any],
         source_list: List[Tuple[str, Dict[str, Any], int]],
-        field: str,
     ) -> None:
         """
-        Merge a pricing field (pricing / cache_pricing / batch_pricing) across
-        sources at currency granularity.
+        Merge endpoint entries across sources.
 
-        Rule: for each currency key (USD, CNY, …), keep whichever source has the
-        highest priority.  A lower-priority source can contribute a currency that
-        the winner does not have — it never overwrites an existing currency entry.
+        Rule: for each endpoint key (api.openai.com, open.bigmodel.cn, …), keep
+        whichever source has the highest priority.  A lower-priority source can
+        contribute an endpoint the winner does not have — it never overwrites an
+        existing endpoint entry.
 
         Example:
-            source A (priority 100, USD only):  {"USD": {input:2.5, output:10}}
-            source B (priority 70,  CNY only):  {"CNY": {input:18,  output:72}}
-            result: {"USD": {input:2.5, output:10}, "CNY": {input:18, output:72}}
+            source A (priority 100, api.openai.com/USD only)
+            source B (priority 70,  openrouter.ai/USD)
+            source C (priority 100, open.bigmodel.cn/CNY only)
+            result: all three endpoint keys present
         """
-        # Build a priority-ordered map: currency → already-seen priority
-        seen_currencies: Dict[str, int] = {}
+        seen_endpoints: Dict[str, int] = {}
 
-        # Seed with what the winner already contributed (full priority)
+        # Seed with what the winner already contributed
         winner_priority = source_list[0][2]
-        for currency in merged[model_id].get(field, {}):
-            seen_currencies[currency] = winner_priority
+        for ep_key in merged[model_id].get("endpoints", {}):
+            seen_endpoints[ep_key] = winner_priority
 
-        # Walk sources in priority order; add currencies the winner didn't have
+        # Walk sources in priority order; add endpoints the winner didn't have
         for src_name, src_data, src_priority in source_list[1:]:
-            src_field = src_data.get(field, {})
-            if not isinstance(src_field, dict):
-                continue
-            for currency, currency_data in src_field.items():
-                if currency not in seen_currencies:
-                    # Normalize and add
-                    normalized_entry = self._normalize_model_format(
-                        {field: {currency: currency_data}}
-                    )
-                    if field not in merged[model_id]:
-                        merged[model_id][field] = {}
-                    merged[model_id][field][currency] = normalized_entry.get(field, {}).get(currency, currency_data)
-                    seen_currencies[currency] = src_priority
+            for ep_key, ep_data in src_data.get("endpoints", {}).items():
+                if ep_key not in seen_endpoints:
+                    if "endpoints" not in merged[model_id]:
+                        merged[model_id]["endpoints"] = {}
+                    merged[model_id]["endpoints"][ep_key] = copy.deepcopy(ep_data)
+                    seen_endpoints[ep_key] = src_priority
                     logger.debug(
-                        f"Currency-merged {model_id}.{field}.{currency} from {src_name} "
+                        f"Endpoint-merged {model_id}.endpoints.{ep_key} from {src_name} "
                         f"(priority {src_priority})"
                     )
 
@@ -249,97 +234,80 @@ class PricingMerger:
         source_list: List[Tuple[str, Dict[str, Any], int]],
         warnings: List[str]
     ) -> None:
-        """Check for price conflicts between sources (standard and batch pricing)."""
-        self._check_pricing_field_conflicts(
-            model_id, source_list, warnings, field="pricing"
-        )
-        self._check_pricing_field_conflicts(
-            model_id, source_list, warnings, field="batch_pricing"
-        )
+        """
+        Check for price conflicts on shared endpoint keys across sources.
 
-    def _check_pricing_field_conflicts(
-        self,
-        model_id: str,
-        source_list: List[Tuple[str, Dict[str, Any], int]],
-        warnings: List[str],
-        field: str,
-    ) -> None:
-        """Check for input_price drift in a given pricing field across sources."""
-        prices = []
-
+        For each endpoint key that appears in more than one source, compare
+        the pricing.input_price and batch_pricing.input_price for drift.
+        """
+        # Collect endpoint-keyed prices: {ep_key: [(source_name, pricing, batch_pricing), ...]}
+        ep_sources: Dict[str, List[Tuple[str, Dict, Dict]]] = {}
         for source_name, model_data, _ in source_list:
-            pricing = model_data.get(field, {})
-            for currency, price_info in pricing.items():
-                if not isinstance(price_info, dict):
-                    continue
-                input_price = price_info.get("input_price")
-                output_price = price_info.get("output_price")
-                if input_price is not None:
-                    prices.append((source_name, currency, input_price, output_price))
+            for ep_key, ep_data in model_data.get("endpoints", {}).items():
+                if ep_key not in ep_sources:
+                    ep_sources[ep_key] = []
+                ep_sources[ep_key].append((
+                    source_name,
+                    ep_data.get("pricing", {}),
+                    ep_data.get("batch_pricing", {}),
+                ))
 
-        if len(prices) < 2:
-            return
+        for ep_key, ep_list in ep_sources.items():
+            if len(ep_list) < 2:
+                continue
 
-        # Compare first two sources
-        base_source, base_currency, base_input, base_output = prices[0]
-        other_source, other_currency, other_input, other_output = prices[1]
+            base_source, base_pricing, base_batch = ep_list[0]
+            other_source, other_pricing, other_batch = ep_list[1]
 
-        # Only compare same currency
-        if base_currency != other_currency:
-            return
-
-        # Check for >1% drift
-        if base_input and other_input:
-            drift = abs(base_input - other_input) / base_input
-            if drift > config.price_drift_warning_threshold:
-                label = "Batch price" if field == "batch_pricing" else "Price"
-                warning = (
-                    f"{label} drift detected for {model_id}: "
-                    f"{base_source}={base_input} vs {other_source}={other_input} "
-                    f"({drift*100:.1f}% difference)"
-                )
-                warnings.append(warning)
-                logger.warning(warning)
+            for label, base_p, other_p in [
+                ("Price", base_pricing, other_pricing),
+                ("Batch price", base_batch, other_batch),
+            ]:
+                base_input = base_p.get("input_price")
+                other_input = other_p.get("input_price")
+                if base_input and other_input:
+                    drift = abs(base_input - other_input) / base_input
+                    if drift > config.price_drift_warning_threshold:
+                        warning = (
+                            f"{label} drift detected for {model_id} [{ep_key}]: "
+                            f"{base_source}={base_input} vs {other_source}={other_input} "
+                            f"({drift*100:.1f}% difference)"
+                        )
+                        warnings.append(warning)
+                        logger.warning(warning)
 
     def _normalize_model_format(self, model: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Normalize a model entry to burncloud PricingConfig format.
+        Normalize a model entry to burncloud PricingConfig format (endpoint-keyed).
 
-        Fixes:
-        - Remove 'unit' field from pricing (not in CurrencyPricing struct)
-        - Move cache_pricing out of pricing dict to top-level if misplaced
+        Fixes per endpoint entry:
+        - null output_price → 0.0
         - cache_write_input_price → cache_creation_input_price
-        - null output_price → 0.0 (CurrencyPricing.output_price is i64, not Option)
-        - Warn on output_price == 0
+        - Remove stray 'unit' or 'source' fields from pricing dicts
         """
         model = copy.deepcopy(model)
 
-        # Fix pricing entries
-        pricing = model.get("pricing", {})
-        cache_pricing_from_nested = None
-        for currency, pp in list(pricing.items()):
-            if not isinstance(pp, dict):
+        for ep_key, ep_data in model.get("endpoints", {}).items():
+            if not isinstance(ep_data, dict):
                 continue
-            pp.pop("unit", None)
-            if pp.get("output_price") is None:
-                logger.warning(f"output_price is null, setting to 0.0")
-                pp["output_price"] = 0.0
-            elif pp.get("output_price") == 0.0:
-                logger.debug(f"output_price is 0.0 — may be incomplete data")
-            # Move misplaced cache_pricing out of pricing dict
-            if "cache_pricing" in pp:
-                cache_pricing_from_nested = pp.pop("cache_pricing")
 
-        if cache_pricing_from_nested and "cache_pricing" not in model:
-            model["cache_pricing"] = cache_pricing_from_nested
+            # Normalize flat pricing
+            pricing = ep_data.get("pricing", {})
+            if isinstance(pricing, dict):
+                pricing.pop("unit", None)
+                pricing.pop("source", None)
+                if pricing.get("output_price") is None:
+                    logger.warning(f"output_price is null for {ep_key}, setting to 0.0")
+                    pricing["output_price"] = 0.0
+                elif pricing.get("output_price") == 0.0:
+                    logger.debug(f"output_price is 0.0 for {ep_key} — may be incomplete data")
 
-        # Fix cache_pricing field names
-        for currency, cp in model.get("cache_pricing", {}).items():
-            if not isinstance(cp, dict):
-                continue
-            cp.pop("unit", None)
-            if "cache_write_input_price" in cp:
-                cp["cache_creation_input_price"] = cp.pop("cache_write_input_price")
+            # Fix cache_pricing field names
+            cache_pricing = ep_data.get("cache_pricing", {})
+            if isinstance(cache_pricing, dict):
+                cache_pricing.pop("unit", None)
+                if "cache_write_input_price" in cache_pricing:
+                    cache_pricing["cache_creation_input_price"] = cache_pricing.pop("cache_write_input_price")
 
         return model
 

@@ -2,14 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://pricing.burn.cloud/schema.json",
   "title": "LLM Pricing Data Schema",
-  "description": "Schema for LLM API pricing data",
+  "description": "Schema for LLM API pricing data (endpoint-keyed format v2.0)",
   "type": "object",
   "required": ["version", "updated_at", "source", "models"],
   "properties": {
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+$",
-      "description": "Schema version (e.g., '1.0')"
+      "description": "Schema version (e.g., '2.0')"
     },
     "updated_at": {
       "type": "string",
@@ -30,41 +30,47 @@
   "definitions": {
     "Model": {
       "type": "object",
-      "required": ["pricing", "metadata"],
+      "required": ["endpoints", "metadata"],
       "properties": {
-        "pricing": {
+        "endpoints": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/Pricing"
+            "$ref": "#/definitions/EndpointEntry"
           },
-          "description": "Pricing by currency (USD, CNY)"
-        },
-        "cache_pricing": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/CachePricing"
-          },
-          "description": "Prompt caching pricing by currency"
-        },
-        "batch_pricing": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/BatchPricing"
-          },
-          "description": "Batch API pricing by currency (same structure as pricing)"
-        },
-        "tiered_pricing": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/PricingTier"
-            }
-          },
-          "description": "Tiered pricing by currency (e.g. price differs by context length)"
+          "description": "Pricing keyed by API endpoint domain (e.g. api.openai.com, open.bigmodel.cn)"
         },
         "metadata": {
           "$ref": "#/definitions/Metadata"
+        }
+      }
+    },
+    "EndpointEntry": {
+      "type": "object",
+      "required": ["base_url", "currency", "pricing"],
+      "properties": {
+        "base_url": {
+          "type": "string",
+          "description": "Canonical API base URL for this endpoint"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency for all prices in this entry (e.g. USD, CNY)"
+        },
+        "pricing": {
+          "$ref": "#/definitions/Pricing"
+        },
+        "cache_pricing": {
+          "$ref": "#/definitions/CachePricing"
+        },
+        "batch_pricing": {
+          "$ref": "#/definitions/BatchPricing"
+        },
+        "tiered_pricing": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingTier"
+          },
+          "description": "Tiered pricing (e.g. price differs by context length)"
         }
       }
     },
@@ -75,16 +81,12 @@
         "input_price": {
           "type": "number",
           "minimum": 0,
-          "description": "Price per 1M tokens for input (USD)"
+          "description": "Price per 1M input tokens"
         },
         "output_price": {
           "type": "number",
           "minimum": 0,
-          "description": "Price per 1M tokens for output (USD)"
-        },
-        "source": {
-          "type": "string",
-          "description": "Data source for this pricing (e.g., 'openai', 'openrouter')"
+          "description": "Price per 1M output tokens"
         }
       }
     },

@@ -182,6 +182,59 @@ class BaseFetcher(ABC):
         """Parse models from the response."""
         pass
 
+    def _build_endpoint_entry(
+        self,
+        pricing: Dict[str, Any],
+        *,
+        cache_pricing: Optional[Dict[str, Any]] = None,
+        batch_pricing: Optional[Dict[str, Any]] = None,
+        tiered_pricing: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        """
+        Build a single endpoint entry for the endpoint-keyed model structure.
+
+        Args:
+            pricing: flat dict with input_price / output_price (no currency wrapper)
+            cache_pricing: optional flat cache pricing dict
+            batch_pricing: optional flat batch pricing dict
+            tiered_pricing: optional tiered pricing structure
+
+        Returns:
+            {"base_url": ..., "currency": ..., "pricing": ..., ...}
+        """
+        entry: Dict[str, Any] = {
+            "base_url": self.fetcher_config.base_url,
+            "currency": self.fetcher_config.currency,
+            "pricing": pricing,
+        }
+        if cache_pricing is not None:
+            entry["cache_pricing"] = cache_pricing
+        if batch_pricing is not None:
+            entry["batch_pricing"] = batch_pricing
+        if tiered_pricing is not None:
+            entry["tiered_pricing"] = tiered_pricing
+        return entry
+
+    def _build_model_entry(
+        self,
+        endpoint_entry: Dict[str, Any],
+        metadata: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """
+        Build a full model entry with endpoint-keyed pricing.
+
+        Args:
+            endpoint_entry: result of _build_endpoint_entry()
+            metadata: provider metadata dict
+
+        Returns:
+            {"endpoints": {endpoint_key: endpoint_entry}, "metadata": metadata}
+        """
+        return {
+            "endpoints": {self.fetcher_config.endpoint_key: endpoint_entry},
+            "metadata": metadata,
+        }
+
     def save_result(self, result: FetchResult, date_str: str) -> Path:
         """
         Save fetch result to sources directory.

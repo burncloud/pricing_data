@@ -172,18 +172,14 @@ class AnthropicFetcher(BaseFetcher):
             input_price = float(m.group(1))
             output_price = float(m.group(2))
 
-            models[model_id] = {
-                "pricing": {
-                    "USD": {
-                        "input_price": input_price,
-                        "output_price": output_price,
-                    }
-                },
-                "metadata": {
-                    "provider": "anthropic",
-                    "family": self._extract_family(model_id),
-                },
+            metadata = {
+                "provider": "anthropic",
+                "family": self._extract_family(model_id),
             }
+            endpoint_entry = self._build_endpoint_entry(
+                {"input_price": input_price, "output_price": output_price}
+            )
+            models[model_id] = self._build_model_entry(endpoint_entry, metadata)
 
         logger.info(f"Anthropic: parsed {len(models)} models")
         return models

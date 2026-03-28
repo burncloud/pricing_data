@@ -132,23 +132,18 @@ class DeepSeekFetcher(BaseFetcher):
 
         models: Dict[str, Any] = {}
         for model_id in model_ids:
-            entry: Dict[str, Any] = {
-                "pricing": {
-                    "USD": {
-                        "input_price": cache_miss,
-                        "output_price": output,
-                    }
-                },
-                "metadata": {
-                    "provider": "deepseek",
-                    "family": self._extract_family(model_id),
-                },
+            metadata = {
+                "provider": "deepseek",
+                "family": self._extract_family(model_id),
             }
-            if cache_hit is not None:
-                entry["cache_pricing"] = {
-                    "USD": {"cache_read_input_price": cache_hit}
-                }
-            models[model_id] = entry
+            cache_pricing = (
+                {"cache_read_input_price": cache_hit} if cache_hit is not None else None
+            )
+            endpoint_entry = self._build_endpoint_entry(
+                {"input_price": cache_miss, "output_price": output},
+                cache_pricing=cache_pricing,
+            )
+            models[model_id] = self._build_model_entry(endpoint_entry, metadata)
 
         logger.info(f"DeepSeek: parsed {len(models)} models")
         return models

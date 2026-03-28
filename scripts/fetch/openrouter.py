@@ -27,15 +27,7 @@ class OpenRouterFetcher(BaseFetcher):
     PRICE_MULTIPLIER = 1_000_000
 
     def __init__(self, config: Config):
-        from scripts.config import FetcherConfig
-        fetcher_config = FetcherConfig(
-            name="openrouter",
-            url="https://openrouter.ai/api/v1/models",
-            timeout=30.0,
-            max_retries=3,
-            requires_auth=True,
-            auth_env_var="OPENROUTER_API_KEY",
-        )
+        fetcher_config = config.fetchers["openrouter"]
         super().__init__(config, fetcher_config)
 
     def _make_request(self) -> Optional[requests.Response]:
@@ -105,19 +97,13 @@ class OpenRouterFetcher(BaseFetcher):
 
             # Extract metadata
             metadata = self._extract_metadata(model_data)
+            metadata["source_id"] = model_id  # Keep original ID for reference
 
-            model_entry: Dict[str, Any] = {
-                "pricing": pricing,
-                "metadata": metadata,
-                "source_id": model_id,  # Keep original ID for reference
-            }
+            # Extract cache pricing
+            cache_pricing = self._extract_cache_pricing(pricing_data) or None
 
-            # Extract cache pricing as top-level field (burncloud format)
-            cache_pricing = self._extract_cache_pricing(pricing_data)
-            if cache_pricing:
-                model_entry["cache_pricing"] = cache_pricing
-
-            models[normalized_id] = model_entry
+            endpoint_entry = self._build_endpoint_entry(pricing, cache_pricing=cache_pricing)
+            models[normalized_id] = self._build_model_entry(endpoint_entry, metadata)
 
         return models
 
@@ -135,7 +121,7 @@ class OpenRouterFetcher(BaseFetcher):
         return model_id
 
     def _extract_pricing(self, pricing_data: Dict[str, Any], model_id: str) -> Dict[str, Any]:
-        """Extract and convert pricing from OpenRouter format."""
+        """Extract and convert pricing from OpenRouter format. Returns flat dict (no currency key)."""
         prompt_price = pricing_data.get("prompt")
         completion_price = pricing_data.get("completion")
 
@@ -154,21 +140,16 @@ class OpenRouterFetcher(BaseFetcher):
                 logger.debug(f"Skipping {model_id}: negative price (OpenRouter sentinel value)")
                 return {}
 
-            pricing = {
-                "USD": {
-                    "input_price": round(input_price, 6),
-                    "output_price": round(output_price, 6),
-                    "source": "openrouter",
-                }
+            return {
+                "input_price": round(input_price, 6),
+                "output_price": round(output_price, 6),
             }
-
-            return pricing
         except (ValueError, TypeError) as e:
             logger.debug(f"Skipping {model_id}: invalid price value — {e}")
             return {}
 
     def _extract_cache_pricing(self, pricing_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Extract cache pricing as a top-level field (separate from pricing)."""
+        """Extract cache pricing. Returns flat dict (no currency key)."""
         cache_read = pricing_data.get("cache_read")
         cache_write = pricing_data.get("cache_write")
 
@@ -177,16 +158,10 @@ class OpenRouterFetcher(BaseFetcher):
 
         try:
             return {
-                "USD": {
-                    "cache_read_input_price": round(float(cache_read or 0) * self.PRICE_MULTIPLIER, 6),
-                    "cache_creation_input_price": round(float(cache_write or 0) * self.PRICE_MULTIPLIER, 6),
-                }
+                "cache_read_input_price": round(float(cache_read or 0) * self.PRICE_MULTIPLIER, 6),
+                "cache_creation_input_price": round(float(cache_write or 0) * self.PRICE_MULTIPLIER, 6),
             }
         except (ValueError, TypeError):
-            return {}
-
-        except (ValueError, TypeError) as e:
-            logger.warning(f"Failed to parse pricing for {model_id}: {e}")
             return {}
 
     def _extract_metadata(self, model_data: Dict[str, Any]) -> Dict[str, Any]:

@@ -101,7 +101,7 @@ class LiteLLMFetcher(BaseFetcher):
             model_id = self._normalize_id(raw_id)
 
             try:
-                model_entry = self._build_model_entry(entry)
+                model_entry = self._build_litellm_entry(entry)
             except Exception as e:
                 logger.warning(f"LiteLLM: skipping {raw_id} — {e}")
                 continue
@@ -123,7 +123,7 @@ class LiteLLMFetcher(BaseFetcher):
             return raw_id.split("/", 1)[1]
         return raw_id
 
-    def _build_model_entry(self, entry: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    def _build_litellm_entry(self, entry: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Build a normalized model entry from a LiteLLM JSON record."""
         input_per_token = entry.get("input_cost_per_token")
         output_per_token = entry.get("output_cost_per_token")
@@ -131,38 +131,34 @@ class LiteLLMFetcher(BaseFetcher):
         if input_per_token is None or output_per_token is None:
             return None
 
-        model: Dict[str, Any] = {
-            "pricing": {
-                "USD": {
-                    "input_price": round(float(input_per_token) * _PER_TOKEN_TO_PER_MILLION, 6),
-                    "output_price": round(float(output_per_token) * _PER_TOKEN_TO_PER_MILLION, 6),
-                }
-            }
+        flat_pricing = {
+            "input_price": round(float(input_per_token) * _PER_TOKEN_TO_PER_MILLION, 6),
+            "output_price": round(float(output_per_token) * _PER_TOKEN_TO_PER_MILLION, 6),
         }
 
-        # Batch pricing
+        # Batch pricing (flat — no currency wrapper)
+        batch_pricing = None
         batch_in = entry.get("input_cost_per_token_batches")
         batch_out = entry.get("output_cost_per_token_batches")
         if batch_in is not None and batch_out is not None:
-            model["batch_pricing"] = {
-                "USD": {
-                    "input_price": round(float(batch_in) * _PER_TOKEN_TO_PER_MILLION, 6),
-                    "output_price": round(float(batch_out) * _PER_TOKEN_TO_PER_MILLION, 6),
-                }
+            batch_pricing = {
+                "input_price": round(float(batch_in) * _PER_TOKEN_TO_PER_MILLION, 6),
+                "output_price": round(float(batch_out) * _PER_TOKEN_TO_PER_MILLION, 6),
             }
 
-        # Tiered pricing — explicit tiered_pricing field takes precedence
+        # Tiered pricing (flat list — no currency wrapper)
+        tiered_pricing = None
         if "tiered_pricing" in entry:
             tiers = self._parse_explicit_tiered(
                 entry["tiered_pricing"],
                 base_output_per_token=float(output_per_token),
             )
             if tiers:
-                model["tiered_pricing"] = {"USD": tiers}
+                tiered_pricing = tiers
         elif "input_cost_per_token_above_128k_tokens" in entry:
             tiers = self._parse_inline_tiered(entry, float(output_per_token))
             if tiers:
-                model["tiered_pricing"] = {"USD": tiers}
+                tiered_pricing = tiers
 
         # Metadata (best-effort)
         metadata: Dict[str, Any] = {
@@ -173,9 +169,13 @@ class LiteLLMFetcher(BaseFetcher):
             metadata["context_window"] = entry["max_tokens"]
         if isinstance(entry.get("max_output_tokens"), int) and entry["max_output_tokens"] > 0:
             metadata["max_output_tokens"] = entry["max_output_tokens"]
-        model["metadata"] = metadata
 
-        return model
+        endpoint_entry = self._build_endpoint_entry(
+            flat_pricing,
+            batch_pricing=batch_pricing,
+            tiered_pricing=tiered_pricing,
+        )
+        return self._build_model_entry(endpoint_entry, metadata)
 
     def _parse_explicit_tiered(
         self,

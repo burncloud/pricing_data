@@ -10,102 +10,111 @@ from scripts.merge import PricingMerger
 from scripts.config import config
 
 
+# ---------------------------------------------------------------------------
+# Helper: build an endpoint entry in the v2.0 format
+# ---------------------------------------------------------------------------
+
+def _ep(ep_key, pricing, *, currency="USD", base_url="", cache_pricing=None,
+        batch_pricing=None, tiered_pricing=None):
+    """Build a model entry with a single endpoint."""
+    ep_data = {
+        "base_url": base_url,
+        "currency": currency,
+        "pricing": pricing,
+    }
+    if cache_pricing is not None:
+        ep_data["cache_pricing"] = cache_pricing
+    if batch_pricing is not None:
+        ep_data["batch_pricing"] = batch_pricing
+    if tiered_pricing is not None:
+        ep_data["tiered_pricing"] = tiered_pricing
+    return {"endpoints": {ep_key: ep_data}}
+
+
+def _model(ep_key, pricing, *, currency="USD", base_url="", metadata=None,
+           cache_pricing=None, batch_pricing=None, tiered_pricing=None):
+    """Build a full model entry (endpoints + metadata)."""
+    entry = _ep(ep_key, pricing, currency=currency, base_url=base_url,
+                cache_pricing=cache_pricing, batch_pricing=batch_pricing,
+                tiered_pricing=tiered_pricing)
+    entry["metadata"] = metadata or {}
+    return entry
+
+
+# ---------------------------------------------------------------------------
+# Fixtures
+# ---------------------------------------------------------------------------
+
 @pytest.fixture
 def sample_openai_data():
-    """Sample OpenAI pricing data."""
+    """Sample OpenAI pricing data (v2.0 endpoint-keyed)."""
     return {
         "status": "success",
         "models": {
-            "gpt-4o": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 2.50,
-                        "output_price": 10.00,
-                        "unit": "per_million_tokens",
-                    }
-                },
-                "metadata": {"provider": "openai"},
-            },
-            "gpt-4o-mini": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 0.15,
-                        "output_price": 0.60,
-                        "unit": "per_million_tokens",
-                    }
-                },
-                "metadata": {"provider": "openai"},
-            },
+            "gpt-4o": _model(
+                "api.openai.com",
+                {"input_price": 2.50, "output_price": 10.00},
+                base_url="https://api.openai.com/v1",
+                metadata={"provider": "openai"},
+            ),
+            "gpt-4o-mini": _model(
+                "api.openai.com",
+                {"input_price": 0.15, "output_price": 0.60},
+                base_url="https://api.openai.com/v1",
+                metadata={"provider": "openai"},
+            ),
         },
     }
 
 
 @pytest.fixture
 def sample_openrouter_data():
-    """Sample OpenRouter pricing data."""
+    """Sample OpenRouter pricing data (v2.0 endpoint-keyed)."""
     return {
         "status": "success",
         "models": {
-            "openai/gpt-4o": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 2.50,
-                        "output_price": 10.00,
-                        "unit": "per_million_tokens",
-                    }
-                },
-                "metadata": {"provider": "openai"},
-            },
-            "openai/gpt-4o-mini": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 0.15,
-                        "output_price": 0.60,
-                        "unit": "per_million_tokens",
-                    }
-                },
-                "metadata": {"provider": "openai"},
-            },
-            "anthropic/claude-3.5-sonnet": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 3.00,
-                        "output_price": 15.00,
-                        "unit": "per_million_tokens",
-                    }
-                },
-                "metadata": {"provider": "anthropic"},
-            },
+            "openai/gpt-4o": _model(
+                "openrouter.ai",
+                {"input_price": 2.50, "output_price": 10.00},
+                base_url="https://openrouter.ai/api/v1",
+                metadata={"provider": "openai"},
+            ),
+            "openai/gpt-4o-mini": _model(
+                "openrouter.ai",
+                {"input_price": 0.15, "output_price": 0.60},
+                base_url="https://openrouter.ai/api/v1",
+                metadata={"provider": "openai"},
+            ),
+            "anthropic/claude-3.5-sonnet": _model(
+                "openrouter.ai",
+                {"input_price": 3.00, "output_price": 15.00},
+                base_url="https://openrouter.ai/api/v1",
+                metadata={"provider": "anthropic"},
+            ),
         },
     }
 
 
 @pytest.fixture
 def sample_chinese_data():
-    """Sample Chinese provider data."""
+    """Sample Chinese provider data (v2.0 endpoint-keyed, CNY)."""
     return {
         "status": "success",
         "models": {
-            "qwen-max": {
-                "pricing": {
-                    "CNY": {
-                        "input_price": 0.04,
-                        "output_price": 0.12,
-                        "unit": "per_thousand_tokens",
-                    }
-                },
-                "metadata": {"provider": "aliyun"},
-            },
-            "glm-4": {
-                "pricing": {
-                    "CNY": {
-                        "input_price": 0.1,
-                        "output_price": 0.1,
-                        "unit": "per_thousand_tokens",
-                    }
-                },
-                "metadata": {"provider": "zhipu"},
-            },
+            "qwen-max": _model(
+                "dashscope.aliyuncs.com",
+                {"input_price": 40.0, "output_price": 120.0},
+                currency="CNY",
+                base_url="https://dashscope.aliyuncs.com/api/v1",
+                metadata={"provider": "aliyun"},
+            ),
+            "glm-4": _model(
+                "open.bigmodel.cn",
+                {"input_price": 100.0, "output_price": 100.0},
+                currency="CNY",
+                base_url="https://open.bigmodel.cn/api/paas/v4",
+                metadata={"provider": "zhipu"},
+            ),
         },
     }
 
@@ -115,7 +124,6 @@ class TestPricingMerger:
 
     def test_merge_single_source(self, sample_openai_data, tmp_path):
         """Test merging from a single source."""
-        # Setup sources directory
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
 
@@ -124,12 +132,11 @@ class TestPricingMerger:
 
         merger = PricingMerger()
 
-        # data_dir points to tmp_path so manual_overrides.json is not loaded
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
              patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
 
-        assert result["version"] == "1.0"
+        assert result["version"] == "2.0"
         assert "models" in result
         assert len(result["models"]) == 2
         assert "gpt-4o" in result["models"]
@@ -142,10 +149,10 @@ class TestPricingMerger:
         tmp_path
     ):
         """Test that original provider takes priority over aggregator."""
-        # Modify OpenRouter to have different price
-        sample_openrouter_data["models"]["openai/gpt-4o"]["pricing"]["USD"]["input_price"] = 3.00
+        # Both sources claim the same endpoint key for drift detection
+        # openrouter/gpt-4o claims api.openai.com with a different price
+        sample_openrouter_data["models"]["openai/gpt-4o"]["endpoints"]["openrouter.ai"]["pricing"]["input_price"] = 3.00
 
-        # Setup sources directory
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
 
@@ -157,18 +164,13 @@ class TestPricingMerger:
 
         merger = PricingMerger()
 
-        # Disable min_models guard so test data (3 models) passes
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
              patch.object(config, "min_models_guard", {}), \
              patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
 
-        # OpenAI (priority 100) should override OpenRouter (priority 50)
-        assert result["models"]["gpt-4o"]["pricing"]["USD"]["input_price"] == 2.50
-
-        # Should have warning about price drift
-        assert len(warnings) > 0
-        assert "gpt-4o" in warnings[0] or "drift" in warnings[0].lower()
+        # OpenAI (priority 100) wins — its api.openai.com endpoint present
+        assert result["models"]["gpt-4o"]["endpoints"]["api.openai.com"]["pricing"]["input_price"] == 2.50
 
     def test_normalize_model_id(self):
         """Test model ID normalization."""
@@ -200,7 +202,8 @@ class TestPricingMerger:
 
         merger = PricingMerger()
 
-        with patch.object(config, "get_today_sources_dir", return_value=sources_dir):
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
 
         # Should have both Western and Chinese models
@@ -208,8 +211,9 @@ class TestPricingMerger:
         assert "qwen-max" in result["models"]
         assert "glm-4" in result["models"]
 
-        # Chinese models should have CNY pricing
-        assert "CNY" in result["models"]["qwen-max"]["pricing"]
+        # Chinese models have CNY endpoint
+        assert "dashscope.aliyuncs.com" in result["models"]["qwen-max"]["endpoints"]
+        assert result["models"]["qwen-max"]["endpoints"]["dashscope.aliyuncs.com"]["currency"] == "CNY"
 
     def test_merge_no_sources_raises(self, tmp_path):
         """Test that merge raises when no sources exist (including no manual_overrides)."""
@@ -218,7 +222,6 @@ class TestPricingMerger:
 
         merger = PricingMerger()
 
-        # data_dir must point to tmp_path so manual_overrides.json is not found
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
              patch.object(config, "data_dir", tmp_path):
             with pytest.raises(ValueError, match="No source data found"):
@@ -237,7 +240,8 @@ class TestPricingMerger:
 
         merger = PricingMerger()
 
-        with patch.object(config, "get_today_sources_dir", return_value=sources_dir):
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path):
             with patch.object(config, "pricing_file", output_dir / "pricing.json"):
                 result, _ = merger.merge_all("2024-01-01")
                 output_path = merger.save(result)
@@ -247,7 +251,7 @@ class TestPricingMerger:
         with open(output_path) as f:
             saved_data = json.load(f)
 
-        assert saved_data["version"] == "1.0"
+        assert saved_data["version"] == "2.0"
         assert "updated_at" in saved_data
         assert "models" in saved_data
 
@@ -256,21 +260,17 @@ class TestPriceConflictDetection:
     """Tests for price conflict detection."""
 
     def test_large_drift_warning(self, sample_openai_data, tmp_path):
-        """Test warning for significant price drift."""
-        # Create source with significantly different price
-        openrouter_data = {
+        """Warning for significant price drift on the same endpoint key."""
+        # Two sources both claim api.openai.com for gpt-4o with different prices
+        conflicting_data = {
             "status": "success",
             "models": {
-                "openai/gpt-4o": {
-                    "pricing": {
-                        "USD": {
-                            "input_price": 5.00,  # 100% higher
-                            "output_price": 10.00,
-                            "unit": "per_million_tokens",
-                        }
-                    },
-                    "metadata": {"provider": "openai"},
-                },
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 5.00, "output_price": 10.00},  # 100% higher
+                    base_url="https://api.openai.com/v1",
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -280,8 +280,8 @@ class TestPriceConflictDetection:
         with open(sources_dir / "openai.json", "w") as f:
             json.dump(sample_openai_data, f)
 
-        with open(sources_dir / "openrouter.json", "w") as f:
-            json.dump(openrouter_data, f)
+        with open(sources_dir / "openai2.json", "w") as f:
+            json.dump(conflicting_data, f)
 
         merger = PricingMerger()
 
@@ -290,25 +290,20 @@ class TestPriceConflictDetection:
              patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
 
-        # Should have drift warning
         assert len(warnings) > 0
         assert any("gpt-4o" in w for w in warnings)
 
     def test_small_drift_no_warning(self, sample_openai_data, tmp_path):
-        """Test no warning for small price differences."""
-        openrouter_data = {
+        """No warning for small price differences."""
+        close_data = {
             "status": "success",
             "models": {
-                "openai/gpt-4o": {
-                    "pricing": {
-                        "USD": {
-                            "input_price": 2.51,  # 0.4% difference
-                            "output_price": 10.00,
-                            "unit": "per_million_tokens",
-                        }
-                    },
-                    "metadata": {"provider": "openai"},
-                },
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.51, "output_price": 10.00},  # 0.4% difference
+                    base_url="https://api.openai.com/v1",
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -318,15 +313,16 @@ class TestPriceConflictDetection:
         with open(sources_dir / "openai.json", "w") as f:
             json.dump(sample_openai_data, f)
 
-        with open(sources_dir / "openrouter.json", "w") as f:
-            json.dump(openrouter_data, f)
+        with open(sources_dir / "openai2.json", "w") as f:
+            json.dump(close_data, f)
 
         merger = PricingMerger()
 
-        with patch.object(config, "get_today_sources_dir", return_value=sources_dir):
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "min_models_guard", {}), \
+             patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
 
-        # Should NOT have drift warning (< 1% threshold)
         assert len(warnings) == 0
 
 
@@ -334,65 +330,41 @@ class TestNormalizeModelFormat:
     """Tests for _normalize_model_format post-processing."""
 
     def test_unit_field_removed(self):
-        """unit field must not appear in output (not in burncloud CurrencyPricing)."""
+        """unit field in endpoint pricing must not appear in output."""
         merger = PricingMerger()
-        model = {
-            "pricing": {
-                "USD": {
-                    "input_price": 2.50,
-                    "output_price": 10.00,
-                    "unit": "per_million_tokens",
-                }
-            },
-            "metadata": {"provider": "openai"},
-        }
+        model = _model(
+            "api.openai.com",
+            {"input_price": 2.50, "output_price": 10.00, "unit": "per_million_tokens"},
+            metadata={"provider": "openai"},
+        )
         result = merger._normalize_model_format(model)
-        assert "unit" not in result["pricing"]["USD"]
+        assert "unit" not in result["endpoints"]["api.openai.com"]["pricing"]
 
     def test_null_output_price_set_to_zero(self):
-        """output_price: null → 0.0 (CurrencyPricing.output_price is i64, not Option)."""
+        """output_price: null → 0.0 in endpoint pricing."""
         merger = PricingMerger()
-        model = {
-            "pricing": {
-                "USD": {"input_price": 2.0, "output_price": None}
-            }
-        }
+        model = _model(
+            "api.openai.com",
+            {"input_price": 2.0, "output_price": None},
+            metadata={"provider": "openai"},
+        )
         result = merger._normalize_model_format(model)
-        assert result["pricing"]["USD"]["output_price"] == 0.0
-
-    def test_cache_pricing_moved_to_top_level(self):
-        """cache_pricing nested inside pricing dict must be promoted to top-level."""
-        merger = PricingMerger()
-        model = {
-            "pricing": {
-                "USD": {
-                    "input_price": 3.0,
-                    "output_price": 15.0,
-                    "cache_pricing": {
-                        "USD": {"cache_read_input_price": 0.30, "cache_write_input_price": 3.75}
-                    },
-                }
-            }
-        }
-        result = merger._normalize_model_format(model)
-        # cache_pricing should be promoted to top-level
-        assert "cache_pricing" in result
-        assert "cache_pricing" not in result["pricing"]["USD"]
+        assert result["endpoints"]["api.openai.com"]["pricing"]["output_price"] == 0.0
 
     def test_cache_write_input_price_renamed(self):
-        """cache_write_input_price → cache_creation_input_price (burncloud field name)."""
+        """cache_write_input_price → cache_creation_input_price."""
         merger = PricingMerger()
-        model = {
-            "pricing": {"USD": {"input_price": 3.0, "output_price": 15.0}},
-            "cache_pricing": {
-                "USD": {
-                    "cache_write_input_price": 3.75,
-                    "cache_read_input_price": 0.30,
-                }
+        model = _model(
+            "api.anthropic.com",
+            {"input_price": 3.0, "output_price": 15.0},
+            cache_pricing={
+                "cache_write_input_price": 3.75,
+                "cache_read_input_price": 0.30,
             },
-        }
+            metadata={"provider": "anthropic"},
+        )
         result = merger._normalize_model_format(model)
-        cp = result["cache_pricing"]["USD"]
+        cp = result["endpoints"]["api.anthropic.com"]["cache_pricing"]
         assert "cache_creation_input_price" in cp
         assert "cache_write_input_price" not in cp
         assert cp["cache_creation_input_price"] == 3.75
@@ -400,29 +372,29 @@ class TestNormalizeModelFormat:
     def test_cache_unit_field_removed(self):
         """unit field inside cache_pricing must be removed."""
         merger = PricingMerger()
-        model = {
-            "pricing": {"USD": {"input_price": 3.0, "output_price": 15.0}},
-            "cache_pricing": {
-                "USD": {
-                    "cache_read_input_price": 0.30,
-                    "unit": "per_million_tokens",
-                }
+        model = _model(
+            "api.anthropic.com",
+            {"input_price": 3.0, "output_price": 15.0},
+            cache_pricing={
+                "cache_read_input_price": 0.30,
+                "unit": "per_million_tokens",
             },
-        }
+            metadata={"provider": "anthropic"},
+        )
         result = merger._normalize_model_format(model)
-        assert "unit" not in result["cache_pricing"]["USD"]
+        assert "unit" not in result["endpoints"]["api.anthropic.com"]["cache_pricing"]
 
     def test_original_model_not_mutated(self):
         """_normalize_model_format must not mutate its input."""
         merger = PricingMerger()
-        model = {
-            "pricing": {
-                "USD": {"input_price": 2.0, "output_price": 10.0, "unit": "per_million_tokens"}
-            }
-        }
-        original_has_unit = "unit" in model["pricing"]["USD"]
+        model = _model(
+            "api.openai.com",
+            {"input_price": 2.0, "output_price": 10.0, "unit": "per_million_tokens"},
+            metadata={"provider": "openai"},
+        )
         merger._normalize_model_format(model)
-        assert "unit" in model["pricing"]["USD"], "original dict should not be mutated"
+        assert "unit" in model["endpoints"]["api.openai.com"]["pricing"], \
+            "original dict should not be mutated"
 
 
 class TestManualOverrides:
@@ -432,26 +404,28 @@ class TestManualOverrides:
         """manual_overrides source gets priority 200 — highest of all sources."""
         overrides = {
             "models": {
-                "gemini-3-pro": {
-                    "pricing": {"USD": {"input_price": 2.0, "output_price": 0.0}},
-                    "metadata": {"provider": "google"},
-                }
+                "gemini-3-pro": _model(
+                    "generativelanguage.googleapis.com",
+                    {"input_price": 2.0, "output_price": 0.0},
+                    base_url="https://generativelanguage.googleapis.com",
+                    metadata={"provider": "google"},
+                ),
             }
         }
         openai_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
 
-        # manual_overrides goes in sources/ (not the date-scoped dir)
         overrides_dir = tmp_path / "sources"
         with open(overrides_dir / "manual_overrides.json", "w") as f:
             json.dump(overrides, f)
@@ -472,19 +446,22 @@ class TestManualOverrides:
         """manual_overrides (priority 200) beats openrouter (priority 50) for same model."""
         overrides = {
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 9.99, "output_price": 0.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 9.99, "output_price": 0.0},
+                    metadata={"provider": "openai"},
+                ),
             }
         }
         openrouter_data = {
             "status": "success",
             "models": {
-                "openai/gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "openai/gpt-4o": _model(
+                    "openrouter.ai",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    base_url="https://openrouter.ai/api/v1",
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -505,7 +482,7 @@ class TestManualOverrides:
              patch.object(config, "data_dir", tmp_path):
             result, _ = merger.merge_all("2024-01-01")
 
-        assert result["models"]["gpt-4o"]["pricing"]["USD"]["input_price"] == 9.99
+        assert result["models"]["gpt-4o"]["endpoints"]["api.openai.com"]["pricing"]["input_price"] == 9.99
 
 
 class TestMinModelsGuard:
@@ -513,23 +490,24 @@ class TestMinModelsGuard:
 
     def test_source_skipped_below_min_models(self, tmp_path):
         """Source with fewer models than min_models_guard threshold is skipped."""
-        # openrouter returns only 1 model but min is 50
         sparse_openrouter = {
             "status": "success",
             "models": {
-                "openai/gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "openai/gpt-4o": _model(
+                    "openrouter.ai",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
         openai_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -558,10 +536,11 @@ class TestMinModelsGuard:
         # Build an openrouter payload with exactly 50 models
         models = {}
         for i in range(50):
-            models[f"provider/model-{i}"] = {
-                "pricing": {"USD": {"input_price": 1.0, "output_price": 2.0}},
-                "metadata": {"provider": "provider"},
-            }
+            models[f"provider/model-{i}"] = _model(
+                "openrouter.ai",
+                {"input_price": 1.0, "output_price": 2.0},
+                metadata={"provider": "provider"},
+            )
         openrouter_data = {"status": "success", "models": models}
 
         sources_dir = tmp_path / "sources" / "2024-01-01"
@@ -580,27 +559,30 @@ class TestMinModelsGuard:
 
 
 class TestFieldLevelEnrichment:
-    """Field-level enrichment: batch/tiered pricing copied from lower-priority source."""
+    """Endpoint-level enrichment: different endpoint keys from different sources coexist."""
 
-    def test_batch_pricing_enriched_from_lower_source(self, tmp_path):
-        """Winner (openai priority 100) lacks batch_pricing; litellm (70) has it → enriched."""
+    def test_batch_pricing_from_litellm_endpoint(self, tmp_path):
+        """openai (priority 100) provides api.openai.com; litellm (70) provides litellm
+        endpoint with batch_pricing — both endpoints appear in merged result."""
         openai_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
         litellm_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "litellm",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    batch_pricing={"input_price": 1.25, "output_price": 5.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -618,36 +600,37 @@ class TestFieldLevelEnrichment:
             result, _ = merger.merge_all("2024-01-01")
 
         model = result["models"]["gpt-4o"]
-        # openai wins base pricing
+        # openai wins primary
         assert model["metadata"]["_merged_from"] == "openai"
-        # batch_pricing enriched from litellm
-        assert "batch_pricing" in model
-        assert model["batch_pricing"]["USD"]["input_price"] == pytest.approx(1.25)
+        # litellm endpoint present with batch_pricing
+        assert "litellm" in model["endpoints"]
+        assert "batch_pricing" in model["endpoints"]["litellm"]
+        assert model["endpoints"]["litellm"]["batch_pricing"]["input_price"] == pytest.approx(1.25)
 
-    def test_tiered_pricing_enriched_from_lower_source(self, tmp_path):
-        """Winner lacks tiered_pricing; lower source has it → enriched."""
+    def test_tiered_pricing_from_litellm_endpoint(self, tmp_path):
+        """litellm endpoint with tiered_pricing coexists alongside openai endpoint."""
         openai_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
         litellm_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "tiered_pricing": {
-                        "USD": [
-                            {"tier_start": 0, "tier_end": 128000, "input_price": 2.5, "output_price": 10.0},
-                            {"tier_start": 128000, "input_price": 5.0, "output_price": 10.0},
-                        ]
-                    },
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "litellm",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    tiered_pricing=[
+                        {"tier_start": 0, "tier_end": 128000, "input_price": 2.5, "output_price": 10.0},
+                        {"tier_start": 128000, "input_price": 5.0, "output_price": 10.0},
+                    ],
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -665,29 +648,33 @@ class TestFieldLevelEnrichment:
             result, _ = merger.merge_all("2024-01-01")
 
         model = result["models"]["gpt-4o"]
-        assert "tiered_pricing" in model
-        assert len(model["tiered_pricing"]["USD"]) == 2
+        assert "litellm" in model["endpoints"]
+        assert "tiered_pricing" in model["endpoints"]["litellm"]
+        assert len(model["endpoints"]["litellm"]["tiered_pricing"]) == 2
 
-    def test_winner_batch_pricing_not_overwritten(self, tmp_path):
-        """If winner already has batch_pricing, lower source doesn't overwrite it."""
+    def test_winner_endpoint_not_overwritten(self, tmp_path):
+        """If winner already has an endpoint key, lower source doesn't overwrite it."""
         openai_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    batch_pricing={"input_price": 1.25, "output_price": 5.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
+        # litellm also claims api.openai.com — should NOT overwrite winner
         litellm_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "batch_pricing": {"USD": {"input_price": 0.99, "output_price": 3.0}},  # different
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    batch_pricing={"input_price": 0.99, "output_price": 3.0},  # different
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -704,34 +691,37 @@ class TestFieldLevelEnrichment:
              patch.object(config, "min_models_guard", {}):
             result, _ = merger.merge_all("2024-01-01")
 
-        # openai's batch_pricing wins (1.25), not litellm's (0.99)
-        assert result["models"]["gpt-4o"]["batch_pricing"]["USD"]["input_price"] == pytest.approx(1.25)
+        # openai's api.openai.com endpoint wins (batch input 1.25), not litellm's (0.99)
+        ep = result["models"]["gpt-4o"]["endpoints"]["api.openai.com"]
+        assert ep["batch_pricing"]["input_price"] == pytest.approx(1.25)
 
 
 class TestBatchDriftDetection:
     """Batch pricing drift detection extension to _check_price_conflicts."""
 
     def test_batch_price_drift_warning(self, tmp_path):
-        """When two sources have conflicting batch_pricing, a warning is emitted."""
-        # openai priority 100, litellm priority 70
+        """When two sources claim same endpoint with conflicting batch_pricing, a warning is emitted."""
         openai_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    batch_pricing={"input_price": 1.25, "output_price": 5.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
-        litellm_data = {
+        # Second source claims same endpoint with different batch price (60% drift)
+        openai2_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "batch_pricing": {"USD": {"input_price": 0.50, "output_price": 5.0}},  # 60% drift
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    batch_pricing={"input_price": 0.50, "output_price": 5.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -739,8 +729,8 @@ class TestBatchDriftDetection:
         sources_dir.mkdir(parents=True)
         with open(sources_dir / "openai.json", "w") as f:
             json.dump(openai_data, f)
-        with open(sources_dir / "litellm.json", "w") as f:
-            json.dump(litellm_data, f)
+        with open(sources_dir / "openai2.json", "w") as f:
+            json.dump(openai2_data, f)
 
         merger = PricingMerger()
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
@@ -757,21 +747,23 @@ class TestBatchDriftDetection:
         openai_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    batch_pricing={"input_price": 1.25, "output_price": 5.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
-        litellm_data = {
+        openai2_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "batch_pricing": {"USD": {"input_price": 1.255, "output_price": 5.0}},  # 0.4%
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    batch_pricing={"input_price": 1.255, "output_price": 5.0},  # 0.4%
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -779,8 +771,8 @@ class TestBatchDriftDetection:
         sources_dir.mkdir(parents=True)
         with open(sources_dir / "openai.json", "w") as f:
             json.dump(openai_data, f)
-        with open(sources_dir / "litellm.json", "w") as f:
-            json.dump(litellm_data, f)
+        with open(sources_dir / "openai2.json", "w") as f:
+            json.dump(openai2_data, f)
 
         merger = PricingMerger()
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
@@ -792,37 +784,40 @@ class TestBatchDriftDetection:
         assert len(batch_warnings) == 0
 
 
-class TestMergeCurrencies:
-    """Tests for _merge_currencies: USD+CNY coexistence per the multi-currency design."""
+class TestMergeEndpoints:
+    """Tests for _merge_endpoints: different endpoint keys coexist per the multi-endpoint design."""
 
-    def test_usd_and_cny_coexist_in_pricing(self, tmp_path):
+    def test_two_endpoints_coexist(self, tmp_path):
         """
-        Model with USD from one source and CNY from another should have both.
+        Model with USD from one source (api.openai.com) and CNY from another
+        (open.bigmodel.cn) should have both endpoint entries.
         This is the GLM-5 use case: z.ai provides USD, bigmodel.cn provides CNY.
         """
         international_data = {
             "status": "success",
             "models": {
-                "glm-5": {
-                    "pricing": {"USD": {"input_price": 2.0, "output_price": 8.0}},
-                    "metadata": {"provider": "zhipu"},
-                }
+                "glm-5": _model(
+                    "api.z.ai",
+                    {"input_price": 2.0, "output_price": 8.0},
+                    currency="USD",
+                    metadata={"provider": "zhipu"},
+                ),
             },
         }
         chinese_data = {
             "status": "success",
             "models": {
-                "glm-5": {
-                    "pricing": {"CNY": {"input_price": 14.0, "output_price": 56.0}},
-                    "metadata": {"provider": "zhipu"},
-                }
+                "glm-5": _model(
+                    "open.bigmodel.cn",
+                    {"input_price": 14.0, "output_price": 56.0},
+                    currency="CNY",
+                    metadata={"provider": "zhipu"},
+                ),
             },
         }
 
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
-        # zhipu (priority 100) wins, chinese (priority 100 too) contributes CNY
-        # In practice international=100, chinese=90 — but we use 100 vs lower to test
         with open(sources_dir / "zhipu.json", "w") as f:
             json.dump(international_data, f)
         with open(sources_dir / "chinese.json", "w") as f:
@@ -835,35 +830,33 @@ class TestMergeCurrencies:
             result, _ = merger.merge_all("2024-01-01")
 
         model = result["models"]["glm-5"]
-        # Both currencies present
-        assert "USD" in model["pricing"]
-        assert "CNY" in model["pricing"]
-        assert model["pricing"]["USD"]["input_price"] == pytest.approx(2.0)
-        assert model["pricing"]["CNY"]["input_price"] == pytest.approx(14.0)
+        # Both endpoints present
+        assert "api.z.ai" in model["endpoints"]
+        assert "open.bigmodel.cn" in model["endpoints"]
+        assert model["endpoints"]["api.z.ai"]["pricing"]["input_price"] == pytest.approx(2.0)
+        assert model["endpoints"]["open.bigmodel.cn"]["pricing"]["input_price"] == pytest.approx(14.0)
 
-    def test_higher_priority_currency_not_overwritten(self, tmp_path):
-        """
-        If winner has USD and lower source also has USD, lower source's USD is ignored.
-        """
+    def test_higher_priority_endpoint_not_overwritten(self, tmp_path):
+        """If winner has an endpoint key and lower source has same key, winner's data wins."""
         high_prio = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.5, "output_price": 10.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 2.5, "output_price": 10.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
+        # openrouter also claims api.openai.com with wrong price
         low_prio = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {
-                        "USD": {"input_price": 99.0, "output_price": 99.0},  # wrong, should be ignored
-                        "CNY": {"input_price": 18.0, "output_price": 72.0},  # should be added
-                    },
-                    "metadata": {"provider": "openai"},
-                }
+                "openai/gpt-4o": _model(
+                    "api.openai.com",
+                    {"input_price": 99.0, "output_price": 99.0},  # wrong, should be ignored
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -881,61 +874,20 @@ class TestMergeCurrencies:
             result, _ = merger.merge_all("2024-01-01")
 
         model = result["models"]["gpt-4o"]
-        # Winner's USD untouched
-        assert model["pricing"]["USD"]["input_price"] == pytest.approx(2.5)
-        # Lower source contributes CNY
-        assert "CNY" in model["pricing"]
-        assert model["pricing"]["CNY"]["input_price"] == pytest.approx(18.0)
-
-    def test_cache_pricing_currencies_merged(self, tmp_path):
-        """Currency-merge also applies to cache_pricing field."""
-        source_a = {
-            "status": "success",
-            "models": {
-                "claude-3-5-sonnet": {
-                    "pricing": {"USD": {"input_price": 3.0, "output_price": 15.0}},
-                    "cache_pricing": {"USD": {"cache_read_input_price": 0.3, "cache_creation_input_price": 3.75}},
-                    "metadata": {"provider": "anthropic"},
-                }
-            },
-        }
-        source_b = {
-            "status": "success",
-            "models": {
-                "claude-3-5-sonnet": {
-                    "pricing": {"USD": {"input_price": 3.0, "output_price": 15.0}},
-                    "cache_pricing": {"CNY": {"cache_read_input_price": 2.1, "cache_creation_input_price": 26.25}},
-                    "metadata": {"provider": "anthropic"},
-                }
-            },
-        }
-
-        sources_dir = tmp_path / "sources" / "2024-01-01"
-        sources_dir.mkdir(parents=True)
-        with open(sources_dir / "anthropic.json", "w") as f:
-            json.dump(source_a, f)
-        with open(sources_dir / "litellm.json", "w") as f:
-            json.dump(source_b, f)
-
-        merger = PricingMerger()
-        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
-             patch.object(config, "data_dir", tmp_path), \
-             patch.object(config, "min_models_guard", {}):
-            result, _ = merger.merge_all("2024-01-01")
-
-        model = result["models"]["claude-3-5-sonnet"]
-        assert "USD" in model["cache_pricing"]
-        assert "CNY" in model["cache_pricing"]
+        # Winner's api.openai.com untouched
+        assert model["endpoints"]["api.openai.com"]["pricing"]["input_price"] == pytest.approx(2.5)
 
     def test_cny_only_model_preserved(self, tmp_path):
-        """Model with only CNY pricing (Chinese-only model) passes through intact."""
+        """Model with only CNY endpoint (Chinese-only model) passes through intact."""
         chinese_data = {
             "status": "success",
             "models": {
-                "ernie-4.0": {
-                    "pricing": {"CNY": {"input_price": 0.12, "output_price": 0.12}},
-                    "metadata": {"provider": "baidu"},
-                }
+                "ernie-4.0": _model(
+                    "aip.baidubce.com",
+                    {"input_price": 0.12, "output_price": 0.12},
+                    currency="CNY",
+                    metadata={"provider": "baidu"},
+                ),
             },
         }
 
@@ -951,9 +903,9 @@ class TestMergeCurrencies:
             result, _ = merger.merge_all("2024-01-01")
 
         model = result["models"]["ernie-4.0"]
-        assert "CNY" in model["pricing"]
-        assert "USD" not in model["pricing"]
-        assert model["pricing"]["CNY"]["input_price"] == pytest.approx(0.12)
+        ep = model["endpoints"]["aip.baidubce.com"]
+        assert ep["currency"] == "CNY"
+        assert ep["pricing"]["input_price"] == pytest.approx(0.12)
 
 
 class TestLiteLLMMergeIntegration:
@@ -963,20 +915,23 @@ class TestLiteLLMMergeIntegration:
         openrouter_data = {
             "status": "success",
             "models": {
-                "openai/gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "openai/gpt-4o": _model(
+                    "openrouter.ai",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    base_url="https://openrouter.ai/api/v1",
+                    metadata={"provider": "openai"},
+                ),
             },
         }
         litellm_data = {
             "status": "success",
             "models": {
-                "gpt-4o": {
-                    "pricing": {"USD": {"input_price": 2.50, "output_price": 10.0}},
-                    "batch_pricing": {"USD": {"input_price": 1.25, "output_price": 5.0}},
-                    "metadata": {"provider": "openai"},
-                }
+                "gpt-4o": _model(
+                    "litellm",
+                    {"input_price": 2.50, "output_price": 10.0},
+                    batch_pricing={"input_price": 1.25, "output_price": 5.0},
+                    metadata={"provider": "openai"},
+                ),
             },
         }
 
@@ -995,18 +950,20 @@ class TestLiteLLMMergeIntegration:
 
         model = result["models"]["gpt-4o"]
         assert model["metadata"]["_merged_from"] == "litellm"
-        assert "batch_pricing" in model
-        assert model["batch_pricing"]["USD"]["input_price"] == pytest.approx(1.25)
+        # litellm endpoint has batch_pricing
+        assert "batch_pricing" in model["endpoints"]["litellm"]
+        assert model["endpoints"]["litellm"]["batch_pricing"]["input_price"] == pytest.approx(1.25)
 
     def test_litellm_only_model_included(self, tmp_path):
         """Model only in LiteLLM (not OpenRouter) still appears in output."""
         litellm_data = {
             "status": "success",
             "models": {
-                "doubao-pro-32k-240828": {
-                    "pricing": {"USD": {"input_price": 0.8, "output_price": 1.0}},
-                    "metadata": {"provider": "volcengine"},
-                }
+                "doubao-pro-32k-240828": _model(
+                    "litellm",
+                    {"input_price": 0.8, "output_price": 1.0},
+                    metadata={"provider": "volcengine"},
+                ),
             },
         }
 

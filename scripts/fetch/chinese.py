@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
 from scripts.config import Config
-from scripts.fetch.base import BaseFetcher, FetchResult, FetcherConfig
+from scripts.fetch.base import BaseFetcher, FetchResult
 
 logger = logging.getLogger(__name__)
 
@@ -70,16 +70,8 @@ class ZhipuFetcher(BaseFetcher):
     to CNY per million tokens to match our standard format.
     """
 
-    PRICING_URL = "https://open.bigmodel.cn/pricing"
-
     def __init__(self, config: Config):
-        fetcher_config = FetcherConfig(
-            name="zhipu",
-            url=self.PRICING_URL,
-            timeout=45.0,
-            max_retries=2,
-        )
-        super().__init__(config, fetcher_config)
+        super().__init__(config, config.fetchers["zhipu"])
 
     # ------------------------------------------------------------------
     # BaseFetcher interface (not used — we override fetch() entirely)
@@ -102,8 +94,8 @@ class ZhipuFetcher(BaseFetcher):
         if not PLAYWRIGHT_AVAILABLE:
             return FetchResult.error_result("zhipu", "Playwright not available")
 
-        logger.info(f"Scraping Zhipu pricing from {self.PRICING_URL}")
-        page_text = _run_playwright(self.PRICING_URL)
+        logger.info(f"Scraping Zhipu pricing from {self.fetcher_config.url}")
+        page_text = _run_playwright(self.fetcher_config.url)
 
         if page_text is None:
             return FetchResult.error_result("zhipu", "Playwright failed to load page")
@@ -315,15 +307,11 @@ class ZhipuFetcher(BaseFetcher):
             return None
 
     def _make_entry(self, input_price: float, output_price: float) -> Dict[str, Any]:
-        return {
-            "pricing": {
-                "CNY": {
-                    "input_price": round(input_price, 6),
-                    "output_price": round(output_price, 6),
-                }
-            },
-            "metadata": {
-                "provider": "zhipu",
-                "family": "glm",
-            },
-        }
+        metadata = {"provider": "zhipu", "family": "glm"}
+        endpoint_entry = self._build_endpoint_entry(
+            {
+                "input_price": round(input_price, 6),
+                "output_price": round(output_price, 6),
+            }
+        )
+        return self._build_model_entry(endpoint_entry, metadata)

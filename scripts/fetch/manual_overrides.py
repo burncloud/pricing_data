@@ -117,9 +117,9 @@ class ManualOverridesFetcher(BaseFetcher):
                 k: v for k, v in entry.items() if not k.startswith("_")
             }
 
-            if not clean.get("pricing"):
+            if not clean.get("endpoints"):
                 logger.warning(
-                    f"manual_overrides: skipping {model_id!r} — missing 'pricing' field"
+                    f"manual_overrides: skipping {model_id!r} — missing 'endpoints' field"
                 )
                 continue
 

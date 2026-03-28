@@ -21,22 +21,24 @@ def mock_config(tmp_path):
 @pytest.fixture
 def valid_overrides():
     return {
-        "_schema": "manual_overrides/1.0",
+        "_schema": "manual_overrides/2.0",
         "_note": "Human-verified prices.",
         "models": {
             "deepseek-chat": {
                 "_verified_at": "2026-03-28",
                 "_verified_source": "https://api-docs.deepseek.com/quick_start/pricing",
                 "_notes": "Official pricing.",
-                "pricing": {
-                    "USD": {
-                        "input_price": 0.28,
-                        "output_price": 0.42,
-                    }
-                },
-                "cache_pricing": {
-                    "USD": {
-                        "cache_read_input_price": 0.028,
+                "endpoints": {
+                    "api.deepseek.com": {
+                        "base_url": "https://api.deepseek.com/v1",
+                        "currency": "USD",
+                        "pricing": {
+                            "input_price": 0.28,
+                            "output_price": 0.42,
+                        },
+                        "cache_pricing": {
+                            "cache_read_input_price": 0.028,
+                        },
                     }
                 },
                 "metadata": {
@@ -48,10 +50,14 @@ def valid_overrides():
                 "_verified_at": "2026-03-28",
                 "_verified_source": "https://ai.google.dev/pricing",
                 "_notes": "TTS model.",
-                "pricing": {
-                    "USD": {
-                        "input_price": 0.50,
-                        "output_price": 10.00,
+                "endpoints": {
+                    "generativelanguage.googleapis.com": {
+                        "base_url": "https://generativelanguage.googleapis.com",
+                        "currency": "USD",
+                        "pricing": {
+                            "input_price": 0.50,
+                            "output_price": 10.00,
+                        },
                     }
                 },
                 "metadata": {
@@ -101,9 +107,10 @@ class TestManualOverridesFetcher:
         result = fetcher.fetch()
 
         model = result.models["deepseek-chat"]
-        assert model["pricing"]["USD"]["input_price"] == 0.28
-        assert model["pricing"]["USD"]["output_price"] == 0.42
-        assert model["cache_pricing"]["USD"]["cache_read_input_price"] == 0.028
+        ep = model["endpoints"]["api.deepseek.com"]
+        assert ep["pricing"]["input_price"] == 0.28
+        assert ep["pricing"]["output_price"] == 0.42
+        assert ep["cache_pricing"]["cache_read_input_price"] == 0.028
         assert model["metadata"]["provider"] == "deepseek"
 
     def test_file_not_found_returns_empty_success(self, mock_config, tmp_path):
@@ -130,13 +137,13 @@ class TestManualOverridesFetcher:
         assert "JSON" in result.error or "json" in result.error.lower()
 
     def test_skips_entry_without_pricing(self, mock_config, tmp_path):
-        """Model entry missing 'pricing' field is skipped with a warning."""
+        """Model entry missing 'endpoints' field is skipped with a warning."""
         data = {
             "models": {
                 "some-model": {
                     "_verified_at": "2026-03-28",
                     "metadata": {"provider": "test"},
-                    # no "pricing" key
+                    # no "endpoints" key
                 }
             }
         }

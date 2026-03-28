@@ -21,6 +21,7 @@ def _make_response(data: dict) -> Mock:
 
 
 class TestExtractPricing:
+    """_extract_pricing returns a flat dict {input_price, output_price} — no currency wrapper."""
 
     def test_normal_prices(self, fetcher):
         """Standard positive prices are converted from per-token to per-MTok."""
@@ -28,8 +29,8 @@ class TestExtractPricing:
             {"prompt": "0.0000025", "completion": "0.00001"},
             "openai/gpt-4o",
         )
-        assert pricing["USD"]["input_price"] == pytest.approx(2.5)
-        assert pricing["USD"]["output_price"] == pytest.approx(10.0)
+        assert pricing["input_price"] == pytest.approx(2.5)
+        assert pricing["output_price"] == pytest.approx(10.0)
 
     def test_negative_price_skipped(self, fetcher):
         """OpenRouter sentinel value -1 per-token must be rejected (not -1M per MTok)."""
@@ -62,7 +63,7 @@ class TestExtractPricing:
             "some/free-model",
         )
         assert pricing != {}
-        assert pricing["USD"]["input_price"] == 0.0
+        assert pricing["input_price"] == 0.0
 
     def test_missing_prompt_skipped(self, fetcher):
         pricing = fetcher._extract_pricing({}, "some/model")

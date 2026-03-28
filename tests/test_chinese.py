@@ -148,40 +148,42 @@ class TestParsePageText:
         assert "glm-4-air-250414" in models
         assert "glm-4-flash-250414" in models
 
+    _EP = "open.bigmodel.cn"
+
     def test_flagship_asymmetric_prices(self, fetcher):
         """GLM-5: input=4 CNY/MTok, output=18 CNY/MTok (already per-million on page)."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
-        cny = models["glm-5"]["pricing"]["CNY"]
-        assert cny["input_price"] == pytest.approx(4.0)
-        assert cny["output_price"] == pytest.approx(18.0)
+        pricing = models["glm-5"]["endpoints"][self._EP]["pricing"]
+        assert pricing["input_price"] == pytest.approx(4.0)
+        assert pricing["output_price"] == pytest.approx(18.0)
 
     def test_flagship_tiered_uses_first_tier(self, fetcher):
         """GLM-5-Turbo has tiered pricing — first tier [0,32) is used."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
-        cny = models["glm-5-turbo"]["pricing"]["CNY"]
-        assert cny["input_price"] == pytest.approx(5.0)
-        assert cny["output_price"] == pytest.approx(22.0)
+        pricing = models["glm-5-turbo"]["endpoints"][self._EP]["pricing"]
+        assert pricing["input_price"] == pytest.approx(5.0)
+        assert pricing["output_price"] == pytest.approx(22.0)
 
     def test_flagship_free_model(self, fetcher):
         """GLM-4.7-Flash is free — both prices are 0.0."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
-        cny = models["glm-4.7-flash"]["pricing"]["CNY"]
-        assert cny["input_price"] == 0.0
-        assert cny["output_price"] == 0.0
+        pricing = models["glm-4.7-flash"]["endpoints"][self._EP]["pricing"]
+        assert pricing["input_price"] == 0.0
+        assert pricing["output_price"] == 0.0
 
     def test_standard_price_per_million(self, fetcher):
         """GLM-4-Plus: 5 元 / 百万Tokens stored as 5.0 (already per-million)."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
-        cny = models["glm-4-plus"]["pricing"]["CNY"]
-        assert cny["input_price"] == pytest.approx(5.0)
-        assert cny["output_price"] == pytest.approx(5.0)
+        pricing = models["glm-4-plus"]["endpoints"][self._EP]["pricing"]
+        assert pricing["input_price"] == pytest.approx(5.0)
+        assert pricing["output_price"] == pytest.approx(5.0)
 
     def test_standard_free_model(self, fetcher):
         """GLM-4-Flash-250414 is free in standard section."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
-        cny = models["glm-4-flash-250414"]["pricing"]["CNY"]
-        assert cny["input_price"] == 0.0
-        assert cny["output_price"] == 0.0
+        pricing = models["glm-4-flash-250414"]["endpoints"][self._EP]["pricing"]
+        assert pricing["input_price"] == 0.0
+        assert pricing["output_price"] == 0.0
 
     def test_model_ids_lowercased(self, fetcher):
         """All model IDs must be lowercase."""
@@ -193,8 +195,8 @@ class TestParsePageText:
         """All extracted pricing must use CNY, not USD."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
         for m, d in models.items():
-            assert "CNY" in d["pricing"], f"{m} missing CNY"
-            assert "USD" not in d["pricing"], f"{m} has unexpected USD"
+            ep = d["endpoints"].get("open.bigmodel.cn", {})
+            assert ep.get("currency") == "CNY", f"{m} missing CNY currency"
 
     def test_metadata_provider_is_zhipu(self, fetcher):
         """Metadata provider must be 'zhipu' for all models."""
@@ -213,7 +215,7 @@ class TestParsePageText:
         models = fetcher._parse_page_text(text)
         assert len([k for k in models if "glm-5" in k]) >= 1
         # Flagship section prices win (4 not 5)
-        assert models["glm-5"]["pricing"]["CNY"]["input_price"] == pytest.approx(4.0)
+        assert models["glm-5"]["endpoints"]["open.bigmodel.cn"]["pricing"]["input_price"] == pytest.approx(4.0)
 
     def test_non_glm_lines_ignored(self, fetcher):
         """Non-GLM model names (qwen-max etc.) are not extracted."""

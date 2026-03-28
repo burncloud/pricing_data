@@ -160,23 +160,29 @@ _NO_OUTPUT_TABLE = """
 """
 
 
+_GGL_EP = "generativelanguage.googleapis.com"
+
+
 class TestParseModelSection:
     def test_flat_pricing(self, fetcher):
         entry = fetcher._parse_model_section("Gemini 2.5 Flash", _FLAT_TABLE)
         assert entry is not None
-        assert entry["pricing"]["USD"]["input_price"] == pytest.approx(0.25)
-        assert entry["pricing"]["USD"]["output_price"] == pytest.approx(1.50)
+        ep = entry["endpoints"][_GGL_EP]
+        assert ep["pricing"]["input_price"] == pytest.approx(0.25)
+        assert ep["pricing"]["output_price"] == pytest.approx(1.50)
 
     def test_flat_with_cache(self, fetcher):
         entry = fetcher._parse_model_section("Gemini 2.5 Flash", _FLAT_TABLE)
-        assert "cache_pricing" in entry
-        assert entry["cache_pricing"]["USD"]["cache_read_input_price"] == pytest.approx(0.025)
+        ep = entry["endpoints"][_GGL_EP]
+        assert "cache_pricing" in ep
+        assert ep["cache_pricing"]["cache_read_input_price"] == pytest.approx(0.025)
 
     def test_tiered_pricing_two_tiers(self, fetcher):
         entry = fetcher._parse_model_section("Gemini 2.5 Pro", _TIERED_TABLE)
         assert entry is not None
-        assert "tiered_pricing" in entry
-        tiers = entry["tiered_pricing"]["USD"]
+        ep = entry["endpoints"][_GGL_EP]
+        assert "tiered_pricing" in ep
+        tiers = ep["tiered_pricing"]
         assert len(tiers) == 2
         assert tiers[0]["tier_start"] == 0
         assert tiers[0]["tier_end"] == 200_000
@@ -189,9 +195,9 @@ class TestParseModelSection:
 
     def test_tiered_also_has_top_level_pricing(self, fetcher):
         entry = fetcher._parse_model_section("Gemini 2.5 Pro", _TIERED_TABLE)
-        assert "pricing" in entry
-        # Top-level uses tier-1 (cheapest) price
-        assert entry["pricing"]["USD"]["input_price"] == pytest.approx(1.25)
+        ep = entry["endpoints"][_GGL_EP]
+        # Top-level pricing uses tier-1 (cheapest) price
+        assert ep["pricing"]["input_price"] == pytest.approx(1.25)
 
     def test_not_available_returns_none(self, fetcher):
         entry = fetcher._parse_model_section("Gemini X", _NO_OUTPUT_TABLE)
@@ -234,13 +240,15 @@ class TestParseModels:
     def test_tiered_model(self, fetcher):
         resp = _make_response(_FULL_PAGE)
         models = fetcher._parse_models(resp)
-        assert "tiered_pricing" in models["gemini-2.5-pro"]
+        ep = models["gemini-2.5-pro"]["endpoints"][_GGL_EP]
+        assert "tiered_pricing" in ep
 
     def test_flat_model(self, fetcher):
         resp = _make_response(_FULL_PAGE)
         models = fetcher._parse_models(resp)
-        assert "tiered_pricing" not in models["gemini-2.5-flash"]
-        assert models["gemini-2.5-flash"]["pricing"]["USD"]["input_price"] == pytest.approx(0.25)
+        ep = models["gemini-2.5-flash"]["endpoints"][_GGL_EP]
+        assert "tiered_pricing" not in ep
+        assert ep["pricing"]["input_price"] == pytest.approx(0.25)
 
 
 class TestValidateResponse:

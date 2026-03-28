@@ -222,63 +222,57 @@ class GoogleFetcher(BaseFetcher):
         if input_price is None or output_price is None:
             return None
 
-        model: Dict[str, Any] = {
-            "metadata": {
-                "provider": "google",
-                "family": self._extract_family(display_name),
-            }
+        metadata = {
+            "provider": "google",
+            "family": self._extract_family(display_name),
         }
 
+        flat_pricing: Dict[str, Any]
+        tiered_pricing = None
+
         if input_boundary is not None:
-            # Tiered pricing: two tiers split at `input_boundary`
-            # Parse second price from input_cell
             all_input_prices = [float(p) for p in _DOLLAR_RE.findall(input_cell)]
             all_output_prices = [float(p) for p in _DOLLAR_RE.findall(output_cell)]
 
             if len(all_input_prices) >= 2:
-                # Tier 1: 0 → boundary, Tier 2: boundary → ∞
                 tier1_in = all_input_prices[0]
                 tier2_in = all_input_prices[1]
-                # Output may also be tiered; if only one output price, use it for both
                 tier1_out = all_output_prices[0]
                 tier2_out = all_output_prices[1] if len(all_output_prices) >= 2 else tier1_out
 
-                model["tiered_pricing"] = {
-                    "USD": [
-                        {
-                            "tier_start": 0,
-                            "tier_end": input_boundary,
-                            "input_price": tier1_in,
-                            "output_price": tier1_out,
-                        },
-                        {
-                            "tier_start": input_boundary,
-                            "input_price": tier2_in,
-                            "output_price": tier2_out,
-                        },
-                    ]
-                }
-                # Also keep top-level pricing using tier-1 prices (cheapest / most common)
-                model["pricing"] = {
-                    "USD": {
+                tiered_pricing = [
+                    {
+                        "tier_start": 0,
+                        "tier_end": input_boundary,
                         "input_price": tier1_in,
                         "output_price": tier1_out,
-                    }
-                }
+                    },
+                    {
+                        "tier_start": input_boundary,
+                        "input_price": tier2_in,
+                        "output_price": tier2_out,
+                    },
+                ]
+                # Top-level pricing uses tier-1 prices (cheapest / most common)
+                flat_pricing = {"input_price": tier1_in, "output_price": tier1_out}
             else:
-                model["pricing"] = {"USD": {"input_price": input_price, "output_price": output_price}}
+                flat_pricing = {"input_price": input_price, "output_price": output_price}
         else:
-            model["pricing"] = {"USD": {"input_price": input_price, "output_price": output_price}}
+            flat_pricing = {"input_price": input_price, "output_price": output_price}
 
         # Context caching
+        cache_pricing = None
         if cache_cell:
             cache_price = _first_dollar(cache_cell)
             if cache_price is not None and "Not available" not in cache_cell:
-                model["cache_pricing"] = {
-                    "USD": {"cache_read_input_price": cache_price}
-                }
+                cache_pricing = {"cache_read_input_price": cache_price}
 
-        return model
+        endpoint_entry = self._build_endpoint_entry(
+            flat_pricing,
+            cache_pricing=cache_pricing,
+            tiered_pricing=tiered_pricing,
+        )
+        return self._build_model_entry(endpoint_entry, metadata)
 
     @staticmethod
     def _find_paid_column(rows: List[List[str]]) -> Optional[int]:

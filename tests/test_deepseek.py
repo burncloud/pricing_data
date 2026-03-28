@@ -53,24 +53,29 @@ class TestParseModels:
     def test_input_price_is_cache_miss(self, fetcher):
         resp = _make_response(_PRICING_TABLE)
         models = fetcher._parse_models(resp)
-        assert models["deepseek-chat"]["pricing"]["USD"]["input_price"] == pytest.approx(0.28)
+        ep = models["deepseek-chat"]["endpoints"]["api.deepseek.com"]
+        assert ep["pricing"]["input_price"] == pytest.approx(0.28)
 
     def test_output_price(self, fetcher):
         resp = _make_response(_PRICING_TABLE)
         models = fetcher._parse_models(resp)
-        assert models["deepseek-chat"]["pricing"]["USD"]["output_price"] == pytest.approx(0.42)
+        ep = models["deepseek-chat"]["endpoints"]["api.deepseek.com"]
+        assert ep["pricing"]["output_price"] == pytest.approx(0.42)
 
     def test_cache_read_price(self, fetcher):
         resp = _make_response(_PRICING_TABLE)
         models = fetcher._parse_models(resp)
-        assert "cache_pricing" in models["deepseek-chat"]
-        assert models["deepseek-chat"]["cache_pricing"]["USD"]["cache_read_input_price"] == pytest.approx(0.028)
+        ep = models["deepseek-chat"]["endpoints"]["api.deepseek.com"]
+        assert "cache_pricing" in ep
+        assert ep["cache_pricing"]["cache_read_input_price"] == pytest.approx(0.028)
 
     def test_reasoner_same_pricing(self, fetcher):
         """Both models share the same pricing (colspan=2 in source table)."""
         resp = _make_response(_PRICING_TABLE)
         models = fetcher._parse_models(resp)
-        assert models["deepseek-chat"]["pricing"] == models["deepseek-reasoner"]["pricing"]
+        chat_ep = models["deepseek-chat"]["endpoints"]["api.deepseek.com"]
+        reasoner_ep = models["deepseek-reasoner"]["endpoints"]["api.deepseek.com"]
+        assert chat_ep["pricing"] == reasoner_ep["pricing"]
 
     def test_metadata_provider(self, fetcher):
         resp = _make_response(_PRICING_TABLE)
@@ -88,7 +93,9 @@ class TestParseModels:
         """
         resp = _make_response(html)
         models = fetcher._parse_models(resp)
-        assert "cache_pricing" not in models.get("deepseek-chat", {})
+        chat = models.get("deepseek-chat", {})
+        if "endpoints" in chat:
+            assert "cache_pricing" not in chat["endpoints"].get("api.deepseek.com", {})
 
     def test_empty_on_no_table(self, fetcher):
         resp = _make_response("<html>No table here</html>")

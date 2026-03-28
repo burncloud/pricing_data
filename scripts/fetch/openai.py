@@ -158,29 +158,22 @@ class OpenAIFetcher(BaseFetcher):
             )
             return None
 
-        model: Dict[str, Any] = {
-            "pricing": {
-                "USD": {
-                    "input_price": input_price,
-                    "output_price": output_price,
-                }
-            },
-            "metadata": {
-                "provider": "openai",
-                "family": self._extract_family(display_name),
-            },
+        metadata = {
+            "provider": "openai",
+            "family": self._extract_family(display_name),
         }
 
         # Prompt caching
         cached_price = prices.get("cached input")
-        if cached_price is not None:
-            model["cache_pricing"] = {
-                "USD": {
-                    "cache_read_input_price": cached_price,
-                }
-            }
+        cache_pricing = (
+            {"cache_read_input_price": cached_price} if cached_price is not None else None
+        )
 
-        return model
+        endpoint_entry = self._build_endpoint_entry(
+            {"input_price": input_price, "output_price": output_price},
+            cache_pricing=cache_pricing,
+        )
+        return self._build_model_entry(endpoint_entry, metadata)
 
     @staticmethod
     def _normalize_display_name(display_name: str) -> str:
