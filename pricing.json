@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updated_at": "2026-03-28T05:54:59.300244+00:00",
+  "updated_at": "2026-03-28T05:59:37.113088+00:00",
   "source": "burncloud-official",
   "models": {
     "gemini-3-pro": {
@@ -22585,6 +22585,4227 @@
         "max_output_tokens": 32768,
         "_merged_from": "litellm"
       }
+    },
+    "kat-coder-pro-v2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 1.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "kwaipilot",
+        "family": "kat-coder",
+        "context_window": 256000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 80000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "kwaipilot/kat-coder-pro-v2"
+    },
+    "reka-edge": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "reka",
+        "family": "reka-edge",
+        "context_window": 16384,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "reka/reka-edge"
+    },
+    "mimo-v2-omni": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "xiaomi",
+        "family": "mimo-v2",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "xiaomi/mimo-v2-omni"
+    },
+    "mimo-v2-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 3.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "xiaomi",
+        "family": "mimo-v2",
+        "context_window": 1048576,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "xiaomi/mimo-v2-pro"
+    },
+    "minimax-m2.7": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 1.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "family": "minimax-m2.7",
+        "context_window": 204800,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "minimax/minimax-m2.7"
+    },
+    "mistral-small-2603": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-small",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-small-2603"
+    },
+    "glm-5-turbo": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.2,
+          "output_price": 4.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "family": "glm",
+        "context_window": 202752,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "z-ai/glm-5-turbo"
+    },
+    "grok-4.20-multi-agent-beta": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "family": "grok",
+        "context_window": 2000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "x-ai/grok-4.20-multi-agent-beta"
+    },
+    "grok-4.20-beta": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "family": "grok",
+        "context_window": 2000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "x-ai/grok-4.20-beta"
+    },
+    "nemotron-3-super-120b-a12b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "nemotron",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 262144,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/nemotron-3-super-120b-a12b:free"
+    },
+    "nemotron-3-super-120b-a12b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "nemotron",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/nemotron-3-super-120b-a12b"
+    },
+    "seed-2.0-lite": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 2.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance-seed",
+        "family": "seed",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "bytedance-seed/seed-2.0-lite"
+    },
+    "qwen3.5-9b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.15,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3.5-9b",
+        "context_window": 256000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3.5-9b"
+    },
+    "mercury-2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 0.75,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inception",
+        "family": "mercury",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 50000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "inception/mercury-2"
+    },
+    "gpt-5.3-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.75,
+          "output_price": 14.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-5.3-chat"
+    },
+    "seed-2.0-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance-seed",
+        "family": "seed",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "bytedance-seed/seed-2.0-mini"
+    },
+    "qwen3.5-35b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1625,
+          "output_price": 1.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3.5-35b",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3.5-35b-a3b"
+    },
+    "qwen3.5-27b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.195,
+          "output_price": 1.56,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3.5-27b",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3.5-27b"
+    },
+    "qwen3.5-122b-a10b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 2.08,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3.5-122b",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3.5-122b-a10b"
+    },
+    "qwen3.5-flash-02-23": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.065,
+          "output_price": 0.26,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3.5-flash",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3.5-flash-02-23"
+    },
+    "lfm-2-24b-a2b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.12,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "family": "lfm",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "liquid/lfm-2-24b-a2b"
+    },
+    "aion-2.0": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "aion-labs",
+        "family": "aion",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "aion-labs/aion-2.0"
+    },
+    "claude-sonnet-4.6": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude-sonnet",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 128000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-sonnet-4.6"
+    },
+    "qwen3.5-plus-02-15": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 1.56,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3.5-plus",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3.5-plus-02-15"
+    },
+    "qwen3.5-397b-a17b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.39,
+          "output_price": 2.34,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3.5-397b",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3.5-397b-a17b"
+    },
+    "minimax-m2.5:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "family": "minimax-m2.5:free",
+        "context_window": 196608,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 196608,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "minimax/minimax-m2.5:free"
+    },
+    "minimax-m2.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 1.17,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "family": "minimax-m2.5",
+        "context_window": 196608,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "minimax/minimax-m2.5"
+    },
+    "qwen3-max-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.78,
+          "output_price": 3.9,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-max",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-max-thinking"
+    },
+    "claude-opus-4.6": {
+      "pricing": {
+        "USD": {
+          "input_price": 5.0,
+          "output_price": 25.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude-opus",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 128000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-opus-4.6"
+    },
+    "qwen3-coder-next": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.12,
+          "output_price": 0.75,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-coder",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-coder-next"
+    },
+    "free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openrouter",
+        "family": "free",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openrouter/free"
+    },
+    "step-3.5-flash:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "stepfun",
+        "family": "step",
+        "context_window": 256000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 256000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "stepfun/step-3.5-flash:free"
+    },
+    "step-3.5-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "stepfun",
+        "family": "step",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "stepfun/step-3.5-flash"
+    },
+    "trinity-large-preview:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "family": "trinity-large",
+        "context_window": 131000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "arcee-ai/trinity-large-preview:free"
+    },
+    "solar-pro-3": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "upstage",
+        "family": "solar-pro",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "upstage/solar-pro-3"
+    },
+    "minimax-m2-her": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 1.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "family": "minimax-m2",
+        "context_window": 65536,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 2048,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "minimax/minimax-m2-her"
+    },
+    "palmyra-x5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.6,
+          "output_price": 6.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "writer",
+        "family": "palmyra-x5",
+        "context_window": 1040000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "writer/palmyra-x5"
+    },
+    "lfm-2.5-1.2b-thinking:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "family": "lfm",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "liquid/lfm-2.5-1.2b-thinking:free"
+    },
+    "lfm-2.5-1.2b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "family": "lfm",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "liquid/lfm-2.5-1.2b-instruct:free"
+    },
+    "glm-4.7-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.06,
+          "output_price": 0.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "family": "glm",
+        "context_window": 202752,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "z-ai/glm-4.7-flash"
+    },
+    "olmo-3.1-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "allenai",
+        "family": "olmo",
+        "context_window": 65536,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "allenai/olmo-3.1-32b-instruct"
+    },
+    "seed-1.6-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.075,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance-seed",
+        "family": "seed",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "bytedance-seed/seed-1.6-flash"
+    },
+    "seed-1.6": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 2.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance-seed",
+        "family": "seed",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "bytedance-seed/seed-1.6"
+    },
+    "minimax-m2.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.27,
+          "output_price": 0.95,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "family": "minimax-m2.1",
+        "context_window": 196608,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "minimax/minimax-m2.1"
+    },
+    "mistral-small-creative": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-small",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-small-creative"
+    },
+    "olmo-3.1-32b-think": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "allenai",
+        "family": "olmo",
+        "context_window": 65536,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "allenai/olmo-3.1-32b-think"
+    },
+    "mimo-v2-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.09,
+          "output_price": 0.29,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "xiaomi",
+        "family": "mimo-v2",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "xiaomi/mimo-v2-flash"
+    },
+    "nemotron-3-nano-30b-a3b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "nemotron",
+        "context_window": 256000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/nemotron-3-nano-30b-a3b:free"
+    },
+    "nemotron-3-nano-30b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "nemotron",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/nemotron-3-nano-30b-a3b"
+    },
+    "gpt-5.2-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.75,
+          "output_price": 14.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-5.2-chat"
+    },
+    "relace-search": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 3.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "relace",
+        "family": "relace-search",
+        "context_window": 256000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 128000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "relace/relace-search"
+    },
+    "glm-4.6v": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.9,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "family": "glm-4.6v",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "z-ai/glm-4.6v"
+    },
+    "deepseek-v3.1-nex-n1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.135,
+          "output_price": 0.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nex-agi",
+        "family": "deepseek-v3.1",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 163840,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nex-agi/deepseek-v3.1-nex-n1"
+    },
+    "rnj-1-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.15,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "essentialai",
+        "family": "rnj",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "essentialai/rnj-1-instruct"
+    },
+    "nova-2-lite-v1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 2.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "amazon",
+        "family": "nova",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65535,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "amazon/nova-2-lite-v1"
+    },
+    "ministral-14b-2512": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "ministral-14b",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/ministral-14b-2512"
+    },
+    "ministral-8b-2512": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.15,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "ministral-8b",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/ministral-8b-2512"
+    },
+    "ministral-3b-2512": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "ministral-3b",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/ministral-3b-2512"
+    },
+    "trinity-mini:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "family": "trinity-mini:free",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "arcee-ai/trinity-mini:free"
+    },
+    "trinity-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.045,
+          "output_price": 0.15,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "family": "trinity-mini",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "arcee-ai/trinity-mini"
+    },
+    "deepseek-v3.2-speciale": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 1.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "family": "deepseek-v3.2",
+        "context_window": 163840,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 163840,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "deepseek/deepseek-v3.2-speciale"
+    },
+    "intellect-3": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 1.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "prime-intellect",
+        "family": "intellect",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "prime-intellect/intellect-3"
+    },
+    "claude-opus-4.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 5.0,
+          "output_price": 25.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude-opus",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 64000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-opus-4.5"
+    },
+    "olmo-3-32b-think": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "allenai",
+        "family": "olmo",
+        "context_window": 65536,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "allenai/olmo-3-32b-think"
+    },
+    "grok-4.1-fast": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "family": "grok",
+        "context_window": 2000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 30000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "x-ai/grok-4.1-fast"
+    },
+    "cogito-v2.1-671b": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 1.25,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepcogito",
+        "family": "cogito-v2.1",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "deepcogito/cogito-v2.1-671b"
+    },
+    "gpt-5.1-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-5.1-chat"
+    },
+    "kat-coder-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.207,
+          "output_price": 0.828,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "kwaipilot",
+        "family": "kat-coder",
+        "context_window": 256000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 128000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "kwaipilot/kat-coder-pro"
+    },
+    "sonar-pro-search": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "perplexity",
+        "family": "sonar-pro",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "perplexity/sonar-pro-search"
+    },
+    "voxtral-small-24b-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "voxtral-small",
+        "context_window": 32000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/voxtral-small-24b-2507"
+    },
+    "gpt-oss-safeguard-20b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.075,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt-oss",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-oss-safeguard-20b"
+    },
+    "nemotron-nano-12b-v2-vl:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "nemotron-nano",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 128000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/nemotron-nano-12b-v2-vl:free"
+    },
+    "nemotron-nano-12b-v2-vl": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "nemotron-nano",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/nemotron-nano-12b-v2-vl"
+    },
+    "minimax-m2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.255,
+          "output_price": 1.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "family": "minimax-m2",
+        "context_window": 196608,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 196608,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "minimax/minimax-m2"
+    },
+    "lfm2-8b-a1b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.01,
+          "output_price": 0.02,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "family": "lfm2-8b",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "liquid/lfm2-8b-a1b"
+    },
+    "lfm-2.2-6b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.01,
+          "output_price": 0.02,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "family": "lfm",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "liquid/lfm-2.2-6b"
+    },
+    "granite-4.0-h-micro": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.017,
+          "output_price": 0.11,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "ibm-granite",
+        "family": "granite",
+        "context_window": 131000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "ibm-granite/granite-4.0-h-micro"
+    },
+    "gpt-5-image-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 2.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt",
+        "context_window": 400000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 128000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-5-image-mini"
+    },
+    "claude-haiku-4.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 5.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude-haiku",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 64000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-haiku-4.5"
+    },
+    "qwen3-vl-8b-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.117,
+          "output_price": 1.365,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-vl",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-vl-8b-thinking"
+    },
+    "qwen3-vl-8b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-vl",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-vl-8b-instruct"
+    },
+    "gpt-5-image": {
+      "pricing": {
+        "USD": {
+          "input_price": 10.0,
+          "output_price": 10.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt",
+        "context_window": 400000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 128000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-5-image"
+    },
+    "llama-3.3-nemotron-super-49b-v1.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "llama",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+    },
+    "ernie-4.5-21b-a3b-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.07,
+          "output_price": 0.28,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "family": "ernie",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "baidu/ernie-4.5-21b-a3b-thinking"
+    },
+    "qwen3-vl-30b-a3b-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.13,
+          "output_price": 1.56,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-vl",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-vl-30b-a3b-thinking"
+    },
+    "qwen3-vl-30b-a3b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.13,
+          "output_price": 0.52,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-vl",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-vl-30b-a3b-instruct"
+    },
+    "claude-sonnet-4.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude-sonnet",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 64000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-sonnet-4.5"
+    },
+    "deepseek-v3.2-exp": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.27,
+          "output_price": 0.41,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "family": "deepseek-v3.2",
+        "context_window": 163840,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "deepseek/deepseek-v3.2-exp"
+    },
+    "cydonia-24b-v4.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "thedrummer",
+        "family": "cydonia-24b",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "thedrummer/cydonia-24b-v4.1"
+    },
+    "relace-apply-3": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.85,
+          "output_price": 1.25,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "relace",
+        "family": "relace-apply",
+        "context_window": 256000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 128000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "relace/relace-apply-3"
+    },
+    "qwen3-max": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.78,
+          "output_price": 3.9,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-max",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-max"
+    },
+    "qwen3-coder-plus": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.65,
+          "output_price": 3.25,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-coder",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-coder-plus"
+    },
+    "deepseek-v3.1-terminus": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.21,
+          "output_price": 0.79,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "family": "deepseek-v3.1",
+        "context_window": 163840,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "deepseek/deepseek-v3.1-terminus"
+    },
+    "grok-4-fast": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "family": "grok",
+        "context_window": 2000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 30000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "x-ai/grok-4-fast"
+    },
+    "tongyi-deepresearch-30b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.09,
+          "output_price": 0.45,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "alibaba",
+        "family": "tongyi-deepresearch",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "alibaba/tongyi-deepresearch-30b-a3b"
+    },
+    "qwen3-coder-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.195,
+          "output_price": 0.975,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-coder",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-coder-flash"
+    },
+    "qwen3-next-80b-a3b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-next",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-next-80b-a3b-instruct:free"
+    },
+    "longcat-flash-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.8,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meituan",
+        "family": "longcat-flash",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meituan/longcat-flash-chat"
+    },
+    "qwen-plus-2025-07-28:thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 0.78,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen-plus",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen-plus-2025-07-28:thinking"
+    },
+    "qwen-plus-2025-07-28": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 0.78,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen-plus",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen-plus-2025-07-28"
+    },
+    "nemotron-nano-9b-v2:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "nemotron-nano",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/nemotron-nano-9b-v2:free"
+    },
+    "nemotron-nano-9b-v2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.16,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "nemotron-nano",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/nemotron-nano-9b-v2"
+    },
+    "kimi-k2-0905": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "moonshotai",
+        "family": "kimi-k2",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "moonshotai/kimi-k2-0905"
+    },
+    "qwen3-30b-a3b-thinking-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-30b",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-30b-a3b-thinking-2507"
+    },
+    "hermes-4-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.13,
+          "output_price": 0.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "family": "hermes",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nousresearch/hermes-4-70b"
+    },
+    "hermes-4-405b": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 3.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "family": "hermes",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nousresearch/hermes-4-405b"
+    },
+    "deepseek-chat-v3.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.75,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "family": "deepseek-chat",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 7168,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "deepseek/deepseek-chat-v3.1"
+    },
+    "mistral-medium-3.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-medium",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-medium-3.1"
+    },
+    "ernie-4.5-21b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.07,
+          "output_price": 0.28,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "family": "ernie",
+        "context_window": 120000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "baidu/ernie-4.5-21b-a3b"
+    },
+    "ernie-4.5-vl-28b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.14,
+          "output_price": 0.56,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "family": "ernie",
+        "context_window": 30000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "baidu/ernie-4.5-vl-28b-a3b"
+    },
+    "gpt-oss-120b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt-oss",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-oss-120b:free"
+    },
+    "gpt-oss-20b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt-oss",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-oss-20b:free"
+    },
+    "claude-opus-4.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 15.0,
+          "output_price": 75.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude-opus",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-opus-4.1"
+    },
+    "qwen3-coder-30b-a3b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.07,
+          "output_price": 0.27,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-coder",
+        "context_window": 160000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-coder-30b-a3b-instruct"
+    },
+    "qwen3-30b-a3b-instruct-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.09,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-30b",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 262144,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-30b-a3b-instruct-2507"
+    },
+    "glm-4.5-air:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "family": "glm",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 96000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "z-ai/glm-4.5-air:free"
+    },
+    "qwen3-235b-a22b-thinking-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1495,
+          "output_price": 1.495,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-235b",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-235b-a22b-thinking-2507"
+    },
+    "glm-4-32b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "family": "glm",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "z-ai/glm-4-32b"
+    },
+    "qwen3-coder:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-coder:free",
+        "context_window": 262000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 262000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-coder:free"
+    },
+    "qwen3-coder": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.22,
+          "output_price": 1.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-coder",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-coder"
+    },
+    "ui-tars-1.5-7b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance",
+        "family": "ui-tars",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 2048,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "bytedance/ui-tars-1.5-7b"
+    },
+    "qwen3-235b-a22b-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.071,
+          "output_price": 0.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-235b",
+        "context_window": 262144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-235b-a22b-2507"
+    },
+    "router": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.85,
+          "output_price": 3.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "switchpoint",
+        "family": "router",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "switchpoint/router"
+    },
+    "kimi-k2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.57,
+          "output_price": 2.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "moonshotai",
+        "family": "kimi-k2",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "moonshotai/kimi-k2"
+    },
+    "devstral-medium": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "devstral-medium",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/devstral-medium"
+    },
+    "devstral-small": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "devstral-small",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/devstral-small"
+    },
+    "dolphin-mistral-24b-venice-edition:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "cognitivecomputations",
+        "family": "dolphin-mistral",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "cognitivecomputations/dolphin-mistral-24b-venice-edition:free"
+    },
+    "gemma-3n-e2b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma-3n",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 2048,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-3n-e2b-it:free"
+    },
+    "hunyuan-a13b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.14,
+          "output_price": 0.57,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "tencent",
+        "family": "hunyuan-a13b",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "tencent/hunyuan-a13b-instruct"
+    },
+    "deepseek-r1t2-chimera": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 1.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "tngtech",
+        "family": "deepseek-r1t2",
+        "context_window": 163840,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 163840,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "tngtech/deepseek-r1t2-chimera"
+    },
+    "ernie-4.5-vl-424b-a47b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.42,
+          "output_price": 1.25,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "family": "ernie",
+        "context_window": 123000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "baidu/ernie-4.5-vl-424b-a47b"
+    },
+    "ernie-4.5-300b-a47b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.28,
+          "output_price": 1.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "family": "ernie",
+        "context_window": 123000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 12000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "baidu/ernie-4.5-300b-a47b"
+    },
+    "mercury": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 0.75,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inception",
+        "family": "mercury",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "inception/mercury"
+    },
+    "mistral-small-3.2-24b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.075,
+          "output_price": 0.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-small",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-small-3.2-24b-instruct"
+    },
+    "minimax-m1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "family": "minimax-m1",
+        "context_window": 1000000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 40000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "minimax/minimax-m1"
+    },
+    "gemini-2.5-pro-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemini",
+        "context_window": 1048576,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65536,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemini-2.5-pro-preview"
+    },
+    "gemma-3n-e4b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma-3n",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 2048,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-3n-e4b-it:free"
+    },
+    "gemma-3n-e4b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.02,
+          "output_price": 0.04,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma-3n",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-3n-e4b-it"
+    },
+    "gemini-2.5-pro-preview-05-06": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemini",
+        "context_window": 1048576,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65535,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemini-2.5-pro-preview-05-06"
+    },
+    "spotlight": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.18,
+          "output_price": 0.18,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "family": "spotlight",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 65537,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "arcee-ai/spotlight"
+    },
+    "maestro-reasoning": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.9,
+          "output_price": 3.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "family": "maestro-reasoning",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "arcee-ai/maestro-reasoning"
+    },
+    "virtuoso-large": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.75,
+          "output_price": 1.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "family": "virtuoso-large",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 64000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "arcee-ai/virtuoso-large"
+    },
+    "coder-large": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.5,
+          "output_price": 0.8,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "family": "coder-large",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "arcee-ai/coder-large"
+    },
+    "mercury-coder": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 0.75,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inception",
+        "family": "mercury-coder",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "inception/mercury-coder"
+    },
+    "qwen3-4b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-4b:free",
+        "context_window": 40960,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-4b:free"
+    },
+    "llama-guard-4-12b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.18,
+          "output_price": 0.18,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama-guard",
+        "context_window": 163840,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-guard-4-12b"
+    },
+    "qwen3-30b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.28,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-30b",
+        "context_window": 40960,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 40960,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-30b-a3b"
+    },
+    "qwen3-14b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.06,
+          "output_price": 0.24,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-14b",
+        "context_window": 40960,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 40960,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-14b"
+    },
+    "qwen3-32b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.24,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-32b",
+        "context_window": 40960,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 40960,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-32b"
+    },
+    "qwen3-235b-a22b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.455,
+          "output_price": 1.82,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen3-235b",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen3-235b-a22b"
+    },
+    "o4-mini-high": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.1,
+          "output_price": 4.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "o4-mini",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 100000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/o4-mini-high"
+    },
+    "qwen2.5-coder-7b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.09,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen2.5-coder",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen2.5-coder-7b-instruct"
+    },
+    "llemma_7b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "eleutherai",
+        "family": "llemma_7b",
+        "context_window": 4096,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 4096,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "eleutherai/llemma_7b"
+    },
+    "codellama-7b-instruct-solidity": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "alfredpros",
+        "family": "codellama-7b",
+        "context_window": 4096,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 4096,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "alfredpros/codellama-7b-instruct-solidity"
+    },
+    "llama-3.1-nemotron-ultra-253b-v1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.6,
+          "output_price": 1.8,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "llama",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/llama-3.1-nemotron-ultra-253b-v1"
+    },
+    "llama-4-maverick": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 1048576,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-4-maverick"
+    },
+    "llama-4-scout": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 327680,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-4-scout"
+    },
+    "qwen2.5-vl-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen2.5-vl",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen2.5-vl-32b-instruct"
+    },
+    "deepseek-chat-v3-0324": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.77,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "family": "deepseek-chat",
+        "context_window": 163840,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "deepseek/deepseek-chat-v3-0324"
+    },
+    "mistral-small-3.1-24b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-small",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-small-3.1-24b-instruct:free"
+    },
+    "mistral-small-3.1-24b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.11,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-small",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-small-3.1-24b-instruct"
+    },
+    "olmo-2-0325-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "allenai",
+        "family": "olmo",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "allenai/olmo-2-0325-32b-instruct"
+    },
+    "gemma-3-4b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-3-4b-it:free"
+    },
+    "gemma-3-4b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.08,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-3-4b-it"
+    },
+    "gemma-3-12b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-3-12b-it:free"
+    },
+    "gemma-3-12b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.13,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-3-12b-it"
+    },
+    "command-a": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "cohere",
+        "family": "command-a",
+        "context_window": 256000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "cohere/command-a"
+    },
+    "gemma-3-27b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-3-27b-it:free"
+    },
+    "skyfall-36b-v2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.55,
+          "output_price": 0.8,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "thedrummer",
+        "family": "skyfall-36b",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "thedrummer/skyfall-36b-v2"
+    },
+    "qwq-32b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.58,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwq-32b",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 131072,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwq-32b"
+    },
+    "claude-3.7-sonnet": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 64000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-3.7-sonnet"
+    },
+    "claude-3.7-sonnet:thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 64000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-3.7-sonnet:thinking"
+    },
+    "mistral-saba": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-saba",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-saba"
+    },
+    "llama-guard-3-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.02,
+          "output_price": 0.06,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama-guard",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-guard-3-8b"
+    },
+    "o3-mini-high": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.1,
+          "output_price": 4.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "o3-mini",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 100000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/o3-mini-high"
+    },
+    "qwen-vl-plus": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1365,
+          "output_price": 0.4095,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen-vl",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen-vl-plus"
+    },
+    "aion-1.0": {
+      "pricing": {
+        "USD": {
+          "input_price": 4.0,
+          "output_price": 8.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "aion-labs",
+        "family": "aion",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "aion-labs/aion-1.0"
+    },
+    "aion-1.0-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.7,
+          "output_price": 1.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "aion-labs",
+        "family": "aion",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "aion-labs/aion-1.0-mini"
+    },
+    "aion-rp-llama-3.1-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.6,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "aion-labs",
+        "family": "aion-rp",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "aion-labs/aion-rp-llama-3.1-8b"
+    },
+    "qwen-vl-max": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.52,
+          "output_price": 2.08,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen-vl",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen-vl-max"
+    },
+    "qwen2.5-vl-72b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 0.8,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen2.5-vl",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen2.5-vl-72b-instruct"
+    },
+    "mistral-small-24b-instruct-2501": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.08,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-small",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-small-24b-instruct-2501"
+    },
+    "deepseek-r1-distill-qwen-32b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.29,
+          "output_price": 0.29,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "family": "deepseek-r1",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "deepseek/deepseek-r1-distill-qwen-32b"
+    },
+    "minimax-01": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 1.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "family": "minimax",
+        "context_window": 1000192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 1000192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "minimax/minimax-01"
+    },
+    "phi-4": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.065,
+          "output_price": 0.14,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "microsoft",
+        "family": "phi",
+        "context_window": 16384,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "microsoft/phi-4"
+    },
+    "l3.1-70b-hanami-x1": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 3.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "family": "l3.1-70b",
+        "context_window": 16000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "sao10k/l3.1-70b-hanami-x1"
+    },
+    "l3.3-euryale-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.65,
+          "output_price": 0.75,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "family": "l3.3-euryale",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "sao10k/l3.3-euryale-70b"
+    },
+    "llama-3.3-70b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 65536,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-3.3-70b-instruct:free"
+    },
+    "llama-3.3-70b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.32,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-3.3-70b-instruct"
+    },
+    "qwen-2.5-coder-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.66,
+          "output_price": 1.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen-2.5-coder-32b-instruct"
+    },
+    "unslopnemo-12b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 0.4,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "thedrummer",
+        "family": "unslopnemo-12b",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "thedrummer/unslopnemo-12b"
+    },
+    "claude-3.5-haiku": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 4.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-3.5-haiku"
+    },
+    "magnum-v4-72b": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 5.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthracite-org",
+        "family": "magnum-v4",
+        "context_window": 16384,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 2048,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthracite-org/magnum-v4-72b"
+    },
+    "claude-3.5-sonnet": {
+      "pricing": {
+        "USD": {
+          "input_price": 6.0,
+          "output_price": 30.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "family": "claude",
+        "context_window": 200000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "anthropic/claude-3.5-sonnet"
+    },
+    "qwen-2.5-7b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.1,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen-2.5-7b-instruct"
+    },
+    "llama-3.1-nemotron-70b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.2,
+          "output_price": 1.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "family": "llama",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nvidia/llama-3.1-nemotron-70b-instruct"
+    },
+    "inflection-3-productivity": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inflection",
+        "family": "inflection",
+        "context_window": 8000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 1024,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "inflection/inflection-3-productivity"
+    },
+    "inflection-3-pi": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inflection",
+        "family": "inflection",
+        "context_window": 8000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 1024,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "inflection/inflection-3-pi"
+    },
+    "rocinante-12b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.17,
+          "output_price": 0.43,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "thedrummer",
+        "family": "rocinante-12b",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 32768,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "thedrummer/rocinante-12b"
+    },
+    "llama-3.2-3b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-3.2-3b-instruct:free"
+    },
+    "llama-3.2-3b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.051,
+          "output_price": 0.34,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 80000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-3.2-3b-instruct"
+    },
+    "llama-3.2-1b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.027,
+          "output_price": 0.2,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 60000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-3.2-1b-instruct"
+    },
+    "llama-3.2-11b-vision-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.049,
+          "output_price": 0.049,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-3.2-11b-vision-instruct"
+    },
+    "qwen-2.5-72b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.12,
+          "output_price": 0.39,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "family": "qwen",
+        "context_window": 32768,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "qwen/qwen-2.5-72b-instruct"
+    },
+    "l3.1-euryale-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.85,
+          "output_price": 0.85,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "family": "l3.1-euryale",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "sao10k/l3.1-euryale-70b"
+    },
+    "hermes-3-llama-3.1-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.3,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "family": "hermes",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nousresearch/hermes-3-llama-3.1-70b"
+    },
+    "hermes-3-llama-3.1-405b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "family": "hermes",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nousresearch/hermes-3-llama-3.1-405b:free"
+    },
+    "hermes-3-llama-3.1-405b": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 1.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "family": "hermes",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nousresearch/hermes-3-llama-3.1-405b"
+    },
+    "l3-lunaris-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.05,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "family": "l3-lunaris",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "sao10k/l3-lunaris-8b"
+    },
+    "mistral-nemo": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.02,
+          "output_price": 0.04,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-nemo",
+        "context_window": 131072,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-nemo"
+    },
+    "gemma-2-27b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.65,
+          "output_price": 0.65,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 2048,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-2-27b-it"
+    },
+    "gemma-2-9b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.09,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "family": "gemma",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "google/gemma-2-9b-it"
+    },
+    "l3-euryale-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.48,
+          "output_price": 1.48,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "family": "l3-euryale",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "sao10k/l3-euryale-70b"
+    },
+    "hermes-2-pro-llama-3-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.14,
+          "output_price": 0.14,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "family": "hermes",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8192,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "nousresearch/hermes-2-pro-llama-3-8b"
+    },
+    "gpt-4o:extended": {
+      "pricing": {
+        "USD": {
+          "input_price": 6.0,
+          "output_price": 18.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt-4o:extended",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 64000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-4o:extended"
+    },
+    "llama-3-8b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.04,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 16384,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-3-8b-instruct"
+    },
+    "llama-3-70b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.51,
+          "output_price": 0.74,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "family": "llama",
+        "context_window": 8192,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "meta-llama/llama-3-70b-instruct"
+    },
+    "mixtral-8x22b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mixtral-8x22b",
+        "context_window": 65536,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mixtral-8x22b-instruct"
+    },
+    "wizardlm-2-8x22b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.62,
+          "output_price": 0.62,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "microsoft",
+        "family": "wizardlm",
+        "context_window": 65535,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 8000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "microsoft/wizardlm-2-8x22b"
+    },
+    "mistral-large": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-large",
+        "context_window": 128000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-large"
+    },
+    "gpt-3.5-turbo-0613": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 2.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "family": "gpt",
+        "context_window": 4095,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 4096,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "openai/gpt-3.5-turbo-0613"
+    },
+    "goliath-120b": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.75,
+          "output_price": 7.5,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "alpindale",
+        "family": "goliath-120b",
+        "context_window": 6144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 1024,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "alpindale/goliath-120b"
+    },
+    "mistral-7b-instruct-v0.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.11,
+          "output_price": 0.19,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "family": "mistral-7b",
+        "context_window": 2824,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mistralai/mistral-7b-instruct-v0.1"
+    },
+    "weaver": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.75,
+          "output_price": 1.0,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mancer",
+        "family": "weaver",
+        "context_window": 8000,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 2000,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "mancer/weaver"
+    },
+    "remm-slerp-l2-13b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.45,
+          "output_price": 0.65,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "undi95",
+        "family": "remm-slerp",
+        "context_window": 6144,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 4096,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "undi95/remm-slerp-l2-13b"
+    },
+    "mythomax-l2-13b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.06,
+          "output_price": 0.06,
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "gryphe",
+        "family": "mythomax-l2",
+        "context_window": 4096,
+        "supports_vision": false,
+        "supports_function_calling": false,
+        "max_output_tokens": 4096,
+        "_merged_from": "openrouter"
+      },
+      "source_id": "gryphe/mythomax-l2-13b"
     }
   }
 }

@@ -154,22 +154,23 @@ class PricingMerger:
             # Sort by priority (descending)
             source_list.sort(key=lambda x: x[2], reverse=True)
 
-            # Use highest priority source
+            # Use highest priority source as base structure
             primary_source, primary_data, _ = source_list[0]
             merged[normalized_id] = self._normalize_model_format(primary_data)
 
-            # Field-level enrichment: copy batch_pricing / tiered_pricing from any
-            # lower-priority source if the winning entry lacks them.
-            # This ensures batch/tiered data from LiteLLM (70) is preserved even
-            # when a direct provider fetcher (100) wins the base pricing.
             if len(source_list) > 1:
+                # Currency-level merge for pricing / cache_pricing / batch_pricing:
+                # For each currency key, keep the highest-priority source that has it.
+                # This lets USD (z.ai / international) and CNY (bigmodel.cn / China)
+                # coexist in the same model entry — neither overwrites the other.
+                for field in ("pricing", "cache_pricing", "batch_pricing"):
+                    self._merge_currencies(normalized_id, merged, source_list, field)
+
+                # Field-level enrichment: tiered_pricing from lower source if winner lacks it
                 for _src_name, src_data, _src_priority in source_list[1:]:
-                    for field in ("batch_pricing", "tiered_pricing"):
-                        if field not in merged[normalized_id] and field in src_data:
-                            merged[normalized_id][field] = copy.deepcopy(src_data[field])
-                            logger.debug(
-                                f"Field-enriched {normalized_id}.{field} from {_src_name}"
-                            )
+                    if "tiered_pricing" not in merged[normalized_id] and "tiered_pricing" in src_data:
+                        merged[normalized_id]["tiered_pricing"] = copy.deepcopy(src_data["tiered_pricing"])
+                        logger.debug(f"Field-enriched {normalized_id}.tiered_pricing from {_src_name}")
 
             # Check for price conflicts
             if len(source_list) > 1:
@@ -181,6 +182,54 @@ class PricingMerger:
             merged[normalized_id]["metadata"]["_merged_from"] = primary_source
 
         return merged
+
+    def _merge_currencies(
+        self,
+        model_id: str,
+        merged: Dict[str, Any],
+        source_list: List[Tuple[str, Dict[str, Any], int]],
+        field: str,
+    ) -> None:
+        """
+        Merge a pricing field (pricing / cache_pricing / batch_pricing) across
+        sources at currency granularity.
+
+        Rule: for each currency key (USD, CNY, …), keep whichever source has the
+        highest priority.  A lower-priority source can contribute a currency that
+        the winner does not have — it never overwrites an existing currency entry.
+
+        Example:
+            source A (priority 100, USD only):  {"USD": {input:2.5, output:10}}
+            source B (priority 70,  CNY only):  {"CNY": {input:18,  output:72}}
+            result: {"USD": {input:2.5, output:10}, "CNY": {input:18, output:72}}
+        """
+        # Build a priority-ordered map: currency → already-seen priority
+        seen_currencies: Dict[str, int] = {}
+
+        # Seed with what the winner already contributed (full priority)
+        winner_priority = source_list[0][2]
+        for currency in merged[model_id].get(field, {}):
+            seen_currencies[currency] = winner_priority
+
+        # Walk sources in priority order; add currencies the winner didn't have
+        for src_name, src_data, src_priority in source_list[1:]:
+            src_field = src_data.get(field, {})
+            if not isinstance(src_field, dict):
+                continue
+            for currency, currency_data in src_field.items():
+                if currency not in seen_currencies:
+                    # Normalize and add
+                    normalized_entry = self._normalize_model_format(
+                        {field: {currency: currency_data}}
+                    )
+                    if field not in merged[model_id]:
+                        merged[model_id][field] = {}
+                    merged[model_id][field][currency] = normalized_entry.get(field, {}).get(currency, currency_data)
+                    seen_currencies[currency] = src_priority
+                    logger.debug(
+                        f"Currency-merged {model_id}.{field}.{currency} from {src_name} "
+                        f"(priority {src_priority})"
+                    )
 
     def _normalize_model_id(self, model_id: str, source: str) -> str:
         """

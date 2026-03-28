@@ -792,6 +792,170 @@ class TestBatchDriftDetection:
         assert len(batch_warnings) == 0
 
 
+class TestMergeCurrencies:
+    """Tests for _merge_currencies: USD+CNY coexistence per the multi-currency design."""
+
+    def test_usd_and_cny_coexist_in_pricing(self, tmp_path):
+        """
+        Model with USD from one source and CNY from another should have both.
+        This is the GLM-5 use case: z.ai provides USD, bigmodel.cn provides CNY.
+        """
+        international_data = {
+            "status": "success",
+            "models": {
+                "glm-5": {
+                    "pricing": {"USD": {"input_price": 2.0, "output_price": 8.0}},
+                    "metadata": {"provider": "zhipu"},
+                }
+            },
+        }
+        chinese_data = {
+            "status": "success",
+            "models": {
+                "glm-5": {
+                    "pricing": {"CNY": {"input_price": 14.0, "output_price": 56.0}},
+                    "metadata": {"provider": "zhipu"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        # zhipu (priority 100) wins, chinese (priority 100 too) contributes CNY
+        # In practice international=100, chinese=90 — but we use 100 vs lower to test
+        with open(sources_dir / "zhipu.json", "w") as f:
+            json.dump(international_data, f)
+        with open(sources_dir / "chinese.json", "w") as f:
+            json.dump(chinese_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        model = result["models"]["glm-5"]
+        # Both currencies present
+        assert "USD" in model["pricing"]
+        assert "CNY" in model["pricing"]
+        assert model["pricing"]["USD"]["input_price"] == pytest.approx(2.0)
+        assert model["pricing"]["CNY"]["input_price"] == pytest.approx(14.0)
+
+    def test_higher_priority_currency_not_overwritten(self, tmp_path):
+        """
+        If winner has USD and lower source also has USD, lower source's USD is ignored.
+        """
+        high_prio = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {"USD": {"input_price": 2.5, "output_price": 10.0}},
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+        low_prio = {
+            "status": "success",
+            "models": {
+                "gpt-4o": {
+                    "pricing": {
+                        "USD": {"input_price": 99.0, "output_price": 99.0},  # wrong, should be ignored
+                        "CNY": {"input_price": 18.0, "output_price": 72.0},  # should be added
+                    },
+                    "metadata": {"provider": "openai"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "openai.json", "w") as f:
+            json.dump(high_prio, f)
+        with open(sources_dir / "openrouter.json", "w") as f:
+            json.dump(low_prio, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        model = result["models"]["gpt-4o"]
+        # Winner's USD untouched
+        assert model["pricing"]["USD"]["input_price"] == pytest.approx(2.5)
+        # Lower source contributes CNY
+        assert "CNY" in model["pricing"]
+        assert model["pricing"]["CNY"]["input_price"] == pytest.approx(18.0)
+
+    def test_cache_pricing_currencies_merged(self, tmp_path):
+        """Currency-merge also applies to cache_pricing field."""
+        source_a = {
+            "status": "success",
+            "models": {
+                "claude-3-5-sonnet": {
+                    "pricing": {"USD": {"input_price": 3.0, "output_price": 15.0}},
+                    "cache_pricing": {"USD": {"cache_read_input_price": 0.3, "cache_creation_input_price": 3.75}},
+                    "metadata": {"provider": "anthropic"},
+                }
+            },
+        }
+        source_b = {
+            "status": "success",
+            "models": {
+                "claude-3-5-sonnet": {
+                    "pricing": {"USD": {"input_price": 3.0, "output_price": 15.0}},
+                    "cache_pricing": {"CNY": {"cache_read_input_price": 2.1, "cache_creation_input_price": 26.25}},
+                    "metadata": {"provider": "anthropic"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "anthropic.json", "w") as f:
+            json.dump(source_a, f)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(source_b, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        model = result["models"]["claude-3-5-sonnet"]
+        assert "USD" in model["cache_pricing"]
+        assert "CNY" in model["cache_pricing"]
+
+    def test_cny_only_model_preserved(self, tmp_path):
+        """Model with only CNY pricing (Chinese-only model) passes through intact."""
+        chinese_data = {
+            "status": "success",
+            "models": {
+                "ernie-4.0": {
+                    "pricing": {"CNY": {"input_price": 0.12, "output_price": 0.12}},
+                    "metadata": {"provider": "baidu"},
+                }
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "baidu.json", "w") as f:
+            json.dump(chinese_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        model = result["models"]["ernie-4.0"]
+        assert "CNY" in model["pricing"]
+        assert "USD" not in model["pricing"]
+        assert model["pricing"]["CNY"]["input_price"] == pytest.approx(0.12)
+
+
 class TestLiteLLMMergeIntegration:
     """LiteLLM (priority 70) wins over OpenRouter (50) for overlapping models."""
 

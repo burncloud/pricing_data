@@ -1,358 +1,189 @@
 """
 Chinese LLM providers fetcher.
 
-Note: Most Chinese LLM APIs do NOT expose pricing via API endpoints.
-This module uses web scraping with Playwright to extract pricing from provider websites.
+Most Chinese LLM APIs do not expose pricing via REST endpoints.
+This module uses Playwright to scrape provider pricing pages.
 
-If Playwright is not available, falls back to cached data.
+Priority: each fetcher saves with its provider name so config.source_priority applies:
+    zhipu=100, aliyun=100, baidu=100, moonshot=100
 """
 import json
 import logging
 import re
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from scripts.config import Config
 from scripts.fetch.base import BaseFetcher, FetchResult, FetcherConfig
 
 logger = logging.getLogger(__name__)
 
-# Try to import Playwright, but gracefully degrade if unavailable
+# Per-million-token multiplier for prices given per thousand tokens
+_PER_THOUSAND_TO_PER_MILLION = 1000
+
 try:
-    from playwright.sync_api import sync_playwright, Browser, Page
+    from playwright.sync_api import sync_playwright
     PLAYWRIGHT_AVAILABLE = True
 except ImportError:
     PLAYWRIGHT_AVAILABLE = False
-    logger.warning("Playwright not available. Chinese providers will use cached data.")
+    logger.warning("Playwright not available — Chinese provider fetchers will fail.")
 
 
-@dataclass
-class ScrapedPricing:
-    """Scraped pricing data from a provider website."""
-    model_id: str
-    input_price: float
-    output_price: float
-    currency: str = "CNY"
-    unit: str = "per_thousand_tokens"
-    source_url: str = ""
-
-
-class ChineseProviderScraper(ABC):
-    """Base class for Chinese provider web scrapers."""
-
-    def __init__(self, provider_name: str, pricing_url: str):
-        self.provider_name = provider_name
-        self.pricing_url = pricing_url
-
-    @abstractmethod
-    def scrape(self, page: "Page") -> List[ScrapedPricing]:
-        """Scrape pricing data from the provider's pricing page."""
-        pass
-
-
-class ZhipuScraper(ChineseProviderScraper):
-    """Zhipu GLM pricing scraper."""
-
-    def __init__(self):
-        super().__init__("zhipu", "https://open.bigmodel.cn/pricing")
-
-    def scrape(self, page: "Page") -> List[ScrapedPricing]:
-        """Scrape Zhipu pricing page."""
-        results = []
-
-        try:
-            page.goto(self.pricing_url, wait_until="networkidle", timeout=30000)
-
-            # Wait for pricing table to load
-            page.wait_for_selector("table, .pricing-table, [class*='price']", timeout=10000)
-
-            # Extract pricing data from the page
-            # Note: Actual selectors depend on Zhipu's page structure
-            # This is a template that needs adjustment based on real page structure
-
-            pricing_elements = page.query_selector_all("tr, .pricing-row, [class*='model-row']")
-
-            for element in pricing_elements:
-                try:
-                    text = element.inner_text()
-                    # Parse model name and prices from text
-                    # Example: "GLM-4 0.1 0.1" (model, input, output per 1K tokens)
-                    match = re.search(r"(GLM-[\w-]+)\s+([\d.]+)\s+([\d.]+)", text)
-                    if match:
-                        results.append(ScrapedPricing(
-                            model_id=match.group(1).lower(),
-                            input_price=float(match.group(2)),
-                            output_price=float(match.group(3)),
-                            currency="CNY",
-                            source_url=self.pricing_url,
-                        ))
-                except Exception as e:
-                    logger.debug(f"Failed to parse element: {e}")
-                    continue
-
-        except Exception as e:
-            logger.error(f"Zhipu scraping failed: {e}")
-
-        return results
-
-
-class AliyunScraper(ChineseProviderScraper):
-    """Aliyun Qwen pricing scraper."""
-
-    def __init__(self):
-        super().__init__("aliyun", "https://help.aliyun.com/zh/dashscope/developer-reference/billing")
-
-    def scrape(self, page: "Page") -> List[ScrapedPricing]:
-        """Scrape Aliyun pricing page."""
-        results = []
-
-        try:
-            page.goto(self.pricing_url, wait_until="networkidle", timeout=30000)
-            page.wait_for_selector("table, .pricing, [class*='price']", timeout=10000)
-
-            # Aliyun typically has tables with model names and prices
-            tables = page.query_selector_all("table")
-
-            for table in tables:
-                rows = table.query_selector_all("tr")
-                for row in rows[1:]:  # Skip header
-                    try:
-                        cells = row.query_selector_all("td")
-                        if len(cells) >= 3:
-                            model_text = cells[0].inner_text()
-                            # Extract model name (qwen-max, qwen-plus, etc.)
-                            model_match = re.search(r"(qwen-[\w-]+)", model_text, re.IGNORECASE)
-                            if model_match:
-                                # Prices are usually in format "¥X.XX/千tokens"
-                                input_price = self._parse_price(cells[1].inner_text())
-                                output_price = self._parse_price(cells[2].inner_text()) if len(cells) > 2 else input_price
-
-                                if input_price:
-                                    results.append(ScrapedPricing(
-                                        model_id=model_match.group(1).lower(),
-                                        input_price=input_price,
-                                        output_price=output_price or input_price,
-                                        currency="CNY",
-                                        source_url=self.pricing_url,
-                                    ))
-                    except Exception as e:
-                        logger.debug(f"Failed to parse row: {e}")
-                        continue
-
-        except Exception as e:
-            logger.error(f"Aliyun scraping failed: {e}")
-
-        return results
-
-    def _parse_price(self, text: str) -> Optional[float]:
-        """Parse price from text like '¥0.04/千tokens' or '0.04'. """
-        match = re.search(r"[\d.]+", text.replace("¥", ""))
-        if match:
-            return float(match.group())
+def _run_playwright(url: str, timeout_ms: int = 45_000) -> Optional[str]:
+    """
+    Load a page with Playwright and return the rendered page text.
+    Returns None if Playwright is unavailable or loading fails.
+    """
+    if not PLAYWRIGHT_AVAILABLE:
         return None
-
-
-class BaiduScraper(ChineseProviderScraper):
-    """Baidu ERNIE pricing scraper."""
-
-    def __init__(self):
-        super().__init__("baidu", "https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Blfmc9dlf")
-
-    def scrape(self, page: "Page") -> List[ScrapedPricing]:
-        """Scrape Baidu pricing page."""
-        results = []
-
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
         try:
-            page.goto(self.pricing_url, wait_until="networkidle", timeout=30000)
-            page.wait_for_selector("table, .pricing-table", timeout=10000)
-
-            tables = page.query_selector_all("table")
-
-            for table in tables:
-                rows = table.query_selector_all("tr")
-                for row in rows[1:]:
-                    try:
-                        text = row.inner_text()
-                        # Baidu format: "ERNIE-4.0-8K 0.12 0.12"
-                        match = re.search(r"(ERNIE-[\w.-]+)\s+([\d.]+)\s+([\d.]+)", text)
-                        if match:
-                            results.append(ScrapedPricing(
-                                model_id=match.group(1).lower().replace("ernie-", ""),
-                                input_price=float(match.group(2)),
-                                output_price=float(match.group(3)),
-                                currency="CNY",
-                                source_url=self.pricing_url,
-                            ))
-                    except Exception as e:
-                        logger.debug(f"Failed to parse row: {e}")
-                        continue
-
+            context = browser.new_context(
+                locale="zh-CN",
+                user_agent=(
+                    "Mozilla/5.0 (X11; Linux x86_64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/120.0.0.0 Safari/537.36"
+                ),
+            )
+            page = context.new_page()
+            page.goto(url, wait_until="networkidle", timeout=timeout_ms)
+            # Extra wait for React renders that happen after networkidle
+            page.wait_for_timeout(2000)
+            return page.inner_text("body")
         except Exception as e:
-            logger.error(f"Baidu scraping failed: {e}")
-
-        return results
-
-
-class MoonshotScraper(ChineseProviderScraper):
-    """Moonshot Kimi pricing scraper."""
-
-    def __init__(self):
-        super().__init__("moonshot", "https://platform.moonshot.cn/docs/pricing")
-
-    def scrape(self, page: "Page") -> List[ScrapedPricing]:
-        """Scrape Moonshot pricing page."""
-        results = []
-
-        try:
-            page.goto(self.pricing_url, wait_until="networkidle", timeout=30000)
-            page.wait_for_selector("table, .pricing", timeout=10000)
-
-            text = page.content()
-            # Moonshot format: "moonshot-v1-8k: 0.012/千tokens"
-            matches = re.findall(r"(moonshot-v1-\d+k).*?([\d.]+)/千", text)
-            for model_id, price in matches:
-                results.append(ScrapedPricing(
-                    model_id=model_id.lower(),
-                    input_price=float(price),
-                    output_price=float(price),
-                    currency="CNY",
-                    source_url=self.pricing_url,
-                ))
-
-        except Exception as e:
-            logger.error(f"Moonshot scraping failed: {e}")
-
-        return results
+            logger.error(f"Playwright failed to load {url}: {e}")
+            return None
+        finally:
+            browser.close()
 
 
-class ChineseFetcher(BaseFetcher):
+class ZhipuFetcher(BaseFetcher):
     """
-    Fetches pricing data from Chinese LLM providers via web scraping.
+    Fetches Zhipu GLM pricing from https://open.bigmodel.cn/pricing.
 
-    Falls back to cached data if Playwright is unavailable.
+    The page is a React SPA. We use Playwright to render it, then extract
+    CNY prices from the visible text.
+
+    Prices on the page are typically in CNY per thousand tokens — we convert
+    to CNY per million tokens to match our standard format.
     """
 
-    SCRAPERS = [
-        ZhipuScraper,
-        AliyunScraper,
-        BaiduScraper,
-        MoonshotScraper,
-    ]
+    PRICING_URL = "https://open.bigmodel.cn/pricing"
 
-    def __init__(self, config: Config, provider: str = "all"):
-        self.provider = provider
+    def __init__(self, config: Config):
         fetcher_config = FetcherConfig(
-            name=f"chinese-{provider}",
-            url="",  # URL varies by scraper
-            timeout=30.0,
+            name="zhipu",
+            url=self.PRICING_URL,
+            timeout=45.0,
             max_retries=2,
         )
         super().__init__(config, fetcher_config)
 
-    def _make_request(self) -> Optional[requests.Response]:
-        """Not used for web scraping fetchers."""
+    # ------------------------------------------------------------------
+    # BaseFetcher interface (not used — we override fetch() entirely)
+    # ------------------------------------------------------------------
+
+    def _make_request(self):
         return None
 
-    def _validate_response(self, response: requests.Response) -> bool:
-        """Not used for web scraping fetchers."""
+    def _validate_response(self, response) -> bool:
         return True
 
-    def _parse_models(self, response: requests.Response) -> Dict[str, Any]:
-        """Not used for web scraping fetchers."""
+    def _parse_models(self, response) -> Dict[str, Any]:
         return {}
 
+    # ------------------------------------------------------------------
+    # Main entry point
+    # ------------------------------------------------------------------
+
     def fetch(self) -> FetchResult:
-        """Fetch pricing data from Chinese providers."""
         if not PLAYWRIGHT_AVAILABLE:
-            logger.warning("Playwright not available, returning cached data")
-            return self._get_cached_result()
+            return FetchResult.error_result("zhipu", "Playwright not available")
 
-        all_models = {}
-        errors = []
+        logger.info(f"Scraping Zhipu pricing from {self.PRICING_URL}")
+        page_text = _run_playwright(self.PRICING_URL)
 
-        for scraper_class in self.SCRAPERS:
-            scraper = scraper_class()
+        if page_text is None:
+            return FetchResult.error_result("zhipu", "Playwright failed to load page")
 
-            if self.provider != "all" and scraper.provider_name != self.provider:
-                continue
+        try:
+            models = self._parse_page_text(page_text)
+        except Exception as e:
+            logger.exception("Zhipu pricing parse failed")
+            return FetchResult.error_result("zhipu", f"Parse error: {e}")
 
-            try:
-                with sync_playwright() as p:
-                    browser = p.chromium.launch(headless=True)
-                    page = browser.new_page()
+        if not models:
+            logger.warning("Zhipu: no models extracted from page")
+            return FetchResult.error_result("zhipu", "No models found in page")
 
-                    # Set reasonable timeout and wait for page load
-                    page.set_default_timeout(30000)
-
-                    scraped = scraper.scrape(page)
-
-                    browser.close()
-
-                    for item in scraped:
-                        all_models[item.model_id] = {
-                            "pricing": {
-                                item.currency: {
-                                    "input_price": item.input_price,
-                                    "output_price": item.output_price,
-                                    "unit": item.unit,
-                                    "source": scraper.provider_name,
-                                }
-                            },
-                            "metadata": {
-                                "provider": scraper.provider_name,
-                                "family": self._extract_family(item.model_id),
-                                "source_url": item.source_url,
-                            }
-                        }
-
-                    logger.info(f"Scraped {len(scraped)} models from {scraper.provider_name}")
-
-            except Exception as e:
-                error_msg = f"{scraper.provider_name} scraping failed: {e}"
-                logger.error(error_msg)
-                errors.append(error_msg)
-
-        if not all_models and errors:
-            return FetchResult.error_result(
-                "chinese",
-                "; ".join(errors)
-            )
-
+        logger.info(f"Zhipu: extracted {len(models)} models")
         return FetchResult(
-            source="chinese",
+            source="zhipu",
             success=True,
             fetched_at=datetime.now(timezone.utc).isoformat(),
-            models=all_models,
-            models_count=len(all_models),
+            models=models,
+            models_count=len(models),
         )
 
-    def _get_cached_result(self) -> FetchResult:
-        """Get cached result when Playwright is unavailable."""
-        # Look for the most recent cached data
-        from datetime import date, timedelta
+    # ------------------------------------------------------------------
+    # Parsing
+    # ------------------------------------------------------------------
 
-        for days_ago in range(7):
-            check_date = (date.today() - timedelta(days=days_ago)).isoformat()
-            cached = self.load_cached_result(check_date)
-            if cached and cached.success:
-                logger.info(f"Using cached Chinese data from {check_date}")
-                return cached
+    def _parse_page_text(self, text: str) -> Dict[str, Any]:
+        """
+        Extract GLM model pricing from page text.
 
-        return FetchResult.error_result(
-            "chinese",
-            "Playwright unavailable and no cached data found"
+        bigmodel.cn shows a table with columns roughly:
+            模型名称 | 输入价格 | 输出价格  (CNY per thousand tokens)
+
+        We look for lines that contain a GLM model name followed by two prices.
+        """
+        models: Dict[str, Any] = {}
+
+        # Patterns seen on bigmodel.cn pricing pages (flexible — tolerate whitespace):
+        #   GLM-4-Flash   0.0001   0.0001
+        #   GLM-4         0.1      0.1
+        # Prices may be in formats: 0.1 / 0.0001 / 0.00001
+        # Unit is CNY / thousand tokens on the page — multiply by 1000 for per-million.
+        pattern = re.compile(
+            r"(GLM[-\w]+)"           # model name
+            r"[\s\S]{0,200}?"        # loose match for cells between name and prices
+            r"([\d]+\.[\d]+)"        # input price (always has decimal)
+            r"\s+"
+            r"([\d]+\.[\d]+)",       # output price
+            re.IGNORECASE,
         )
 
-    def _extract_family(self, model_id: str) -> str:
-        """Extract model family from ID."""
-        if model_id.startswith("qwen"):
-            return "qwen"
-        elif model_id.startswith("glm"):
-            return "glm"
-        elif model_id.startswith("ernie"):
-            return "ernie"
-        elif model_id.startswith("moonshot"):
-            return "moonshot"
-        return model_id.split("-")[0]
+        seen_models = set()
+        for m in pattern.finditer(text):
+            raw_name = m.group(1).strip()
+            input_per_k = float(m.group(2))
+            output_per_k = float(m.group(3))
+
+            model_id = raw_name.lower()
+            if model_id in seen_models:
+                continue
+            seen_models.add(model_id)
+
+            input_per_m = round(input_per_k * _PER_THOUSAND_TO_PER_MILLION, 6)
+            output_per_m = round(output_per_k * _PER_THOUSAND_TO_PER_MILLION, 6)
+
+            models[model_id] = {
+                "pricing": {
+                    "CNY": {
+                        "input_price": input_per_m,
+                        "output_price": output_per_m,
+                    }
+                },
+                "metadata": {
+                    "provider": "zhipu",
+                    "family": "glm",
+                },
+            }
+            logger.debug(
+                f"Zhipu: {model_id} CNY input={input_per_m} output={output_per_m} /MTok"
+            )
+
+        return models

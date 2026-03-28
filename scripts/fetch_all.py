@@ -12,6 +12,7 @@ from typing import Optional
 
 from scripts.config import config
 from scripts.fetch.anthropic import AnthropicFetcher
+from scripts.fetch.chinese import ZhipuFetcher
 from scripts.fetch.deepseek import DeepSeekFetcher
 from scripts.fetch.google import GoogleFetcher
 from scripts.fetch.litellm import LiteLLMFetcher
@@ -39,6 +40,7 @@ def fetch_all(date_str: Optional[str] = None) -> int:
         AnthropicFetcher(config),        # priority 100, plain HTTP
         GoogleFetcher(config),           # priority 100, plain HTTP
         DeepSeekFetcher(config),         # priority 100, plain HTTP
+        ZhipuFetcher(config),            # priority 100, Playwright (bigmodel.cn CNY)
         OpenRouterFetcher(config),       # priority 50
         LiteLLMFetcher(config),          # priority 70
     ]
