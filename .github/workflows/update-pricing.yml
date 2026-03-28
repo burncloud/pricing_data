@@ -2,7 +2,6 @@ name: Update Pricing Data
 
 on:
   schedule:
-    # Run at 00:00 UTC daily
     - cron: '0 0 * * *'
   workflow_dispatch:
 
@@ -34,7 +33,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest
+          pip install pytest requests
 
       - name: Create sources directory
         run: |
@@ -43,75 +42,77 @@ jobs:
           echo "DATE=$DATE" >> $GITHUB_ENV
 
       - name: Fetch from OpenRouter
-        if: ${{ secrets.OPENROUTER_API_KEY != '' }}
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          python -c "
+          python3 << 'PYEOF'
           import json
           import requests
           import os
           from datetime import datetime, timezone
 
-          api_key = os.environ.get('OPENROUTER_API_KEY')
+          api_key = os.environ.get('OPENROUTER_API_KEY', '')
+          date = os.environ.get('DATE', datetime.now().strftime('%Y-%m-%d'))
+
           if not api_key:
-              print('No API key, skipping')
+              print('No OPENROUTER_API_KEY set, skipping fetch')
               exit(0)
 
-          headers = {
-              'Authorization': f'Bearer {api_key}',
-              'Accept': 'application/json'
-          }
+          try:
+              headers = {
+                  'Authorization': f'Bearer {api_key}',
+                  'Accept': 'application/json'
+              }
+              resp = requests.get('https://openrouter.ai/api/v1/models', headers=headers, timeout=30)
+              resp.raise_for_status()
+              data = resp.json()
 
-          resp = requests.get('https://openrouter.ai/api/v1/models', headers=headers, timeout=30)
-          resp.raise_for_status()
-          data = resp.json()
+              models = {}
+              for m in data.get('data', []):
+                  model_id = m.get('id', '')
+                  normalized = model_id.split('/', 1)[1] if '/' in model_id else model_id
 
-          models = {}
-          for m in data.get('data', []):
-              model_id = m.get('id', '')
-              if '/' in model_id:
-                  model_id = model_id.split('/', 1)[1]
+                  pricing = m.get('pricing', {})
+                  prompt = pricing.get('prompt')
+                  completion = pricing.get('completion')
 
-              pricing = m.get('pricing', {})
-              prompt = pricing.get('prompt')
-              completion = pricing.get('completion')
-
-              if prompt and completion:
-                  models[model_id] = {
-                      'pricing': {
-                          'USD': {
-                              'input_price': float(prompt) * 1000000,
-                              'output_price': float(completion) * 1000000,
-                              'unit': 'per_million_tokens',
-                              'source': 'openrouter'
+                  if prompt and completion:
+                      models[normalized] = {
+                          'pricing': {
+                              'USD': {
+                                  'input_price': float(prompt) * 1000000,
+                                  'output_price': float(completion) * 1000000,
+                                  'unit': 'per_million_tokens',
+                                  'source': 'openrouter'
+                              }
+                          },
+                          'metadata': {
+                              'provider': model_id.split('/')[0] if '/' in model_id else 'unknown',
+                              'context_window': m.get('context_length')
                           }
-                      },
-                      'metadata': {
-                          'provider': m.get('id', '').split('/')[0] if '/' in m.get('id', '') else 'unknown',
-                          'context_window': m.get('context_length')
                       }
-                  }
 
-          result = {
-              'source': 'openrouter',
-              'fetched_at': datetime.now(timezone.utc).isoformat(),
-              'status': 'success',
-              'models_count': len(models),
-              'models': models
-          }
+              result = {
+                  'source': 'openrouter',
+                  'fetched_at': datetime.now(timezone.utc).isoformat(),
+                  'status': 'success',
+                  'models_count': len(models),
+                  'models': models
+              }
 
-          with open(f'sources/{os.environ[\"DATE\"]}/openrouter.json', 'w') as f:
-              json.dump(result, f, indent=2)
+              os.makedirs(f'sources/{date}', exist_ok=True)
+              with open(f'sources/{date}/openrouter.json', 'w') as f:
+                  json.dump(result, f, indent=2)
 
-          print(f'Fetched {len(models)} models from OpenRouter')
-          "
+              print(f'Fetched {len(models)} models from OpenRouter')
+          except Exception as e:
+              print(f'Fetch failed: {e}')
+          PYEOF
         continue-on-error: true
 
       - name: Merge pricing data
-        id: merge
         run: |
-          python -c "
+          python3 << 'PYEOF'
           import json
           import os
           from datetime import datetime, timezone
@@ -124,19 +125,24 @@ jobs:
 
           if sources_dir.exists():
               for src_file in sources_dir.glob('*.json'):
-                  with open(src_file) as f:
-                      data = json.load(f)
-                  if data.get('status') == 'success' and data.get('models'):
-                      all_models.update(data['models'])
-                      print(f'Loaded {len(data[\"models\"])} models from {src_file.name}')
+                  try:
+                      with open(src_file) as f:
+                          data = json.load(f)
+                      if data.get('status') == 'success' and data.get('models'):
+                          all_models.update(data['models'])
+                          print(f'Loaded {len(data["models"])} models from {src_file.name}')
+                  except Exception as e:
+                      print(f'Failed to load {src_file}: {e}')
 
-          # If no new data, keep existing pricing.json
           if not all_models:
               if Path('pricing.json').exists():
-                  print('No new data, keeping existing pricing.json')
+                  print('No new data fetched, keeping existing pricing.json')
+                  with open('pricing.json') as f:
+                      existing = json.load(f)
+                  print(f'Existing pricing.json has {len(existing.get("models", {}))} models')
                   exit(0)
               else:
-                  print('No data available')
+                  print('No data available and no existing pricing.json')
                   exit(1)
 
           result = {
@@ -150,7 +156,6 @@ jobs:
               json.dump(result, f, indent=2, ensure_ascii=False)
 
           print(f'Merged {len(all_models)} models to pricing.json')
-          "
 
       - name: Run tests
         run: pytest tests/ -v --tb=short || echo "Some tests failed"
