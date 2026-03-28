@@ -1,8 +1,4838 @@
 {
   "schema_version": "1.0",
-  "updated_at": "2026-03-28T02:32:14.802325+00:00",
+  "updated_at": "2026-03-28T02:50:44.374985+00:00",
   "source": "burncloud-official",
   "models": {
+    "kat-coder-pro-v2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "kwaipilot",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "reka-edge": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "reka",
+        "context_window": 16384,
+        "supports_vision": true
+      }
+    },
+    "mimo-v2-omni": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "xiaomi",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "mimo-v2-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 3.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "xiaomi",
+        "context_window": 1048576,
+        "supports_vision": false
+      }
+    },
+    "minimax-m2.7": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "context_window": 204800,
+        "supports_vision": false
+      }
+    },
+    "gpt-5.4-nano": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 1.25,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.4-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.75,
+          "output_price": 4.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "mistral-small-2603": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "glm-5-turbo": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.2,
+          "output_price": 4.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 202752,
+        "supports_vision": false
+      }
+    },
+    "grok-4.20-multi-agent-beta": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 2000000,
+        "supports_vision": true
+      }
+    },
+    "grok-4.20-beta": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 2000000,
+        "supports_vision": true
+      }
+    },
+    "nemotron-3-super-120b-a12b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "nemotron-3-super-120b-a12b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "seed-2.0-lite": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance-seed",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "qwen3.5-9b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.15,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 256000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.4-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 30.0,
+          "output_price": 180.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 1050000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.4": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 1050000,
+        "supports_vision": true
+      }
+    },
+    "mercury-2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 0.75,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inception",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gpt-5.3-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.75,
+          "output_price": 14.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "gemini-3.1-flash-lite-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 1.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "seed-2.0-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance-seed",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "gemini-3.1-flash-image-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.5,
+          "output_price": 3.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 65536,
+        "supports_vision": true
+      }
+    },
+    "qwen3.5-35b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1625,
+          "output_price": 1.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "qwen3.5-27b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.195,
+          "output_price": 1.56,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "qwen3.5-122b-a10b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 2.08,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "qwen3.5-flash-02-23": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.065,
+          "output_price": 0.26,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 1000000,
+        "supports_vision": true
+      }
+    },
+    "lfm-2-24b-a2b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.12,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "gemini-3.1-pro-preview-customtools": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 12.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.3-codex": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.75,
+          "output_price": 14.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "aion-2.0": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "aion-labs",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "gemini-3.1-pro-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 12.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "claude-sonnet-4.6": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 1000000,
+        "supports_vision": true
+      }
+    },
+    "qwen3.5-plus-02-15": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 1.56,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 1000000,
+        "supports_vision": true
+      }
+    },
+    "qwen3.5-397b-a17b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.39,
+          "output_price": 2.34,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "minimax-m2.5:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "context_window": 196608,
+        "supports_vision": false
+      }
+    },
+    "minimax-m2.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 1.17,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "context_window": 196608,
+        "supports_vision": false
+      }
+    },
+    "glm-5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.72,
+          "output_price": 2.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 80000,
+        "supports_vision": false
+      }
+    },
+    "qwen3-max-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.78,
+          "output_price": 3.9,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "claude-opus-4.6": {
+      "pricing": {
+        "USD": {
+          "input_price": 5.0,
+          "output_price": 25.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 1000000,
+        "supports_vision": true
+      }
+    },
+    "qwen3-coder-next": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.12,
+          "output_price": 0.75,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openrouter",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "step-3.5-flash:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "stepfun",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "step-3.5-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "stepfun",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "trinity-large-preview:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "context_window": 131000,
+        "supports_vision": false
+      }
+    },
+    "kimi-k2.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.45,
+          "output_price": 2.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "moonshotai",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "solar-pro-3": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "upstage",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "minimax-m2-her": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "context_window": 65536,
+        "supports_vision": false
+      }
+    },
+    "palmyra-x5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.6,
+          "output_price": 6.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "writer",
+        "context_window": 1040000,
+        "supports_vision": false
+      }
+    },
+    "lfm-2.5-1.2b-thinking:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "lfm-2.5-1.2b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "gpt-audio": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gpt-audio-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.6,
+          "output_price": 2.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "glm-4.7-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.06,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 202752,
+        "supports_vision": false
+      }
+    },
+    "gpt-5.2-codex": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.75,
+          "output_price": 14.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "olmo-3.1-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "allenai",
+        "context_window": 65536,
+        "supports_vision": false
+      }
+    },
+    "seed-1.6-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.075,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance-seed",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "seed-1.6": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance-seed",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "minimax-m2.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.27,
+          "output_price": 0.95,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "context_window": 196608,
+        "supports_vision": false
+      }
+    },
+    "glm-4.7": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.39,
+          "output_price": 1.75,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 202752,
+        "supports_vision": false
+      }
+    },
+    "gemini-3-flash-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.5,
+          "output_price": 3.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "mistral-small-creative": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "olmo-3.1-32b-think": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "allenai",
+        "context_window": 65536,
+        "supports_vision": false
+      }
+    },
+    "mimo-v2-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.09,
+          "output_price": 0.29,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "xiaomi",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "nemotron-3-nano-30b-a3b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "nemotron-3-nano-30b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "gpt-5.2-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.75,
+          "output_price": 14.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.2-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 21.0,
+          "output_price": 168.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.2": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.75,
+          "output_price": 14.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "devstral-2512": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "relace-search": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 3.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "relace",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "glm-4.6v": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.9,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "deepseek-v3.1-nex-n1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.135,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nex-agi",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "rnj-1-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.15,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "essentialai",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "bodybuilder": {
+      "pricing": {
+        "USD": {
+          "input_price": -1000000.0,
+          "output_price": -1000000.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openrouter",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gpt-5.1-codex-max": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "nova-2-lite-v1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 2.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "amazon",
+        "context_window": 1000000,
+        "supports_vision": true
+      }
+    },
+    "ministral-14b-2512": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "ministral-8b-2512": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.15,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "ministral-3b-2512": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "mistral-large-2512": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.5,
+          "output_price": 1.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "trinity-mini:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "trinity-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.045,
+          "output_price": 0.15,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "deepseek-v3.2-speciale": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 163840,
+        "supports_vision": false
+      }
+    },
+    "deepseek-v3.2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 0.38,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 163840,
+        "supports_vision": false
+      }
+    },
+    "intellect-3": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 1.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "prime-intellect",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "claude-opus-4.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 5.0,
+          "output_price": 25.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "olmo-3-32b-think": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "allenai",
+        "context_window": 65536,
+        "supports_vision": false
+      }
+    },
+    "gemini-3-pro-image-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 12.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 65536,
+        "supports_vision": true
+      }
+    },
+    "grok-4.1-fast": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 2000000,
+        "supports_vision": true
+      }
+    },
+    "cogito-v2.1-671b": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 1.25,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepcogito",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gpt-5.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.1-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.1-codex": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5.1-codex-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "kat-coder-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.207,
+          "output_price": 0.828,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "kwaipilot",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "kimi-k2-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.47,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "moonshotai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "nova-premier-v1": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 12.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "amazon",
+        "context_window": 1000000,
+        "supports_vision": true
+      }
+    },
+    "sonar-pro-search": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "perplexity",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "voxtral-small-24b-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 32000,
+        "supports_vision": false
+      }
+    },
+    "gpt-oss-safeguard-20b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.075,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "nemotron-nano-12b-v2-vl:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "nemotron-nano-12b-v2-vl": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "minimax-m2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.255,
+          "output_price": 1.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "context_window": 196608,
+        "supports_vision": false
+      }
+    },
+    "qwen3-vl-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.104,
+          "output_price": 0.416,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "lfm2-8b-a1b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.01,
+          "output_price": 0.02,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "lfm-2.2-6b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.01,
+          "output_price": 0.02,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "liquid",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "granite-4.0-h-micro": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.017,
+          "output_price": 0.11,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "ibm-granite",
+        "context_window": 131000,
+        "supports_vision": false
+      }
+    },
+    "gpt-5-image-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "claude-haiku-4.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 5.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "qwen3-vl-8b-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.117,
+          "output_price": 1.365,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "qwen3-vl-8b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "gpt-5-image": {
+      "pricing": {
+        "USD": {
+          "input_price": 10.0,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "o3-deep-research": {
+      "pricing": {
+        "USD": {
+          "input_price": 10.0,
+          "output_price": 40.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "o4-mini-deep-research": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 8.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "llama-3.3-nemotron-super-49b-v1.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "ernie-4.5-21b-a3b-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.07,
+          "output_price": 0.28,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "gemini-2.5-flash-image": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 2.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 32768,
+        "supports_vision": true
+      }
+    },
+    "qwen3-vl-30b-a3b-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.13,
+          "output_price": 1.56,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "qwen3-vl-30b-a3b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.13,
+          "output_price": 0.52,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "gpt-5-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 15.0,
+          "output_price": 120.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "glm-4.6": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.39,
+          "output_price": 1.9,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 204800,
+        "supports_vision": false
+      }
+    },
+    "claude-sonnet-4.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 1000000,
+        "supports_vision": true
+      }
+    },
+    "deepseek-v3.2-exp": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.27,
+          "output_price": 0.41,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 163840,
+        "supports_vision": false
+      }
+    },
+    "cydonia-24b-v4.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "thedrummer",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "relace-apply-3": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.85,
+          "output_price": 1.25,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "relace",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "gemini-2.5-flash-lite-preview-09-2025": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "qwen3-vl-235b-a22b-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 2.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "qwen3-vl-235b-a22b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.88,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": true
+      }
+    },
+    "qwen3-max": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.78,
+          "output_price": 3.9,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "qwen3-coder-plus": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.65,
+          "output_price": 3.25,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 1000000,
+        "supports_vision": false
+      }
+    },
+    "gpt-5-codex": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "deepseek-v3.1-terminus": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.21,
+          "output_price": 0.79,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 163840,
+        "supports_vision": false
+      }
+    },
+    "grok-4-fast": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 2000000,
+        "supports_vision": true
+      }
+    },
+    "tongyi-deepresearch-30b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.09,
+          "output_price": 0.45,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "alibaba",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "qwen3-coder-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.195,
+          "output_price": 0.975,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 1000000,
+        "supports_vision": false
+      }
+    },
+    "qwen3-next-80b-a3b-thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0975,
+          "output_price": 0.78,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "qwen3-next-80b-a3b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "qwen3-next-80b-a3b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.09,
+          "output_price": 1.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "longcat-flash-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.8,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meituan",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "qwen-plus-2025-07-28:thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 0.78,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 1000000,
+        "supports_vision": false
+      }
+    },
+    "qwen-plus-2025-07-28": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 0.78,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 1000000,
+        "supports_vision": false
+      }
+    },
+    "nemotron-nano-9b-v2:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "nemotron-nano-9b-v2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.16,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "kimi-k2-0905": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "moonshotai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "qwen3-30b-a3b-thinking-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "grok-code-fast-1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 1.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "hermes-4-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.13,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "hermes-4-405b": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 3.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "deepseek-chat-v3.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.75,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "gpt-4o-audio-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "mistral-medium-3.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "ernie-4.5-21b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.07,
+          "output_price": 0.28,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "context_window": 120000,
+        "supports_vision": false
+      }
+    },
+    "ernie-4.5-vl-28b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.14,
+          "output_price": 0.56,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "context_window": 30000,
+        "supports_vision": true
+      }
+    },
+    "glm-4.5v": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.6,
+          "output_price": 1.8,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 65536,
+        "supports_vision": true
+      }
+    },
+    "jamba-large-1.7": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 8.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "ai21",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "gpt-5-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "gpt-5-nano": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 400000,
+        "supports_vision": true
+      }
+    },
+    "gpt-oss-120b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "gpt-oss-120b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.039,
+          "output_price": 0.19,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "gpt-oss-20b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "gpt-oss-20b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.11,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "claude-opus-4.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 15.0,
+          "output_price": 75.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "codestral-2508": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.9,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "qwen3-coder-30b-a3b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.07,
+          "output_price": 0.27,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 160000,
+        "supports_vision": false
+      }
+    },
+    "qwen3-30b-a3b-instruct-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.09,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "glm-4.5": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.6,
+          "output_price": 2.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "glm-4.5-air:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "glm-4.5-air": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.13,
+          "output_price": 0.85,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "qwen3-235b-a22b-thinking-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1495,
+          "output_price": 1.495,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "glm-4-32b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "z-ai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "qwen3-coder:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262000,
+        "supports_vision": false
+      }
+    },
+    "qwen3-coder": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.22,
+          "output_price": 1.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "ui-tars-1.5-7b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "bytedance",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "gemini-2.5-flash-lite": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "qwen3-235b-a22b-2507": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.071,
+          "output_price": 0.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "router": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.85,
+          "output_price": 3.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "switchpoint",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "kimi-k2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.57,
+          "output_price": 2.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "moonshotai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "devstral-medium": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "devstral-small": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "dolphin-mistral-24b-venice-edition:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "cognitivecomputations",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "grok-4": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 256000,
+        "supports_vision": true
+      }
+    },
+    "gemma-3n-e2b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
+    "hunyuan-a13b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.14,
+          "output_price": 0.57,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "tencent",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "deepseek-r1t2-chimera": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 1.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "tngtech",
+        "context_window": 163840,
+        "supports_vision": false
+      }
+    },
+    "morph-v3-large": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.9,
+          "output_price": 1.9,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "morph",
+        "context_window": 262144,
+        "supports_vision": false
+      }
+    },
+    "morph-v3-fast": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "morph",
+        "context_window": 81920,
+        "supports_vision": false
+      }
+    },
+    "ernie-4.5-vl-424b-a47b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.42,
+          "output_price": 1.25,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "context_window": 123000,
+        "supports_vision": true
+      }
+    },
+    "ernie-4.5-300b-a47b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.28,
+          "output_price": 1.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "baidu",
+        "context_window": 123000,
+        "supports_vision": false
+      }
+    },
+    "mercury": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 0.75,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inception",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "mistral-small-3.2-24b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.075,
+          "output_price": 0.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "minimax-m1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "context_window": 1000000,
+        "supports_vision": false
+      }
+    },
+    "gemini-2.5-flash": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 2.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "gemini-2.5-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "o3-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 20.0,
+          "output_price": 80.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "grok-3-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "grok-3": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "gemini-2.5-pro-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "deepseek-r1-0528": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.45,
+          "output_price": 2.15,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 163840,
+        "supports_vision": false
+      }
+    },
+    "claude-opus-4": {
+      "pricing": {
+        "USD": {
+          "input_price": 15.0,
+          "output_price": 75.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "claude-sonnet-4": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "gemma-3n-e4b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
+    "gemma-3n-e4b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.02,
+          "output_price": 0.04,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "mistral-medium-3": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "gemini-2.5-pro-preview-05-06": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.25,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "spotlight": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.18,
+          "output_price": 0.18,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "maestro-reasoning": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.9,
+          "output_price": 3.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "virtuoso-large": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.75,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "coder-large": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.5,
+          "output_price": 0.8,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "arcee-ai",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "mercury-coder": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 0.75,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inception",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "qwen3-4b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 40960,
+        "supports_vision": false
+      }
+    },
+    "llama-guard-4-12b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.18,
+          "output_price": 0.18,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 163840,
+        "supports_vision": true
+      }
+    },
+    "qwen3-30b-a3b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.28,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 40960,
+        "supports_vision": false
+      }
+    },
+    "qwen3-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 40960,
+        "supports_vision": false
+      }
+    },
+    "qwen3-14b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.06,
+          "output_price": 0.24,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 40960,
+        "supports_vision": false
+      }
+    },
+    "qwen3-32b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.24,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 40960,
+        "supports_vision": false
+      }
+    },
+    "qwen3-235b-a22b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.455,
+          "output_price": 1.82,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "o4-mini-high": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.1,
+          "output_price": 4.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "o3": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 8.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "o4-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.1,
+          "output_price": 4.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "qwen2.5-coder-7b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.09,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "gpt-4.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 8.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 1047576,
+        "supports_vision": true
+      }
+    },
+    "gpt-4.1-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 1.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 1047576,
+        "supports_vision": true
+      }
+    },
+    "gpt-4.1-nano": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 1047576,
+        "supports_vision": true
+      }
+    },
+    "llemma_7b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "eleutherai",
+        "context_window": 4096,
+        "supports_vision": false
+      }
+    },
+    "codellama-7b-instruct-solidity": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "alfredpros",
+        "context_window": 4096,
+        "supports_vision": false
+      }
+    },
+    "grok-3-mini-beta": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "grok-3-beta": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "x-ai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "llama-3.1-nemotron-ultra-253b-v1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.6,
+          "output_price": 1.8,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "llama-4-maverick": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "llama-4-scout": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 327680,
+        "supports_vision": true
+      }
+    },
+    "qwen2.5-vl-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "deepseek-chat-v3-0324": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.77,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 163840,
+        "supports_vision": false
+      }
+    },
+    "o1-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 150.0,
+          "output_price": 600.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "mistral-small-3.1-24b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "mistral-small-3.1-24b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.11,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "olmo-2-0325-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "allenai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gemma-3-4b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 32768,
+        "supports_vision": true
+      }
+    },
+    "gemma-3-4b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.08,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "gemma-3-12b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 32768,
+        "supports_vision": true
+      }
+    },
+    "gemma-3-12b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.13,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "command-a": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "cohere",
+        "context_window": 256000,
+        "supports_vision": false
+      }
+    },
+    "gpt-4o-mini-search-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gpt-4o-search-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gemma-3-27b-it:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "gemma-3-27b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.08,
+          "output_price": 0.16,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "skyfall-36b-v2": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.55,
+          "output_price": 0.8,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "thedrummer",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "sonar-reasoning-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 8.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "perplexity",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "sonar-pro": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "perplexity",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "sonar-deep-research": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 8.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "perplexity",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "qwq-32b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.58,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "gemini-2.0-flash-lite-001": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.075,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "claude-3.7-sonnet": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "claude-3.7-sonnet:thinking": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 15.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "mistral-saba": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "llama-guard-3-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.02,
+          "output_price": 0.06,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "o3-mini-high": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.1,
+          "output_price": 4.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": false
+      }
+    },
+    "gemini-2.0-flash-001": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 1048576,
+        "supports_vision": true
+      }
+    },
+    "qwen-vl-plus": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1365,
+          "output_price": 0.4095,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "aion-1.0": {
+      "pricing": {
+        "USD": {
+          "input_price": 4.0,
+          "output_price": 8.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "aion-labs",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "aion-1.0-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.7,
+          "output_price": 1.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "aion-labs",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "aion-rp-llama-3.1-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 1.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "aion-labs",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "qwen-vl-max": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.52,
+          "output_price": 2.08,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "qwen-turbo": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0325,
+          "output_price": 0.13,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "qwen2.5-vl-72b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 0.8,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 32768,
+        "supports_vision": true
+      }
+    },
+    "qwen-plus": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.26,
+          "output_price": 0.78,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 1000000,
+        "supports_vision": false
+      }
+    },
+    "qwen-max": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.04,
+          "output_price": 4.16,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "o3-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.1,
+          "output_price": 4.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": false
+      }
+    },
+    "mistral-small-24b-instruct-2501": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.05,
+          "output_price": 0.08,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "deepseek-r1-distill-qwen-32b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.29,
+          "output_price": 0.29,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "sonar": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 1.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "perplexity",
+        "context_window": 127072,
+        "supports_vision": true
+      }
+    },
+    "deepseek-r1-distill-llama-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.7,
+          "output_price": 0.8,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "deepseek-r1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.7,
+          "output_price": 2.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 64000,
+        "supports_vision": false
+      }
+    },
+    "minimax-01": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.2,
+          "output_price": 1.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "minimax",
+        "context_window": 1000192,
+        "supports_vision": true
+      }
+    },
+    "phi-4": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.065,
+          "output_price": 0.14,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "microsoft",
+        "context_window": 16384,
+        "supports_vision": false
+      }
+    },
+    "l3.1-70b-hanami-x1": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 3.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "context_window": 16000,
+        "supports_vision": false
+      }
+    },
+    "deepseek-chat": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.32,
+          "output_price": 0.89,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "deepseek",
+        "context_window": 163840,
+        "supports_vision": false
+      }
+    },
+    "l3.3-euryale-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.65,
+          "output_price": 0.75,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "o1": {
+      "pricing": {
+        "USD": {
+          "input_price": 15.0,
+          "output_price": 60.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "command-r7b-12-2024": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0375,
+          "output_price": 0.15,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "cohere",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "llama-3.3-70b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 65536,
+        "supports_vision": false
+      }
+    },
+    "llama-3.3-70b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.1,
+          "output_price": 0.32,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "nova-lite-v1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.06,
+          "output_price": 0.24,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "amazon",
+        "context_window": 300000,
+        "supports_vision": true
+      }
+    },
+    "nova-micro-v1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.035,
+          "output_price": 0.14,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "amazon",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "nova-pro-v1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 3.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "amazon",
+        "context_window": 300000,
+        "supports_vision": true
+      }
+    },
+    "gpt-4o-2024-11-20": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "mistral-large-2411": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "mistral-large-2407": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "pixtral-large-2411": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "qwen-2.5-coder-32b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.66,
+          "output_price": 1.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "unslopnemo-12b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "thedrummer",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "claude-3.5-haiku": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.8,
+          "output_price": 4.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "magnum-v4-72b": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 5.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthracite-org",
+        "context_window": 16384,
+        "supports_vision": false
+      }
+    },
+    "claude-3.5-sonnet": {
+      "pricing": {
+        "USD": {
+          "input_price": 6.0,
+          "output_price": 30.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "anthropic",
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "qwen-2.5-7b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.1,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "llama-3.1-nemotron-70b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.2,
+          "output_price": 1.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nvidia",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "inflection-3-productivity": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inflection",
+        "context_window": 8000,
+        "supports_vision": false
+      }
+    },
+    "inflection-3-pi": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "inflection",
+        "context_window": 8000,
+        "supports_vision": false
+      }
+    },
+    "rocinante-12b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.17,
+          "output_price": 0.43,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "thedrummer",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "llama-3.2-3b-instruct:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "llama-3.2-3b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.051,
+          "output_price": 0.34,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 80000,
+        "supports_vision": false
+      }
+    },
+    "llama-3.2-1b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.027,
+          "output_price": 0.2,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 60000,
+        "supports_vision": false
+      }
+    },
+    "llama-3.2-11b-vision-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.049,
+          "output_price": 0.049,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 131072,
+        "supports_vision": true
+      }
+    },
+    "qwen-2.5-72b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.12,
+          "output_price": 0.39,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "qwen",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "command-r-plus-08-2024": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "cohere",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "command-r-08-2024": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "cohere",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "l3.1-euryale-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.85,
+          "output_price": 0.85,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "hermes-3-llama-3.1-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.3,
+          "output_price": 0.3,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "hermes-3-llama-3.1-405b:free": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.0,
+          "output_price": 0.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "hermes-3-llama-3.1-405b": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 1.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "l3-lunaris-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.04,
+          "output_price": 0.05,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
+    "gpt-4o-2024-08-06": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.5,
+          "output_price": 10.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "llama-3.1-8b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.02,
+          "output_price": 0.05,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 16384,
+        "supports_vision": false
+      }
+    },
+    "llama-3.1-70b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.4,
+          "output_price": 0.4,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "mistral-nemo": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.02,
+          "output_price": 0.04,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 131072,
+        "supports_vision": false
+      }
+    },
+    "gpt-4o-mini": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "gpt-4o-mini-2024-07-18": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.15,
+          "output_price": 0.6,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "gemma-2-27b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.65,
+          "output_price": 0.65,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
+    "gemma-2-9b-it": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.09,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "google",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
+    "l3-euryale-70b": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.48,
+          "output_price": 1.48,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "sao10k",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
+    "hermes-2-pro-llama-3-8b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.14,
+          "output_price": 0.14,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "nousresearch",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
     "gpt-4o": {
       "pricing": {
         "USD": {
@@ -14,23 +4844,368 @@
       },
       "metadata": {
         "provider": "openai",
-        "family": "gpt-4",
-        "_merged_from": "openrouter"
+        "context_window": 128000,
+        "supports_vision": true
       }
     },
-    "claude-3.5-sonnet": {
+    "gpt-4o:extended": {
       "pricing": {
         "USD": {
-          "input_price": 3.0,
+          "input_price": 6.0,
+          "output_price": 18.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "gpt-4o-2024-05-13": {
+      "pricing": {
+        "USD": {
+          "input_price": 5.0,
           "output_price": 15.0,
           "unit": "per_million_tokens",
           "source": "openrouter"
         }
       },
       "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "llama-3-8b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.03,
+          "output_price": 0.04,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
+    "llama-3-70b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.51,
+          "output_price": 0.74,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "meta-llama",
+        "context_window": 8192,
+        "supports_vision": false
+      }
+    },
+    "mixtral-8x22b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 65536,
+        "supports_vision": false
+      }
+    },
+    "wizardlm-2-8x22b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.62,
+          "output_price": 0.62,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "microsoft",
+        "context_window": 65535,
+        "supports_vision": false
+      }
+    },
+    "gpt-4-turbo": {
+      "pricing": {
+        "USD": {
+          "input_price": 10.0,
+          "output_price": 30.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": true
+      }
+    },
+    "claude-3-haiku": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.25,
+          "output_price": 1.25,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
         "provider": "anthropic",
-        "family": "claude",
-        "_merged_from": "openrouter"
+        "context_window": 200000,
+        "supports_vision": true
+      }
+    },
+    "mistral-large": {
+      "pricing": {
+        "USD": {
+          "input_price": 2.0,
+          "output_price": 6.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gpt-4-turbo-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 10.0,
+          "output_price": 30.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gpt-3.5-turbo-0613": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.0,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 4095,
+        "supports_vision": false
+      }
+    },
+    "mixtral-8x7b-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.54,
+          "output_price": 0.54,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 32768,
+        "supports_vision": false
+      }
+    },
+    "goliath-120b": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.75,
+          "output_price": 7.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "alpindale",
+        "context_window": 6144,
+        "supports_vision": false
+      }
+    },
+    "auto": {
+      "pricing": {
+        "USD": {
+          "input_price": -1000000.0,
+          "output_price": -1000000.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openrouter",
+        "context_window": 2000000,
+        "supports_vision": true
+      }
+    },
+    "gpt-4-1106-preview": {
+      "pricing": {
+        "USD": {
+          "input_price": 10.0,
+          "output_price": 30.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 128000,
+        "supports_vision": false
+      }
+    },
+    "gpt-3.5-turbo-instruct": {
+      "pricing": {
+        "USD": {
+          "input_price": 1.5,
+          "output_price": 2.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 4095,
+        "supports_vision": false
+      }
+    },
+    "mistral-7b-instruct-v0.1": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.11,
+          "output_price": 0.19,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mistralai",
+        "context_window": 2824,
+        "supports_vision": false
+      }
+    },
+    "gpt-3.5-turbo-16k": {
+      "pricing": {
+        "USD": {
+          "input_price": 3.0,
+          "output_price": 4.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 16385,
+        "supports_vision": false
+      }
+    },
+    "weaver": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.75,
+          "output_price": 1.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "mancer",
+        "context_window": 8000,
+        "supports_vision": false
+      }
+    },
+    "remm-slerp-l2-13b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.45,
+          "output_price": 0.65,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "undi95",
+        "context_window": 6144,
+        "supports_vision": false
+      }
+    },
+    "mythomax-l2-13b": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.06,
+          "output_price": 0.06,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "gryphe",
+        "context_window": 4096,
+        "supports_vision": false
+      }
+    },
+    "gpt-4": {
+      "pricing": {
+        "USD": {
+          "input_price": 30.0,
+          "output_price": 60.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 8191,
+        "supports_vision": false
+      }
+    },
+    "gpt-4-0314": {
+      "pricing": {
+        "USD": {
+          "input_price": 30.0,
+          "output_price": 60.0,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 8191,
+        "supports_vision": false
+      }
+    },
+    "gpt-3.5-turbo": {
+      "pricing": {
+        "USD": {
+          "input_price": 0.5,
+          "output_price": 1.5,
+          "unit": "per_million_tokens",
+          "source": "openrouter"
+        }
+      },
+      "metadata": {
+        "provider": "openai",
+        "context_window": 16385,
+        "supports_vision": false
       }
     }
   }
