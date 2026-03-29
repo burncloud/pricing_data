@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
-from scripts.config import config
+from scripts.config import config, infer_provider
 
 # Display names for known providers
 PROVIDER_DISPLAY: Dict[str, str] = {
@@ -125,10 +125,10 @@ def render(data: Dict) -> str:
     updated_at = (data.get("updated_at") or "")[:10]
     total_models = len(models)
 
-    # Group by provider
+    # Group by provider (inferred from model_id prefix)
     by_provider: Dict[str, list] = {}
     for mid, model in models.items():
-        provider = model.get("metadata", {}).get("provider", "unknown")
+        provider = infer_provider(mid)
         by_provider.setdefault(provider, []).append((mid, model))
 
     sorted_providers = sorted(by_provider.keys(), key=_provider_sort_key)
@@ -180,8 +180,8 @@ def render(data: Dict) -> str:
         if not text_p.get("input_price"):
             continue
         sym = CURRENCY_SYMBOL.get(currency, currency)
-        provider = m.get("metadata", {}).get("provider", "")
-        display_prov = PROVIDER_DISPLAY.get(provider, provider.title())
+        provider = infer_provider(mid)
+        display_prov = PROVIDER_DISPLAY.get(provider, provider.replace("_", " ").title())
         inp = fmt_price(text_p.get("input_price"), sym)
         out = fmt_price(text_p.get("output_price"), sym)
         cp = entry.get("cache_pricing", {})
@@ -240,11 +240,6 @@ def render(data: Dict) -> str:
             pick_display_currency(m)[1].get("batch_pricing")
             for _, m in models_list
         )
-        has_context = any(
-            m.get("metadata", {}).get("context_window")
-            for _, m in models_list
-        )
-
         # Table header
         header_cols = ["| Model", "Input", "Output"]
         sep_cols = ["|-------", "------:", "-------:"]
@@ -256,9 +251,6 @@ def render(data: Dict) -> str:
             header_cols.append("Batch Out")
             sep_cols.append("---------:")
             sep_cols.append("----------:")
-        if has_context:
-            header_cols.append("Context")
-            sep_cols.append("--------:")
         header_cols.append("Currency |")
         sep_cols.append("---------|")
 
@@ -269,7 +261,6 @@ def render(data: Dict) -> str:
             currency, entry = pick_display_currency(model)
             text_p = entry.get("text", {})
             sym = CURRENCY_SYMBOL.get(currency, currency)
-            meta = model.get("metadata", {})
 
             inp = fmt_price(text_p.get("input_price"), sym)
             out = fmt_price(text_p.get("output_price"), sym)
@@ -284,9 +275,6 @@ def render(data: Dict) -> str:
                 bp = entry.get("batch_pricing", {})
                 row_cols.append(fmt_price(bp.get("input_price"), sym))
                 row_cols.append(fmt_price(bp.get("output_price"), sym))
-
-            if has_context:
-                row_cols.append(fmt_context(meta.get("context_window")))
 
             row_cols.append(f"{currency} |")
             lines.append(" | ".join(row_cols))

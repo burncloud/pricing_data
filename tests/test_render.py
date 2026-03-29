@@ -66,7 +66,7 @@ class TestFmtContext:
 
 class TestPickDisplayCurrency:
     def _model(self, pricing_dict):
-        return {"pricing": pricing_dict, "metadata": {}}
+        return {"pricing": pricing_dict}
 
     def test_prefers_usd(self):
         m = self._model({"USD": {"text": {"input_price": 2.5}}, "CNY": {"text": {"input_price": 18.0}}})
@@ -93,7 +93,12 @@ class TestPickDisplayCurrency:
 def _v5_model(provider, currency, input_price, output_price, *,
               cache_read=None, batch_in=None, batch_out=None,
               context_window=None):
-    """Helper: build a v5.0 model entry for test data."""
+    """Helper: build a v6.0 model entry for test data (pricing only, no metadata).
+
+    Note: provider is only used to select the right model_id prefix in tests —
+    the model entry itself stores no provider. Pass a model_id starting with the
+    right prefix when calling render() so infer_provider() groups correctly.
+    """
     text = {"input_price": input_price, "output_price": output_price}
     entry = {"text": text}
     if cache_read is not None:
@@ -101,10 +106,7 @@ def _v5_model(provider, currency, input_price, output_price, *,
     if batch_in is not None:
         entry["batch_pricing"] = {"input_price": batch_in, "output_price": batch_out or 0.0}
     pricing = {currency: entry}
-    meta = {"provider": provider}
-    if context_window:
-        meta["context_window"] = context_window
-    return {"pricing": pricing, "metadata": meta}
+    return {"pricing": pricing}
 
 
 def _make_data(models: dict) -> dict:
@@ -153,7 +155,7 @@ class TestRender:
 
     def test_cache_column_absent_without_cache_data(self):
         data = _make_data({
-            "some-obscure-model": _v5_model("openai", "USD", 2.5, 10.0),
+            "gpt-some-model": _v5_model("openai", "USD", 2.5, 10.0),
         })
         md = render(data)
         openai_section = md[md.index("## OpenAI"):]
@@ -179,13 +181,13 @@ class TestRender:
 
     def test_models_sorted_by_input_price_descending(self):
         data = _make_data({
-            "cheap-model": _v5_model("openai", "USD", 0.1, 0.5),
-            "expensive-model": _v5_model("openai", "USD", 15.0, 75.0),
+            "gpt-cheap-model": _v5_model("openai", "USD", 0.1, 0.5),
+            "gpt-expensive-model": _v5_model("openai", "USD", 15.0, 75.0),
         })
         md = render(data)
         openai_section = md[md.index("## OpenAI"):]
-        cheap_pos = openai_section.index("cheap-model")
-        expensive_pos = openai_section.index("expensive-model")
+        cheap_pos = openai_section.index("gpt-cheap-model")
+        expensive_pos = openai_section.index("gpt-expensive-model")
         assert expensive_pos < cheap_pos  # expensive appears first
 
     def test_providers_toc_present(self):
@@ -221,14 +223,13 @@ class TestRender:
         assert "Quick Reference" in md[:500]
         assert "OpenAI" in md
 
-    def test_context_column_when_present(self):
-        """Context column appears when at least one model has context_window."""
+    def test_context_column_absent(self):
+        """Context column is not rendered in v6.0 (no metadata source for context_window)."""
         data = _make_data({
-            "gpt-4o": _v5_model("openai", "USD", 2.5, 10.0, context_window=128_000),
+            "gpt-4o": _v5_model("openai", "USD", 2.5, 10.0),
         })
         md = render(data)
-        assert "Context" in md
-        assert "128K" in md
+        assert "Context" not in md
 
     def test_multimodal_audio_not_in_text_columns(self):
         """TTS model with audio.output_price shows no text output price."""
@@ -237,7 +238,6 @@ class TestRender:
                 "text": {"input_price": 0.5},
                 "audio": {"output_price": 10.0},
             }},
-            "metadata": {"provider": "google"},
         }
         data = _make_data({"gemini-tts": model})
         md = render(data)

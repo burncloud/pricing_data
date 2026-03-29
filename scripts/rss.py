@@ -14,7 +14,7 @@ from typing import Dict, List, Optional
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 
-from scripts.config import config
+from scripts.config import config, infer_provider
 
 logger = logging.getLogger(__name__)
 
@@ -242,7 +242,7 @@ class RSSGenerator:
 
         # Categories
         SubElement(item, "category").text = "pricing"
-        SubElement(item, "category").text = model_id.split("-")[0]
+        SubElement(item, "category").text = infer_provider(model_id)
 
         return item
 

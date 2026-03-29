@@ -6,7 +6,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.config import Config, FetcherConfig, config
+from scripts.config import Config, FetcherConfig, config, infer_provider
 
 
 class TestFetcherConfig:
@@ -101,6 +101,45 @@ class TestConfig:
     def test_price_drift_threshold(self):
         """Test price drift warning threshold."""
         assert 0 < config.price_drift_warning_threshold < 1
+
+
+class TestInferProvider:
+    """Tests for infer_provider() prefix-based inference."""
+
+    def test_openai_gpt_prefix(self):
+        assert infer_provider("gpt-4o") == "openai"
+
+    def test_openai_o_series(self):
+        assert infer_provider("o1-mini") == "openai"
+        assert infer_provider("o3-mini") == "openai"
+        assert infer_provider("o4-mini") == "openai"
+
+    def test_anthropic_prefix(self):
+        assert infer_provider("claude-opus-4-6") == "anthropic"
+        assert infer_provider("claude-haiku-3-5") == "anthropic"
+
+    def test_google_prefixes(self):
+        assert infer_provider("gemini-2.0-flash") == "google"
+        assert infer_provider("imagen-3") == "google"
+
+    def test_zhipu_prefix(self):
+        assert infer_provider("glm-4-plus") == "zhipu"
+        assert infer_provider("glm-z1-flash") == "zhipu"
+
+    def test_deepseek_prefix(self):
+        assert infer_provider("deepseek-chat") == "deepseek"
+
+    def test_slash_format(self):
+        assert infer_provider("openai/gpt-4o") == "openai"
+
+    def test_accounts_format(self):
+        assert infer_provider("accounts/fireworks/models/llama") == "fireworks"
+
+    def test_unknown_prefix(self):
+        assert infer_provider("some-unknown-xyz-model") == "unknown"
+
+    def test_empty_string(self):
+        assert infer_provider("") == "unknown"
 
 
 class TestSourcePriorities:

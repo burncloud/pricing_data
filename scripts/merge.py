@@ -1,21 +1,23 @@
 """
 Merge pricing data from multiple sources into pricing.json.
 
-Output format: v5.0 — nested modality pricing per model.
+Output format: v6.0 — pricing-only, no metadata.
   pricing.json → model → {
     "pricing": {
       "USD": {
         "text": { "input_price": ..., "output_price": ... },
         "audio": { "input_price": ..., "output_price": ... },   # optional
         "image": { "input_price": ..., "output_price": ... },   # optional
+        "video": { "input_price": ..., "output_price": ... },   # optional
         "cache_pricing": { ... },   # optional, at currency level
         "batch_pricing":  { ... },  # optional, at currency level
         "tiered_pricing": [ ... ],  # optional, at currency level
       },
       "CNY": { ... }
-    },
-    "metadata": { "provider": ..., "family": ..., ... }
+    }
   }
+
+Provider is inferred from model_id prefix by consumers (see infer_provider() in config.py).
 
 Modality field rules:
 - text.*  : any source may contribute
@@ -40,7 +42,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from scripts.config import config, MODALITY_AUTHORITATIVE_SOURCES
+from scripts.config import config, infer_provider, MODALITY_AUTHORITATIVE_SOURCES
 
 logger = logging.getLogger(__name__)
 
@@ -129,11 +131,11 @@ class PricingMerger:
         if not all_sources:
             raise ValueError("No source data found")
 
-        # Merge with priority resolution → v5.0 output
+        # Merge with priority resolution → v6.0 output
         merged_models = self._merge_with_priority(all_sources, warnings)
 
         output = {
-            "version": "5.0",
+            "version": "6.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "source": "burncloud-official",
             "models": merged_models,
@@ -209,8 +211,6 @@ class PricingMerger:
 
         # model_id → { currency → [(source_name, ep_data, priority), ...] }
         model_currency_sources: Dict[str, Dict[str, List[Tuple[str, Dict, int]]]] = {}
-        # model_id → [(source_name, metadata, priority), ...]
-        model_metadata: Dict[str, List[Tuple[str, Dict, int]]] = {}
 
         for source in sources:
             source_name = source["name"]
@@ -221,12 +221,6 @@ class PricingMerger:
 
                 if normalized_id not in model_currency_sources:
                     model_currency_sources[normalized_id] = {}
-                    model_metadata[normalized_id] = []
-
-                if model_data.get("metadata"):
-                    model_metadata[normalized_id].append(
-                        (source_name, model_data["metadata"], priority)
-                    )
 
                 for ep_key, ep_data in model_data.get("endpoints", {}).items():
                     currency = ep_data.get("currency", "USD")
@@ -239,20 +233,13 @@ class PricingMerger:
         for model_id, currency_map in model_currency_sources.items():
             pricing: Dict[str, Any] = {}
 
-            # Resolve provider early for derived pricing.
-            _meta_list = model_metadata.get(model_id, [])
-            _provider: Optional[str] = None
-            _winner_source: Optional[str] = None
-            if _meta_list:
-                _meta_list.sort(key=lambda x: x[2], reverse=True)
-                _provider = _meta_list[0][1].get("provider")
+            # Infer provider from model_id for derived pricing.
+            _provider = infer_provider(model_id)
 
             for currency, source_list in currency_map.items():
                 source_list.sort(key=lambda x: x[2], reverse=True)
 
                 winner_name, winner_ep, _ = source_list[0]
-                if _winner_source is None:
-                    _winner_source = winner_name
 
                 # Build v5.0 modality entry from winner's pricing
                 entry = _to_v5_pricing(winner_ep.get("pricing", {}), winner_name)
@@ -307,7 +294,7 @@ class PricingMerger:
                         cache["cache_creation_input_price"] = cache.pop("cache_write_input_price")
 
                 # Apply provider-level derived pricing for missing optional fields.
-                if _provider:
+                if _provider and _provider != "unknown":
                     text_p = entry.get("text", {})
                     text_input = text_p.get("input_price", 0) or 0
                     text_output = text_p.get("output_price", 0) or 0
@@ -332,41 +319,9 @@ class PricingMerger:
             # Quality check: completeness across currencies
             self._check_pricing_completeness(model_id, pricing, warnings)
 
-            # Build best metadata from highest-priority sources
-            best_metadata = self._build_metadata(_meta_list, _winner_source)
-
-            merged[model_id] = {
-                "pricing": pricing,
-                "metadata": best_metadata,
-            }
+            merged[model_id] = {"pricing": pricing}
 
         return merged
-
-    def _build_metadata(
-        self,
-        meta_list: List[Tuple[str, Dict, int]],
-        winner_source: Optional[str],
-    ) -> Dict[str, Any]:
-        """
-        Build best metadata from all sources.
-
-        Highest-priority source wins base fields (provider, family).
-        Lower-priority sources fill in supplemental fields (context_window, etc.).
-        """
-        if not meta_list:
-            return {}
-
-        # meta_list is already sorted descending by priority
-        best: Dict[str, Any] = {}
-        for _, meta, _ in meta_list:
-            for key, value in meta.items():
-                if key not in best and value is not None:
-                    best[key] = value
-
-        if winner_source:
-            best["_merged_from"] = winner_source
-
-        return best
 
     def _check_pricing_completeness(
         self,
@@ -449,6 +404,14 @@ def main(date_str: Optional[str] = None) -> int:
         output_path = merger.save(data)
 
         print(f"✅ Merged {len(data['models'])} models to {output_path}")
+
+        unknown_providers = [m for m in data["models"] if infer_provider(m) == "unknown"]
+        if unknown_providers:
+            print(f"\n⚠️  {len(unknown_providers)} models with unknown provider (no prefix match):")
+            for m in unknown_providers[:5]:
+                print(f"   - {m}")
+            if len(unknown_providers) > 5:
+                print(f"   ... and {len(unknown_providers) - 5} more")
 
         if warnings:
             print(f"\n⚠️  {len(warnings)} warning(s):")

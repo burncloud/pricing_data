@@ -137,14 +137,14 @@ class TestPricingMerger:
              patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
 
-        assert result["version"] == "5.0"
+        assert result["version"] == "6.0"
         assert "models" in result
         assert len(result["models"]) == 2
         assert "gpt-4o" in result["models"]
         assert len(warnings) == 0
 
-    def test_merge_output_is_v5_format(self, sample_openai_data, tmp_path):
-        """Merged output uses v5.0 format: pricing dict + metadata per model."""
+    def test_merge_output_is_v6_format(self, sample_openai_data, tmp_path):
+        """Merged output uses v6.0 format: pricing only, no metadata per model."""
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
 
@@ -158,9 +158,9 @@ class TestPricingMerger:
             result, _ = merger.merge_all("2024-01-01")
 
         model = result["models"]["gpt-4o"]
-        # v5.0: pricing and metadata are separate top-level keys
+        # v6.0: pricing only — no metadata, no endpoints
         assert "pricing" in model
-        assert "metadata" in model
+        assert "metadata" not in model
         assert "endpoints" not in model
         usd = model["pricing"]["USD"]
         assert "text" in usd
@@ -278,7 +278,7 @@ class TestPricingMerger:
         with open(output_path) as f:
             saved_data = json.load(f)
 
-        assert saved_data["version"] == "5.0"
+        assert saved_data["version"] == "6.0"
         assert "updated_at" in saved_data
         assert "models" in saved_data
 
@@ -848,6 +848,35 @@ class TestDerivedPricing:
         # No completeness warnings
         completeness = [w for w in warnings if "cache_pricing" in w or "batch_pricing" in w]
         assert completeness == [], f"Unexpected completeness warnings: {completeness}"
+
+    def test_zhipu_derived_pricing_inferred_from_model_id(self, tmp_path):
+        """
+        Regression: Zhipu derived pricing still applies after metadata removal (v6.0).
+        Provider is now inferred from glm- prefix, not from metadata.provider.
+        """
+        model = _ep(
+            "open.bigmodel.cn",
+            {"input_price": 5.0, "output_price": 5.0},
+            currency="CNY",
+        )
+        source = {"status": "success", "models": {"glm-4-plus": model}}
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True, exist_ok=True)
+        with open(sources_dir / "zhipu.json", "w") as f:
+            json.dump(source, f)
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path):
+            result, _ = merger.merge_all("2024-01-01")
+
+        cny = result["models"]["glm-4-plus"]["pricing"]["CNY"]
+        # cache derived from infer_provider("glm-4-plus") == "zhipu"
+        assert "cache_pricing" in cny
+        assert cny["cache_pricing"]["cache_read_input_price"] == pytest.approx(2.5)
+        assert "batch_pricing" in cny
+        assert cny["batch_pricing"]["input_price"] == pytest.approx(2.5)
+        # v6.0: no metadata key in output
+        assert "metadata" not in result["models"]["glm-4-plus"]
 
 
 class TestPricingCompletenessCheck:

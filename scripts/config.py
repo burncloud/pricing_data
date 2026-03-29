@@ -8,6 +8,50 @@ from pathlib import Path
 from typing import Any, Dict, FrozenSet, List, Optional, Tuple
 
 
+# Ordered list of (model_id_prefix, provider_name) for provider inference.
+# Used by infer_provider() — first match wins.
+PROVIDER_PREFIXES: List[Tuple[str, str]] = [
+    ("gpt-", "openai"),
+    ("o1-", "openai"),
+    ("o3-", "openai"),
+    ("o4-", "openai"),
+    ("text-embedding-", "openai"),
+    ("dall-e-", "openai"),
+    ("claude-", "anthropic"),
+    ("gemini-", "google"),
+    ("imagen-", "google"),
+    ("deepseek-", "deepseek"),
+    ("glm-", "zhipu"),
+    ("chatglm-", "zhipu"),
+    ("qwen-", "aliyun"),
+    ("ernie-", "baidu"),
+    ("spark-", "xunfei"),
+    ("abab-", "minimax"),
+    ("moonshot-", "moonshot"),
+]
+
+
+def infer_provider(model_id: str) -> str:
+    """Infer provider name from model_id prefix.
+
+    Falls back to the first path segment for slash-separated IDs
+    (e.g. "openai/gpt-4o" -> "openai", "accounts/fireworks/models/llama" -> "fireworks").
+    Returns "unknown" if no match.
+    """
+    if not model_id:
+        return "unknown"
+    lower = model_id.lower()
+    for prefix, provider in PROVIDER_PREFIXES:
+        if lower.startswith(prefix):
+            return provider
+    if "/" in model_id:
+        parts = model_id.split("/")
+        if parts[0] == "accounts" and len(parts) >= 2:
+            return parts[1]
+        return parts[0]
+    return "unknown"
+
+
 # Sources authorised to write modality-specific pricing (audio.*, image.*).
 # LiteLLM and OpenRouter routinely omit or misattribute these fields, so they
 # are blocked from writing them.  Only direct-provider fetchers and human-
