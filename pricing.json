@@ -1,6 +1,6 @@
 {
   "version": "7.0",
-  "updated_at": "2026-03-29T04:38:57.288850+00:00",
+  "updated_at": "2026-03-29T04:41:30.572026+00:00",
   "source": "burncloud-official",
   "models": {
     "deepseek-chat": {
@@ -60,6 +60,9 @@
         "text": {
           "input": 0.5,
           "output": 3.0
+        },
+        "image": {
+          "output": 0.067
         }
       }
     },
@@ -83,11 +86,411 @@
         }
       }
     },
-    "gemini-3.1-pro-preview": {
+    "glm-5-turbo": {
+      "CNY": {
+        "text": {
+          "input": 5.0,
+          "output": 22.0
+        },
+        "cache": {
+          "read_input": 2.5
+        }
+      },
+      "USD": {
+        "text": {
+          "input": 1.2,
+          "output": 4.0
+        },
+        "cache": {
+          "read_input": 0.6
+        }
+      }
+    },
+    "glm-5": {
+      "CNY": {
+        "text": {
+          "input": 4.0,
+          "output": 18.0
+        },
+        "cache": {
+          "read_input": 2.0
+        }
+      },
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 3.2
+        },
+        "cache": {
+          "read_input": 0.5
+        }
+      }
+    },
+    "glm-4.7": {
+      "CNY": {
+        "text": {
+          "input": 2.0,
+          "output": 8.0
+        },
+        "cache": {
+          "read_input": 1.0
+        }
+      },
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 2.2
+        },
+        "cache": {
+          "read_input": 0.3
+        }
+      }
+    },
+    "glm-4.5-air": {
+      "CNY": {
+        "text": {
+          "input": 0.8,
+          "output": 2.0
+        },
+        "cache": {
+          "read_input": 0.4
+        }
+      },
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 1.1
+        },
+        "cache": {
+          "read_input": 0.1
+        }
+      }
+    },
+    "glm-4.7-flashx": {
+      "CNY": {
+        "text": {
+          "input": 0.5,
+          "output": 3.0
+        },
+        "cache": {
+          "read_input": 0.25
+        }
+      }
+    },
+    "glm-4.7-flash": {
+      "CNY": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      },
+      "USD": {
+        "text": {
+          "input": 0.06,
+          "output": 0.4
+        },
+        "cache": {
+          "read_input": 0.03
+        }
+      }
+    },
+    "glm-4-plus": {
+      "CNY": {
+        "text": {
+          "input": 5.0,
+          "output": 5.0
+        },
+        "cache": {
+          "read_input": 2.5
+        },
+        "batch": {
+          "input": 2.5,
+          "output": 2.5
+        }
+      }
+    },
+    "glm-4-air-250414": {
+      "CNY": {
+        "text": {
+          "input": 0.5,
+          "output": 0.5
+        },
+        "cache": {
+          "read_input": 0.25
+        },
+        "batch": {
+          "input": 0.25,
+          "output": 0.25
+        }
+      }
+    },
+    "glm-4-airx": {
+      "CNY": {
+        "text": {
+          "input": 10.0,
+          "output": 10.0
+        },
+        "cache": {
+          "read_input": 5.0
+        }
+      }
+    },
+    "glm-4-long": {
+      "CNY": {
+        "text": {
+          "input": 1.0,
+          "output": 1.0
+        },
+        "cache": {
+          "read_input": 0.5
+        },
+        "batch": {
+          "input": 0.5,
+          "output": 0.5
+        }
+      }
+    },
+    "glm-4-assistant": {
+      "CNY": {
+        "text": {
+          "input": 5.0,
+          "output": 5.0
+        },
+        "cache": {
+          "read_input": 2.5
+        }
+      }
+    },
+    "glm-z1-air": {
+      "CNY": {
+        "text": {
+          "input": 0.5,
+          "output": 0.5
+        },
+        "cache": {
+          "read_input": 0.25
+        }
+      }
+    },
+    "glm-z1-airx": {
+      "CNY": {
+        "text": {
+          "input": 5.0,
+          "output": 5.0
+        },
+        "cache": {
+          "read_input": 2.5
+        }
+      }
+    },
+    "glm-z1-flashx": {
+      "CNY": {
+        "text": {
+          "input": 0.1,
+          "output": 0.1
+        },
+        "cache": {
+          "read_input": 0.05
+        }
+      }
+    },
+    "glm-4-flashx-250414": {
+      "CNY": {
+        "text": {
+          "input": 0.1,
+          "output": 0.1
+        },
+        "cache": {
+          "read_input": 0.05
+        },
+        "batch": {
+          "input": 0.05,
+          "output": 0.05
+        }
+      }
+    },
+    "glm-4-flash-250414": {
+      "CNY": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "glm-z1-flash": {
+      "CNY": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "kat-coder-pro-v2": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 1.2
+        }
+      }
+    },
+    "reka-edge": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.1
+        }
+      }
+    },
+    "mimo-v2-omni": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 2.0
+        }
+      }
+    },
+    "mimo-v2-pro": {
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 3.0
+        }
+      }
+    },
+    "minimax-m2.7": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 1.2
+        }
+      }
+    },
+    "gpt-5.4-nano": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 1.25
+        },
+        "cache": {
+          "read_input": 0.02
+        },
+        "batch": {
+          "input": 0.1,
+          "output": 0.625
+        }
+      }
+    },
+    "gpt-5.4-mini": {
+      "USD": {
+        "text": {
+          "input": 0.75,
+          "output": 4.5
+        },
+        "cache": {
+          "read_input": 0.075
+        },
+        "batch": {
+          "input": 0.375,
+          "output": 2.25
+        }
+      }
+    },
+    "mistral-small-2603": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.6
+        }
+      }
+    },
+    "grok-4.20-multi-agent-beta": {
       "USD": {
         "text": {
           "input": 2.0,
-          "output": 12.0
+          "output": 6.0
+        }
+      }
+    },
+    "grok-4.20-beta": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 6.0
+        }
+      }
+    },
+    "nemotron-3-super-120b-a12b:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "nemotron-3-super-120b-a12b": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.5
+        }
+      }
+    },
+    "seed-2.0-lite": {
+      "USD": {
+        "text": {
+          "input": 0.25,
+          "output": 2.0
+        }
+      }
+    },
+    "qwen3.5-9b": {
+      "USD": {
+        "text": {
+          "input": 0.05,
+          "output": 0.15
+        }
+      }
+    },
+    "gpt-5.4-pro": {
+      "USD": {
+        "text": {
+          "input": 30.0,
+          "output": 180.0
+        },
+        "batch": {
+          "input": 15.0,
+          "output": 90.0
+        }
+      }
+    },
+    "gpt-5.4": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 15.0
+        },
+        "cache": {
+          "read_input": 0.25
+        },
+        "batch": {
+          "input": 1.25,
+          "output": 7.5
+        }
+      }
+    },
+    "mercury-2": {
+      "USD": {
+        "text": {
+          "input": 0.25,
+          "output": 0.75
+        }
+      }
+    },
+    "gpt-5.3-chat": {
+      "USD": {
+        "text": {
+          "input": 1.75,
+          "output": 14.0
         }
       }
     },
@@ -95,6 +498,2670 @@
       "USD": {
         "text": {
           "input": 0.25,
+          "output": 1.5
+        },
+        "cache": {
+          "read_input": 0.025
+        }
+      }
+    },
+    "seed-2.0-mini": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.4
+        }
+      }
+    },
+    "qwen3.5-35b-a3b": {
+      "USD": {
+        "text": {
+          "input": 0.1625,
+          "output": 1.3
+        }
+      }
+    },
+    "qwen3.5-27b": {
+      "USD": {
+        "text": {
+          "input": 0.195,
+          "output": 1.56
+        }
+      }
+    },
+    "qwen3.5-122b-a10b": {
+      "USD": {
+        "text": {
+          "input": 0.26,
+          "output": 2.08
+        }
+      }
+    },
+    "qwen3.5-flash-02-23": {
+      "USD": {
+        "text": {
+          "input": 0.065,
+          "output": 0.26
+        }
+      }
+    },
+    "lfm-2-24b-a2b": {
+      "USD": {
+        "text": {
+          "input": 0.03,
+          "output": 0.12
+        }
+      }
+    },
+    "gemini-3.1-pro-preview-customtools": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 12.0
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 6.0
+        }
+      }
+    },
+    "gpt-5.3-codex": {
+      "USD": {
+        "text": {
+          "input": 1.75,
+          "output": 14.0
+        }
+      }
+    },
+    "aion-2.0": {
+      "USD": {
+        "text": {
+          "input": 0.8,
+          "output": 1.6
+        }
+      }
+    },
+    "gemini-3.1-pro-preview": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 12.0
+        },
+        "cache": {
+          "read_input": 0.2
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 200000,
+            "input": 2.0,
+            "output": 12.0
+          },
+          {
+            "tier_start": 200000,
+            "input": 4.0,
+            "output": 18.0
+          }
+        ],
+        "batch": {
+          "input": 1.0,
+          "output": 6.0
+        }
+      }
+    },
+    "claude-sonnet-4.6": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "qwen3.5-plus-02-15": {
+      "USD": {
+        "text": {
+          "input": 0.26,
+          "output": 1.56
+        }
+      }
+    },
+    "qwen3.5-397b-a17b": {
+      "USD": {
+        "text": {
+          "input": 0.39,
+          "output": 2.34
+        }
+      }
+    },
+    "minimax-m2.5:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "minimax-m2.5": {
+      "USD": {
+        "text": {
+          "input": 0.19,
+          "output": 1.15
+        }
+      }
+    },
+    "qwen3-max-thinking": {
+      "USD": {
+        "text": {
+          "input": 0.78,
+          "output": 3.9
+        }
+      }
+    },
+    "claude-opus-4.6": {
+      "USD": {
+        "text": {
+          "input": 5.0,
+          "output": 25.0
+        }
+      }
+    },
+    "qwen3-coder-next": {
+      "USD": {
+        "text": {
+          "input": 0.12,
+          "output": 0.75
+        }
+      }
+    },
+    "free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "step-3.5-flash:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "step-3.5-flash": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.3
+        }
+      }
+    },
+    "trinity-large-preview:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "kimi-k2.5": {
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 3.0
+        }
+      }
+    },
+    "solar-pro-3": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.6
+        }
+      }
+    },
+    "minimax-m2-her": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 1.2
+        }
+      }
+    },
+    "palmyra-x5": {
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 6.0
+        }
+      }
+    },
+    "lfm-2.5-1.2b-thinking:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "lfm-2.5-1.2b-instruct:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "gpt-audio": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        }
+      }
+    },
+    "gpt-audio-mini": {
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 2.4
+        }
+      }
+    },
+    "gpt-5.2-codex": {
+      "USD": {
+        "text": {
+          "input": 1.75,
+          "output": 14.0
+        }
+      }
+    },
+    "olmo-3.1-32b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.6
+        }
+      }
+    },
+    "seed-1.6-flash": {
+      "USD": {
+        "text": {
+          "input": 0.075,
+          "output": 0.3
+        }
+      }
+    },
+    "seed-1.6": {
+      "USD": {
+        "text": {
+          "input": 0.25,
+          "output": 2.0
+        }
+      }
+    },
+    "minimax-m2.1": {
+      "USD": {
+        "text": {
+          "input": 0.27,
+          "output": 0.95
+        }
+      }
+    },
+    "gemini-3-flash-preview": {
+      "USD": {
+        "text": {
+          "input": 0.5,
+          "output": 3.0
+        },
+        "cache": {
+          "read_input": 0.05
+        }
+      }
+    },
+    "mistral-small-creative": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.3
+        }
+      }
+    },
+    "olmo-3.1-32b-think": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.5
+        }
+      }
+    },
+    "mimo-v2-flash": {
+      "USD": {
+        "text": {
+          "input": 0.09,
+          "output": 0.29
+        }
+      }
+    },
+    "nemotron-3-nano-30b-a3b:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "nemotron-3-nano-30b-a3b": {
+      "USD": {
+        "text": {
+          "input": 0.05,
+          "output": 0.2
+        }
+      }
+    },
+    "gpt-5.2-chat": {
+      "USD": {
+        "text": {
+          "input": 1.75,
+          "output": 14.0
+        }
+      }
+    },
+    "gpt-5.2-pro": {
+      "USD": {
+        "text": {
+          "input": 21.0,
+          "output": 168.0
+        }
+      }
+    },
+    "gpt-5.2": {
+      "USD": {
+        "text": {
+          "input": 1.75,
+          "output": 14.0
+        }
+      }
+    },
+    "devstral-2512": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 2.0
+        }
+      }
+    },
+    "relace-search": {
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 3.0
+        }
+      }
+    },
+    "glm-4.6v": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 0.9
+        },
+        "cache": {
+          "read_input": 0.15
+        }
+      }
+    },
+    "deepseek-v3.1-nex-n1": {
+      "USD": {
+        "text": {
+          "input": 0.135,
+          "output": 0.5
+        }
+      }
+    },
+    "rnj-1-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.15
+        }
+      }
+    },
+    "gpt-5.1-codex-max": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "nova-2-lite-v1": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 2.5
+        }
+      }
+    },
+    "ministral-14b-2512": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.2
+        }
+      }
+    },
+    "ministral-8b-2512": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.15
+        }
+      }
+    },
+    "ministral-3b-2512": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.1
+        }
+      }
+    },
+    "mistral-large-2512": {
+      "USD": {
+        "text": {
+          "input": 0.5,
+          "output": 1.5
+        }
+      }
+    },
+    "trinity-mini:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "trinity-mini": {
+      "USD": {
+        "text": {
+          "input": 0.045,
+          "output": 0.15
+        }
+      }
+    },
+    "deepseek-v3.2-speciale": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 1.2
+        }
+      }
+    },
+    "deepseek-v3.2": {
+      "USD": {
+        "text": {
+          "input": 0.28,
+          "output": 0.4
+        }
+      }
+    },
+    "intellect-3": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 1.1
+        }
+      }
+    },
+    "claude-opus-4.5": {
+      "USD": {
+        "text": {
+          "input": 5.0,
+          "output": 25.0
+        }
+      }
+    },
+    "olmo-3-32b-think": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.5
+        }
+      }
+    },
+    "grok-4.1-fast": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.5
+        }
+      }
+    },
+    "cogito-v2.1-671b": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 1.25
+        }
+      }
+    },
+    "gpt-5.1": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "gpt-5.1-chat": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "gpt-5.1-codex": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "gpt-5.1-codex-mini": {
+      "USD": {
+        "text": {
+          "input": 0.25,
+          "output": 2.0
+        }
+      }
+    },
+    "kat-coder-pro": {
+      "USD": {
+        "text": {
+          "input": 0.207,
+          "output": 0.828
+        }
+      }
+    },
+    "kimi-k2-thinking": {
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 2.5
+        }
+      }
+    },
+    "nova-premier-v1": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 12.5
+        }
+      }
+    },
+    "sonar-pro-search": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "voxtral-small-24b-2507": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.3
+        }
+      }
+    },
+    "gpt-oss-safeguard-20b": {
+      "USD": {
+        "text": {
+          "input": 0.075,
+          "output": 0.3
+        }
+      }
+    },
+    "nemotron-nano-12b-v2-vl:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "nemotron-nano-12b-v2-vl": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.6
+        }
+      }
+    },
+    "minimax-m2": {
+      "USD": {
+        "text": {
+          "input": 0.255,
+          "output": 1.0
+        }
+      }
+    },
+    "qwen3-vl-32b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.16,
+          "output": 0.64
+        }
+      }
+    },
+    "lfm2-8b-a1b": {
+      "USD": {
+        "text": {
+          "input": 0.01,
+          "output": 0.02
+        }
+      }
+    },
+    "lfm-2.2-6b": {
+      "USD": {
+        "text": {
+          "input": 0.01,
+          "output": 0.02
+        }
+      }
+    },
+    "granite-4.0-h-micro": {
+      "USD": {
+        "text": {
+          "input": 0.017,
+          "output": 0.11
+        }
+      }
+    },
+    "gpt-5-image-mini": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 2.0
+        }
+      }
+    },
+    "claude-haiku-4.5": {
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 5.0
+        }
+      }
+    },
+    "qwen3-vl-8b-thinking": {
+      "USD": {
+        "text": {
+          "input": 0.117,
+          "output": 1.365
+        }
+      }
+    },
+    "qwen3-vl-8b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.08,
+          "output": 0.5
+        }
+      }
+    },
+    "gpt-5-image": {
+      "USD": {
+        "text": {
+          "input": 10.0,
+          "output": 10.0
+        }
+      }
+    },
+    "o3-deep-research": {
+      "USD": {
+        "text": {
+          "input": 10.0,
+          "output": 40.0
+        },
+        "batch": {
+          "input": 5.0,
+          "output": 20.0
+        }
+      }
+    },
+    "o4-mini-deep-research": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 8.0
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 4.0
+        }
+      }
+    },
+    "llama-3.3-nemotron-super-49b-v1.5": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.4
+        }
+      }
+    },
+    "ernie-4.5-21b-a3b-thinking": {
+      "USD": {
+        "text": {
+          "input": 0.07,
+          "output": 0.28
+        }
+      }
+    },
+    "qwen3-vl-30b-a3b-thinking": {
+      "USD": {
+        "text": {
+          "input": 0.13,
+          "output": 1.56
+        }
+      }
+    },
+    "qwen3-vl-30b-a3b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.13,
+          "output": 0.52
+        }
+      }
+    },
+    "gpt-5-pro": {
+      "USD": {
+        "text": {
+          "input": 15.0,
+          "output": 120.0
+        },
+        "batch": {
+          "input": 7.5,
+          "output": 60.0
+        }
+      }
+    },
+    "glm-4.6": {
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 2.2
+        },
+        "cache": {
+          "read_input": 0.3
+        }
+      }
+    },
+    "claude-sonnet-4.5": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "deepseek-v3.2-exp": {
+      "USD": {
+        "text": {
+          "input": 0.27,
+          "output": 0.41
+        }
+      }
+    },
+    "cydonia-24b-v4.1": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 0.5
+        }
+      }
+    },
+    "relace-apply-3": {
+      "USD": {
+        "text": {
+          "input": 0.85,
+          "output": 1.25
+        }
+      }
+    },
+    "gemini-2.5-flash-lite-preview-09-2025": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.4
+        }
+      }
+    },
+    "qwen3-vl-235b-a22b-thinking": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 4.0
+        }
+      }
+    },
+    "qwen3-vl-235b-a22b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 1.6
+        }
+      }
+    },
+    "qwen3-max": {
+      "USD": {
+        "text": {
+          "input": 0.78,
+          "output": 3.9
+        }
+      }
+    },
+    "qwen3-coder-plus": {
+      "USD": {
+        "text": {
+          "input": 0.65,
+          "output": 3.25
+        }
+      }
+    },
+    "gpt-5-codex": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "deepseek-v3.1-terminus": {
+      "USD": {
+        "text": {
+          "input": 0.21,
+          "output": 0.79
+        }
+      }
+    },
+    "grok-4-fast": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.5
+        }
+      }
+    },
+    "tongyi-deepresearch-30b-a3b": {
+      "USD": {
+        "text": {
+          "input": 0.09,
+          "output": 0.45
+        }
+      }
+    },
+    "qwen3-coder-flash": {
+      "USD": {
+        "text": {
+          "input": 0.195,
+          "output": 0.975
+        }
+      }
+    },
+    "qwen3-next-80b-a3b-thinking": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 1.2
+        }
+      }
+    },
+    "qwen3-next-80b-a3b-instruct:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "qwen3-next-80b-a3b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 1.2
+        }
+      }
+    },
+    "longcat-flash-chat": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.8
+        }
+      }
+    },
+    "qwen-plus-2025-07-28:thinking": {
+      "USD": {
+        "text": {
+          "input": 0.26,
+          "output": 0.78
+        }
+      }
+    },
+    "qwen-plus-2025-07-28": {
+      "USD": {
+        "text": {
+          "input": 0.26,
+          "output": 0.78
+        }
+      }
+    },
+    "nemotron-nano-9b-v2:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "nemotron-nano-9b-v2": {
+      "USD": {
+        "text": {
+          "input": 0.04,
+          "output": 0.16
+        }
+      }
+    },
+    "kimi-k2-0905": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 2.0
+        }
+      }
+    },
+    "qwen3-30b-a3b-thinking-2507": {
+      "USD": {
+        "text": {
+          "input": 0.08,
+          "output": 0.4
+        }
+      }
+    },
+    "grok-code-fast-1": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 1.5
+        }
+      }
+    },
+    "hermes-4-70b": {
+      "USD": {
+        "text": {
+          "input": 0.13,
+          "output": 0.4
+        }
+      }
+    },
+    "hermes-4-405b": {
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 3.0
+        }
+      }
+    },
+    "deepseek-chat-v3.1": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.75
+        }
+      }
+    },
+    "gpt-4o-audio-preview": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        }
+      }
+    },
+    "mistral-medium-3.1": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 2.0
+        }
+      }
+    },
+    "ernie-4.5-21b-a3b": {
+      "USD": {
+        "text": {
+          "input": 0.07,
+          "output": 0.28
+        }
+      }
+    },
+    "ernie-4.5-vl-28b-a3b": {
+      "USD": {
+        "text": {
+          "input": 0.14,
+          "output": 0.56
+        }
+      }
+    },
+    "glm-4.5v": {
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 1.8
+        },
+        "cache": {
+          "read_input": 0.3
+        }
+      }
+    },
+    "jamba-large-1.7": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 8.0
+        }
+      }
+    },
+    "gpt-5-chat": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "gpt-5": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "gpt-5-mini": {
+      "USD": {
+        "text": {
+          "input": 0.25,
+          "output": 2.0
+        }
+      }
+    },
+    "gpt-5-nano": {
+      "USD": {
+        "text": {
+          "input": 0.05,
+          "output": 0.4
+        }
+      }
+    },
+    "gpt-oss-120b:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "gpt-oss-120b": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 4.5
+        }
+      }
+    },
+    "gpt-oss-20b:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "gpt-oss-20b": {
+      "USD": {
+        "text": {
+          "input": 0.09,
+          "output": 0.36
+        }
+      }
+    },
+    "claude-opus-4.1": {
+      "USD": {
+        "text": {
+          "input": 15.0,
+          "output": 75.0
+        }
+      }
+    },
+    "codestral-2508": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 0.9
+        }
+      }
+    },
+    "qwen3-coder-30b-a3b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.07,
+          "output": 0.27
+        }
+      }
+    },
+    "qwen3-30b-a3b-instruct-2507": {
+      "USD": {
+        "text": {
+          "input": 0.09,
+          "output": 0.3
+        }
+      }
+    },
+    "glm-4.5": {
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 2.2
+        },
+        "cache": {
+          "read_input": 0.3
+        }
+      }
+    },
+    "glm-4.5-air:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "qwen3-235b-a22b-thinking-2507": {
+      "USD": {
+        "text": {
+          "input": 0.1495,
+          "output": 1.495
+        }
+      }
+    },
+    "glm-4-32b": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.1
+        },
+        "cache": {
+          "read_input": 0.05
+        }
+      }
+    },
+    "qwen3-coder:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "qwen3-coder": {
+      "USD": {
+        "text": {
+          "input": 0.22,
+          "output": 1.0
+        }
+      }
+    },
+    "ui-tars-1.5-7b": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.2
+        }
+      }
+    },
+    "gemini-2.5-flash-lite": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.4
+        },
+        "cache": {
+          "read_input": 0.01
+        }
+      }
+    },
+    "qwen3-235b-a22b-2507": {
+      "USD": {
+        "text": {
+          "input": 0.071,
+          "output": 0.1
+        }
+      }
+    },
+    "router": {
+      "USD": {
+        "text": {
+          "input": 0.85,
+          "output": 3.4
+        }
+      }
+    },
+    "kimi-k2": {
+      "USD": {
+        "text": {
+          "input": 0.57,
+          "output": 2.3
+        }
+      }
+    },
+    "devstral-medium": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 2.0
+        }
+      }
+    },
+    "devstral-small": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.3
+        }
+      }
+    },
+    "dolphin-mistral-24b-venice-edition:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "grok-4": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "gemma-3n-e2b-it:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "hunyuan-a13b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.14,
+          "output": 0.57
+        }
+      }
+    },
+    "deepseek-r1t2-chimera": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 1.1
+        }
+      }
+    },
+    "morph-v3-large": {
+      "USD": {
+        "text": {
+          "input": 0.9,
+          "output": 1.9
+        }
+      }
+    },
+    "morph-v3-fast": {
+      "USD": {
+        "text": {
+          "input": 0.8,
+          "output": 1.2
+        }
+      }
+    },
+    "ernie-4.5-vl-424b-a47b": {
+      "USD": {
+        "text": {
+          "input": 0.42,
+          "output": 1.25
+        }
+      }
+    },
+    "ernie-4.5-300b-a47b": {
+      "USD": {
+        "text": {
+          "input": 0.28,
+          "output": 1.1
+        }
+      }
+    },
+    "mercury": {
+      "USD": {
+        "text": {
+          "input": 0.25,
+          "output": 0.75
+        }
+      }
+    },
+    "mistral-small-3.2-24b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.075,
+          "output": 0.2
+        }
+      }
+    },
+    "minimax-m1": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 2.2
+        }
+      }
+    },
+    "gemini-2.5-flash": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 2.5
+        },
+        "cache": {
+          "read_input": 0.03
+        }
+      }
+    },
+    "gemini-2.5-pro": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        },
+        "cache": {
+          "read_input": 0.125
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 200000,
+            "input": 1.25,
+            "output": 10.0
+          },
+          {
+            "tier_start": 200000,
+            "input": 2.5,
+            "output": 15.0
+          }
+        ]
+      }
+    },
+    "o3-pro": {
+      "USD": {
+        "text": {
+          "input": 20.0,
+          "output": 80.0
+        },
+        "batch": {
+          "input": 10.0,
+          "output": 40.0
+        }
+      }
+    },
+    "grok-3-mini": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 0.5
+        }
+      }
+    },
+    "grok-3": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "gemini-2.5-pro-preview": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "deepseek-r1-0528": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.6
+        }
+      }
+    },
+    "claude-opus-4": {
+      "USD": {
+        "text": {
+          "input": 15.0,
+          "output": 75.0
+        }
+      }
+    },
+    "claude-sonnet-4": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "gemma-3n-e4b-it:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "gemma-3n-e4b-it": {
+      "USD": {
+        "text": {
+          "input": 0.02,
+          "output": 0.04
+        }
+      }
+    },
+    "mistral-medium-3": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 2.0
+        }
+      }
+    },
+    "gemini-2.5-pro-preview-05-06": {
+      "USD": {
+        "text": {
+          "input": 1.25,
+          "output": 10.0
+        }
+      }
+    },
+    "spotlight": {
+      "USD": {
+        "text": {
+          "input": 0.18,
+          "output": 0.18
+        }
+      }
+    },
+    "maestro-reasoning": {
+      "USD": {
+        "text": {
+          "input": 0.9,
+          "output": 3.3
+        }
+      }
+    },
+    "virtuoso-large": {
+      "USD": {
+        "text": {
+          "input": 0.75,
+          "output": 1.2
+        }
+      }
+    },
+    "coder-large": {
+      "USD": {
+        "text": {
+          "input": 0.5,
+          "output": 0.8
+        }
+      }
+    },
+    "mercury-coder": {
+      "USD": {
+        "text": {
+          "input": 0.25,
+          "output": 0.75
+        }
+      }
+    },
+    "llama-guard-4-12b": {
+      "USD": {
+        "text": {
+          "input": 0.18,
+          "output": 0.18
+        }
+      }
+    },
+    "qwen3-30b-a3b": {
+      "USD": {
+        "text": {
+          "input": 0.08,
+          "output": 0.28
+        }
+      }
+    },
+    "qwen3-8b": {
+      "USD": {
+        "text": {
+          "input": 0.04,
+          "output": 0.14
+        }
+      }
+    },
+    "qwen3-14b": {
+      "USD": {
+        "text": {
+          "input": 0.06,
+          "output": 0.24
+        }
+      }
+    },
+    "qwen3-32b": {
+      "USD": {
+        "text": {
+          "input": 0.08,
+          "output": 0.24
+        }
+      }
+    },
+    "qwen3-235b-a22b": {
+      "USD": {
+        "text": {
+          "input": 0.455,
+          "output": 1.82
+        }
+      }
+    },
+    "o4-mini-high": {
+      "USD": {
+        "text": {
+          "input": 1.1,
+          "output": 4.4
+        }
+      }
+    },
+    "o3": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 8.0
+        }
+      }
+    },
+    "o4-mini": {
+      "USD": {
+        "text": {
+          "input": 1.1,
+          "output": 4.4
+        }
+      }
+    },
+    "qwen2.5-coder-7b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.03,
+          "output": 0.09
+        }
+      }
+    },
+    "gpt-4.1": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 8.0
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 4.0
+        }
+      }
+    },
+    "gpt-4.1-mini": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 1.6
+        },
+        "batch": {
+          "input": 0.2,
+          "output": 0.8
+        }
+      }
+    },
+    "gpt-4.1-nano": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.4
+        },
+        "batch": {
+          "input": 0.05,
+          "output": 0.2
+        }
+      }
+    },
+    "llemma_7b": {
+      "USD": {
+        "text": {
+          "input": 0.8,
+          "output": 1.2
+        }
+      }
+    },
+    "codellama-7b-instruct-solidity": {
+      "USD": {
+        "text": {
+          "input": 0.8,
+          "output": 1.2
+        }
+      }
+    },
+    "grok-3-mini-beta": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 0.5
+        }
+      }
+    },
+    "grok-3-beta": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "llama-3.1-nemotron-ultra-253b-v1": {
+      "USD": {
+        "text": {
+          "input": 0.6,
+          "output": 1.8
+        }
+      }
+    },
+    "llama-4-maverick": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.6
+        }
+      }
+    },
+    "llama-4-scout": {
+      "USD": {
+        "text": {
+          "input": 0.08,
+          "output": 0.3
+        }
+      }
+    },
+    "qwen2.5-vl-32b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.6
+        }
+      }
+    },
+    "deepseek-chat-v3-0324": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.77
+        }
+      }
+    },
+    "o1-pro": {
+      "USD": {
+        "text": {
+          "input": 150.0,
+          "output": 600.0
+        },
+        "batch": {
+          "input": 75.0,
+          "output": 300.0
+        }
+      }
+    },
+    "mistral-small-3.1-24b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.03,
+          "output": 0.11
+        }
+      }
+    },
+    "olmo-2-0325-32b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.05,
+          "output": 0.2
+        }
+      }
+    },
+    "gemma-3-4b-it:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "gemma-3-4b-it": {
+      "USD": {
+        "text": {
+          "input": 0.04,
+          "output": 0.08
+        }
+      }
+    },
+    "gemma-3-12b-it:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "gemma-3-12b-it": {
+      "USD": {
+        "text": {
+          "input": 0.04,
+          "output": 0.13
+        }
+      }
+    },
+    "command-a": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        }
+      }
+    },
+    "gpt-4o-mini-search-preview": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.6
+        },
+        "batch": {
+          "input": 0.075,
+          "output": 0.3
+        }
+      }
+    },
+    "gpt-4o-search-preview": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        },
+        "batch": {
+          "input": 1.25,
+          "output": 5.0
+        }
+      }
+    },
+    "gemma-3-27b-it:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "gemma-3-27b-it": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.0,
+            "output": 0.0
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.0,
+            "output": 0.0
+          }
+        ]
+      }
+    },
+    "skyfall-36b-v2": {
+      "USD": {
+        "text": {
+          "input": 0.55,
+          "output": 0.8
+        }
+      }
+    },
+    "sonar-reasoning-pro": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 8.0
+        }
+      }
+    },
+    "sonar-pro": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "sonar-deep-research": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 8.0
+        }
+      }
+    },
+    "qwq-32b": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.58
+        }
+      }
+    },
+    "gemini-2.0-flash-lite-001": {
+      "USD": {
+        "text": {
+          "input": 0.075,
+          "output": 0.3
+        }
+      }
+    },
+    "claude-3.7-sonnet": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "claude-3.7-sonnet:thinking": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 15.0
+        }
+      }
+    },
+    "mistral-saba": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.6
+        }
+      }
+    },
+    "llama-guard-3-8b": {
+      "USD": {
+        "text": {
+          "input": 0.02,
+          "output": 0.06
+        }
+      }
+    },
+    "o3-mini-high": {
+      "USD": {
+        "text": {
+          "input": 1.1,
+          "output": 4.4
+        }
+      }
+    },
+    "gemini-2.0-flash-001": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.4
+        }
+      }
+    },
+    "qwen-vl-plus": {
+      "USD": {
+        "text": {
+          "input": 0.1365,
+          "output": 0.4095
+        }
+      }
+    },
+    "aion-1.0": {
+      "USD": {
+        "text": {
+          "input": 4.0,
+          "output": 8.0
+        }
+      }
+    },
+    "aion-1.0-mini": {
+      "USD": {
+        "text": {
+          "input": 0.7,
+          "output": 1.4
+        }
+      }
+    },
+    "aion-rp-llama-3.1-8b": {
+      "USD": {
+        "text": {
+          "input": 0.8,
+          "output": 1.6
+        }
+      }
+    },
+    "qwen-vl-max": {
+      "USD": {
+        "text": {
+          "input": 0.52,
+          "output": 2.08
+        }
+      }
+    },
+    "qwen-turbo": {
+      "USD": {
+        "text": {
+          "input": 0.05,
+          "output": 0.2
+        }
+      }
+    },
+    "qwen2.5-vl-72b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.8,
+          "output": 0.8
+        }
+      }
+    },
+    "qwen-plus": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 1.2
+        }
+      }
+    },
+    "qwen-max": {
+      "USD": {
+        "text": {
+          "input": 1.6,
+          "output": 6.4
+        }
+      }
+    },
+    "o3-mini": {
+      "USD": {
+        "text": {
+          "input": 1.1,
+          "output": 4.4
+        }
+      }
+    },
+    "mistral-small-24b-instruct-2501": {
+      "USD": {
+        "text": {
+          "input": 0.05,
+          "output": 0.08
+        }
+      }
+    },
+    "deepseek-r1-distill-qwen-32b": {
+      "USD": {
+        "text": {
+          "input": 0.29,
+          "output": 0.29
+        }
+      }
+    },
+    "sonar": {
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 1.0
+        }
+      }
+    },
+    "deepseek-r1-distill-llama-70b": {
+      "USD": {
+        "text": {
+          "input": 0.99,
+          "output": 0.99
+        }
+      }
+    },
+    "deepseek-r1": {
+      "USD": {
+        "text": {
+          "input": 0.55,
+          "output": 2.19
+        }
+      }
+    },
+    "minimax-01": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 1.1
+        }
+      }
+    },
+    "phi-4": {
+      "USD": {
+        "text": {
+          "input": 0.065,
+          "output": 0.14
+        }
+      }
+    },
+    "l3.1-70b-hanami-x1": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 3.0
+        }
+      }
+    },
+    "l3.3-euryale-70b": {
+      "USD": {
+        "text": {
+          "input": 0.65,
+          "output": 0.75
+        }
+      }
+    },
+    "o1": {
+      "USD": {
+        "text": {
+          "input": 15.0,
+          "output": 60.0
+        }
+      }
+    },
+    "command-r7b-12-2024": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.0375
+        }
+      }
+    },
+    "llama-3.3-70b-instruct:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "llama-3.3-70b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.1,
+          "output": 0.32
+        }
+      }
+    },
+    "nova-lite-v1": {
+      "USD": {
+        "text": {
+          "input": 0.06,
+          "output": 0.24
+        }
+      }
+    },
+    "nova-micro-v1": {
+      "USD": {
+        "text": {
+          "input": 0.035,
+          "output": 0.14
+        }
+      }
+    },
+    "nova-pro-v1": {
+      "USD": {
+        "text": {
+          "input": 0.8,
+          "output": 3.2
+        }
+      }
+    },
+    "gpt-4o-2024-11-20": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        },
+        "batch": {
+          "input": 1.25,
+          "output": 5.0
+        }
+      }
+    },
+    "mistral-large-2411": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 6.0
+        }
+      }
+    },
+    "mistral-large-2407": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 9.0
+        }
+      }
+    },
+    "pixtral-large-2411": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 6.0
+        }
+      }
+    },
+    "qwen-2.5-coder-32b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.66,
+          "output": 1.0
+        }
+      }
+    },
+    "unslopnemo-12b": {
+      "USD": {
+        "text": {
+          "input": 0.4,
+          "output": 0.4
+        }
+      }
+    },
+    "claude-3.5-haiku": {
+      "USD": {
+        "text": {
+          "input": 0.8,
+          "output": 4.0
+        }
+      }
+    },
+    "claude-3.5-sonnet": {
+      "USD": {
+        "text": {
+          "input": 6.0,
+          "output": 30.0
+        }
+      }
+    },
+    "magnum-v4-72b": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 5.0
+        }
+      }
+    },
+    "qwen-2.5-7b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.04,
+          "output": 0.1
+        }
+      }
+    },
+    "llama-3.1-nemotron-70b-instruct": {
+      "USD": {
+        "text": {
+          "input": 1.2,
+          "output": 1.2
+        }
+      }
+    },
+    "inflection-3-productivity": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        }
+      }
+    },
+    "inflection-3-pi": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        }
+      }
+    },
+    "rocinante-12b": {
+      "USD": {
+        "text": {
+          "input": 0.17,
+          "output": 0.43
+        }
+      }
+    },
+    "llama-3.2-3b-instruct:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "llama-3.2-3b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.051,
+          "output": 0.34
+        }
+      }
+    },
+    "llama-3.2-1b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.027,
+          "output": 0.2
+        }
+      }
+    },
+    "llama-3.2-11b-vision-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.049,
+          "output": 0.049
+        }
+      }
+    },
+    "qwen-2.5-72b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.12,
+          "output": 0.39
+        }
+      }
+    },
+    "command-r-plus-08-2024": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        }
+      }
+    },
+    "command-r-08-2024": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.6
+        }
+      }
+    },
+    "l3.1-euryale-70b": {
+      "USD": {
+        "text": {
+          "input": 0.85,
+          "output": 0.85
+        }
+      }
+    },
+    "hermes-3-llama-3.1-70b": {
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 0.3
+        }
+      }
+    },
+    "hermes-3-llama-3.1-405b:free": {
+      "USD": {
+        "text": {
+          "input": 0.0,
+          "output": 0.0
+        }
+      }
+    },
+    "hermes-3-llama-3.1-405b": {
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 1.0
+        }
+      }
+    },
+    "l3-lunaris-8b": {
+      "USD": {
+        "text": {
+          "input": 0.04,
+          "output": 0.05
+        }
+      }
+    },
+    "gpt-4o-2024-08-06": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        },
+        "batch": {
+          "input": 1.25,
+          "output": 5.0
+        }
+      }
+    },
+    "llama-3.1-8b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.2,
+          "output": 0.2
+        }
+      }
+    },
+    "llama-3.1-70b-instruct": {
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 1.0
+        }
+      }
+    },
+    "mistral-nemo": {
+      "USD": {
+        "text": {
+          "input": 0.02,
+          "output": 0.04
+        }
+      }
+    },
+    "gpt-4o-mini-2024-07-18": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.6
+        },
+        "batch": {
+          "input": 0.075,
+          "output": 0.3
+        }
+      }
+    },
+    "gpt-4o-mini": {
+      "USD": {
+        "text": {
+          "input": 0.15,
+          "output": 0.6
+        },
+        "batch": {
+          "input": 0.075,
+          "output": 0.3
+        }
+      }
+    },
+    "gemma-2-27b-it": {
+      "USD": {
+        "text": {
+          "input": 0.65,
+          "output": 0.65
+        }
+      }
+    },
+    "gemma-2-9b-it": {
+      "USD": {
+        "text": {
+          "input": 0.03,
+          "output": 0.09
+        }
+      }
+    },
+    "l3-euryale-70b": {
+      "USD": {
+        "text": {
+          "input": 1.48,
+          "output": 1.48
+        }
+      }
+    },
+    "hermes-2-pro-llama-3-8b": {
+      "USD": {
+        "text": {
+          "input": 0.14,
+          "output": 0.14
+        }
+      }
+    },
+    "gpt-4o-2024-05-13": {
+      "USD": {
+        "text": {
+          "input": 5.0,
+          "output": 15.0
+        },
+        "batch": {
+          "input": 2.5,
+          "output": 7.5
+        }
+      }
+    },
+    "gpt-4o": {
+      "USD": {
+        "text": {
+          "input": 2.5,
+          "output": 10.0
+        },
+        "batch": {
+          "input": 1.25,
+          "output": 5.0
+        }
+      }
+    },
+    "gpt-4o:extended": {
+      "USD": {
+        "text": {
+          "input": 6.0,
+          "output": 18.0
+        }
+      }
+    },
+    "llama-3-8b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.03,
+          "output": 0.04
+        }
+      }
+    },
+    "llama-3-70b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.51,
+          "output": 0.74
+        }
+      }
+    },
+    "mixtral-8x22b-instruct": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 6.0
+        }
+      }
+    },
+    "wizardlm-2-8x22b": {
+      "USD": {
+        "text": {
+          "input": 0.62,
+          "output": 0.62
+        }
+      }
+    },
+    "gpt-4-turbo": {
+      "USD": {
+        "text": {
+          "input": 10.0,
+          "output": 30.0
+        }
+      }
+    },
+    "claude-3-haiku": {
+      "USD": {
+        "text": {
+          "input": 0.25,
+          "output": 1.25
+        }
+      }
+    },
+    "mistral-large": {
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 6.0
+        }
+      }
+    },
+    "gpt-4-turbo-preview": {
+      "USD": {
+        "text": {
+          "input": 10.0,
+          "output": 30.0
+        }
+      }
+    },
+    "gpt-3.5-turbo-0613": {
+      "USD": {
+        "text": {
+          "input": 1.0,
+          "output": 2.0
+        }
+      }
+    },
+    "mixtral-8x7b-instruct": {
+      "USD": {
+        "text": {
+          "input": 0.07,
+          "output": 0.28
+        }
+      }
+    },
+    "goliath-120b": {
+      "USD": {
+        "text": {
+          "input": 3.75,
+          "output": 7.5
+        }
+      }
+    },
+    "gpt-4-1106-preview": {
+      "USD": {
+        "text": {
+          "input": 10.0,
+          "output": 30.0
+        }
+      }
+    },
+    "gpt-3.5-turbo-instruct": {
+      "USD": {
+        "text": {
+          "input": 1.5,
+          "output": 2.0
+        }
+      }
+    },
+    "mistral-7b-instruct-v0.1": {
+      "USD": {
+        "text": {
+          "input": 0.11,
+          "output": 0.19
+        }
+      }
+    },
+    "gpt-3.5-turbo-16k": {
+      "USD": {
+        "text": {
+          "input": 3.0,
+          "output": 4.0
+        }
+      }
+    },
+    "weaver": {
+      "USD": {
+        "text": {
+          "input": 0.75,
+          "output": 1.0
+        }
+      }
+    },
+    "remm-slerp-l2-13b": {
+      "USD": {
+        "text": {
+          "input": 0.45,
+          "output": 0.65
+        }
+      }
+    },
+    "mythomax-l2-13b": {
+      "USD": {
+        "text": {
+          "input": 0.06,
+          "output": 0.06
+        }
+      }
+    },
+    "gpt-4-0314": {
+      "USD": {
+        "text": {
+          "input": 30.0,
+          "output": 60.0
+        }
+      }
+    },
+    "gpt-4": {
+      "USD": {
+        "text": {
+          "input": 30.0,
+          "output": 60.0
+        }
+      }
+    },
+    "gpt-3.5-turbo": {
+      "USD": {
+        "text": {
+          "input": 0.5,
           "output": 1.5
         }
       }
@@ -107,43 +3174,14 @@
         }
       }
     },
-    "gemini-3-flash-preview": {
-      "USD": {
-        "text": {
-          "input": 0.5,
-          "output": 3.0
-        }
-      }
-    },
-    "gemini-2.5-pro": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "gemini-2.5-flash": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 2.5
-        }
-      }
-    },
-    "gemini-2.5-flash-lite": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.4
-        }
-      }
-    },
     "gemini-2.5-flash-lite-preview": {
       "USD": {
         "text": {
           "input": 0.1,
           "output": 0.4
+        },
+        "cache": {
+          "read_input": 0.01
         }
       }
     },
@@ -160,6 +3198,9 @@
         "text": {
           "input": 0.1,
           "output": 0.4
+        },
+        "cache": {
+          "read_input": 0.025
         }
       }
     },
@@ -176,294 +3217,43 @@
         "text": {
           "input": 1.25,
           "output": 10.0
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 200000,
+            "input": 1.25,
+            "output": 10.0
+          },
+          {
+            "tier_start": 200000,
+            "input": 2.5,
+            "output": 15.0
+          }
+        ]
+      }
+    },
+    "claude-opus-4-6": {
+      "USD": {
+        "text": {
+          "input": 5.0,
+          "output": 25.0
         }
       }
     },
-    "gpt-5.4": {
+    "claude-sonnet-4-6": {
       "USD": {
         "text": {
-          "input": 2.5,
+          "input": 3.0,
           "output": 15.0
         }
       }
     },
-    "gpt-5.4-mini": {
-      "USD": {
-        "text": {
-          "input": 0.75,
-          "output": 4.5
-        }
-      }
-    },
-    "gpt-5.4-nano": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 1.25
-        }
-      }
-    },
-    "us.writer.palmyra-x4-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "us.writer.palmyra-x5-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 6.0
-        }
-      }
-    },
-    "writer.palmyra-x4-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "writer.palmyra-x5-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 6.0
-        }
-      }
-    },
-    "amazon.nova-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.06,
-          "output": 0.24
-        }
-      }
-    },
-    "amazon.nova-2-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 2.5
-        }
-      }
-    },
-    "amazon.nova-2-pro-preview-20251202-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.1875,
-          "output": 17.5
-        }
-      }
-    },
-    "apac.amazon.nova-2-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.33,
-          "output": 2.75
-        }
-      }
-    },
-    "apac.amazon.nova-2-pro-preview-20251202-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.1875,
-          "output": 17.5
-        }
-      }
-    },
-    "eu.amazon.nova-2-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.33,
-          "output": 2.75
-        }
-      }
-    },
-    "eu.amazon.nova-2-pro-preview-20251202-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.1875,
-          "output": 17.5
-        }
-      }
-    },
-    "us.amazon.nova-2-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.33,
-          "output": 2.75
-        }
-      }
-    },
-    "us.amazon.nova-2-pro-preview-20251202-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.1875,
-          "output": 17.5
-        }
-      }
-    },
-    "amazon.nova-micro-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.035,
-          "output": 0.14
-        }
-      }
-    },
-    "amazon.nova-pro-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 3.2
-        }
-      }
-    },
-    "anthropic.claude-haiku-4-5-20251001-v1:0": {
+    "claude-haiku-4-5-20251001": {
       "USD": {
         "text": {
           "input": 1.0,
           "output": 5.0
-        }
-      }
-    },
-    "anthropic.claude-haiku-4-5@20251001": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 5.0
-        }
-      }
-    },
-    "anthropic.claude-3-7-sonnet-20250219-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "anthropic.claude-opus-4-1-20250805-v1:0": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "anthropic.claude-opus-4-20250514-v1:0": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "anthropic.claude-opus-4-5-20251101-v1:0": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "anthropic.claude-opus-4-6-v1": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "global.anthropic.claude-opus-4-6-v1": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "us.anthropic.claude-opus-4-6-v1": {
-      "USD": {
-        "text": {
-          "input": 5.5,
-          "output": 27.5
-        }
-      }
-    },
-    "eu.anthropic.claude-opus-4-6-v1": {
-      "USD": {
-        "text": {
-          "input": 5.5,
-          "output": 27.5
-        }
-      }
-    },
-    "au.anthropic.claude-opus-4-6-v1": {
-      "USD": {
-        "text": {
-          "input": 5.5,
-          "output": 27.5
-        }
-      }
-    },
-    "anthropic.claude-sonnet-4-6": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "global.anthropic.claude-sonnet-4-6": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "us.anthropic.claude-sonnet-4-6": {
-      "USD": {
-        "text": {
-          "input": 3.3,
-          "output": 16.5
-        }
-      }
-    },
-    "eu.anthropic.claude-sonnet-4-6": {
-      "USD": {
-        "text": {
-          "input": 3.3,
-          "output": 16.5
-        }
-      }
-    },
-    "au.anthropic.claude-sonnet-4-6": {
-      "USD": {
-        "text": {
-          "input": 3.3,
-          "output": 16.5
-        }
-      }
-    },
-    "anthropic.claude-sonnet-4-20250514-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "anthropic.claude-sonnet-4-5-20250929-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
         }
       }
     },
@@ -563,54 +3353,6 @@
         }
       }
     },
-    "apac.amazon.nova-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.063,
-          "output": 0.252
-        }
-      }
-    },
-    "apac.amazon.nova-micro-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.037,
-          "output": 0.148
-        }
-      }
-    },
-    "apac.amazon.nova-pro-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.84,
-          "output": 3.36
-        }
-      }
-    },
-    "apac.anthropic.claude-haiku-4-5-20251001-v1:0": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 5.5
-        }
-      }
-    },
-    "apac.anthropic.claude-sonnet-4-20250514-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "au.anthropic.claude-sonnet-4-5-20250929-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.3,
-          "output": 16.5
-        }
-      }
-    },
     "gpt-3.5-turbo-instruct-0914": {
       "USD": {
         "text": {
@@ -667,14 +3409,6 @@
         }
       }
     },
-    "gpt-oss-120b": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 4.5
-        }
-      }
-    },
     "qwen-3-32b": {
       "USD": {
         "text": {
@@ -720,14 +3454,6 @@
         "text": {
           "input": 2.5,
           "output": 10.0
-        }
-      }
-    },
-    "claude-haiku-4-5-20251001": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 5.0
         }
       }
     },
@@ -795,14 +3521,6 @@
         }
       }
     },
-    "claude-sonnet-4-6": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
     "claude-opus-4-1": {
       "USD": {
         "text": {
@@ -836,14 +3554,6 @@
       }
     },
     "claude-opus-4-5": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "claude-opus-4-6": {
       "USD": {
         "text": {
           "input": 5.0,
@@ -971,14 +3681,6 @@
         }
       }
     },
-    "command-r-08-2024": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
     "command-r-plus": {
       "USD": {
         "text": {
@@ -987,43 +3689,11 @@
         }
       }
     },
-    "command-r-plus-08-2024": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "command-r7b-12-2024": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.0375
-        }
-      }
-    },
     "qwen-coder": {
       "USD": {
         "text": {
           "input": 0.3,
           "output": 1.5
-        }
-      }
-    },
-    "qwen-max": {
-      "USD": {
-        "text": {
-          "input": 1.6,
-          "output": 6.4
-        }
-      }
-    },
-    "qwen-plus": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 1.2
         }
       }
     },
@@ -1051,14 +3721,6 @@
         }
       }
     },
-    "qwen-turbo": {
-      "USD": {
-        "text": {
-          "input": 0.05,
-          "output": 0.2
-        }
-      }
-    },
     "qwen-turbo-2024-11-01": {
       "USD": {
         "text": {
@@ -1080,46 +3742,6 @@
         "text": {
           "input": 0.05,
           "output": 0.2
-        }
-      }
-    },
-    "qwen3-next-80b-a3b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 1.2
-        }
-      }
-    },
-    "qwen3-next-80b-a3b-thinking": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 1.2
-        }
-      }
-    },
-    "qwen3-vl-235b-a22b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 1.6
-        }
-      }
-    },
-    "qwen3-vl-235b-a22b-thinking": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 4.0
-        }
-      }
-    },
-    "qwen3-vl-32b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.16,
-          "output": 0.64
         }
       }
     },
@@ -1899,43 +4521,11 @@
         }
       }
     },
-    "deepseek-r1": {
-      "USD": {
-        "text": {
-          "input": 0.55,
-          "output": 2.19
-        }
-      }
-    },
     "deepseek-v3": {
       "USD": {
         "text": {
           "input": 0.27,
           "output": 1.1
-        }
-      }
-    },
-    "deepseek-v3.2": {
-      "USD": {
-        "text": {
-          "input": 0.28,
-          "output": 0.4
-        }
-      }
-    },
-    "deepseek.v3-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.58,
-          "output": 1.68
-        }
-      }
-    },
-    "deepseek.v3.2": {
-      "USD": {
-        "text": {
-          "input": 0.62,
-          "output": 1.85
         }
       }
     },
@@ -2064,78 +4654,6 @@
         "text": {
           "input": 100.0,
           "output": 0.0
-        }
-      }
-    },
-    "eu.amazon.nova-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.078,
-          "output": 0.312
-        }
-      }
-    },
-    "eu.amazon.nova-micro-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.046,
-          "output": 0.184
-        }
-      }
-    },
-    "eu.amazon.nova-pro-v1:0": {
-      "USD": {
-        "text": {
-          "input": 1.05,
-          "output": 4.2
-        }
-      }
-    },
-    "eu.anthropic.claude-haiku-4-5-20251001-v1:0": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 5.5
-        }
-      }
-    },
-    "eu.anthropic.claude-opus-4-1-20250805-v1:0": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "eu.anthropic.claude-opus-4-20250514-v1:0": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "eu.anthropic.claude-sonnet-4-20250514-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "eu.anthropic.claude-sonnet-4-5-20250929-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.3,
-          "output": 16.5
-        }
-      }
-    },
-    "eu.mistral.pixtral-large-2502-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
         }
       }
     },
@@ -2555,6 +5073,10 @@
         "text": {
           "input": 1.6,
           "output": 1.6
+        },
+        "batch": {
+          "input": 0.2,
+          "output": 0.2
         }
       }
     },
@@ -2563,6 +5085,10 @@
         "text": {
           "input": 12.0,
           "output": 12.0
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 1.0
         }
       }
     },
@@ -2571,6 +5097,10 @@
         "text": {
           "input": 3.0,
           "output": 6.0
+        },
+        "batch": {
+          "input": 1.5,
+          "output": 3.0
         }
       }
     },
@@ -2611,6 +5141,10 @@
         "text": {
           "input": 3.75,
           "output": 15.0
+        },
+        "batch": {
+          "input": 1.875,
+          "output": 7.5
         }
       }
     },
@@ -2627,6 +5161,10 @@
         "text": {
           "input": 0.3,
           "output": 1.2
+        },
+        "batch": {
+          "input": 0.15,
+          "output": 0.6
         }
       }
     },
@@ -2635,6 +5173,10 @@
         "text": {
           "input": 3.0,
           "output": 12.0
+        },
+        "batch": {
+          "input": 1.5,
+          "output": 6.0
         }
       }
     },
@@ -2643,6 +5185,10 @@
         "text": {
           "input": 0.8,
           "output": 3.2
+        },
+        "batch": {
+          "input": 0.4,
+          "output": 1.6
         }
       }
     },
@@ -2651,6 +5197,10 @@
         "text": {
           "input": 0.2,
           "output": 0.8
+        },
+        "batch": {
+          "input": 0.1,
+          "output": 0.4
         }
       }
     },
@@ -2659,22 +5209,10 @@
         "text": {
           "input": 4.0,
           "output": 16.0
-        }
-      }
-    },
-    "gemini-2.0-flash-001": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.4
-        }
-      }
-    },
-    "gemini-2.0-flash-lite-001": {
-      "USD": {
-        "text": {
-          "input": 0.075,
-          "output": 0.3
+        },
+        "batch": {
+          "input": 2.0,
+          "output": 8.0
         }
       }
     },
@@ -2683,14 +5221,10 @@
         "text": {
           "input": 2.0,
           "output": 12.0
-        }
-      }
-    },
-    "gemini-2.5-flash-lite-preview-09-2025": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.4
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 6.0
         }
       }
     },
@@ -2723,14 +5257,10 @@
         "text": {
           "input": 2.0,
           "output": 12.0
-        }
-      }
-    },
-    "gemini-3.1-pro-preview-customtools": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 12.0
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 6.0
         }
       }
     },
@@ -2779,7 +5309,20 @@
         "text": {
           "input": 0.075,
           "output": 0.0
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.075,
+            "output": 0.0
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.15,
+            "output": 0.0
+          }
+        ]
       }
     },
     "gemini-flash-latest": {
@@ -2803,7 +5346,20 @@
         "text": {
           "input": 0.0,
           "output": 0.0
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.0,
+            "output": 0.0
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.0,
+            "output": 0.0
+          }
+        ]
       }
     },
     "gemini-exp-1206": {
@@ -2830,20 +5386,25 @@
         }
       }
     },
-    "gemma-3-27b-it": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
     "learnlm-1.5-pro-experimental": {
       "USD": {
         "text": {
           "input": 0.0,
           "output": 0.0
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.0,
+            "output": 0.0
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.0,
+            "output": 0.0
+          }
+        ]
       }
     },
     "lyria-3-clip-preview": {
@@ -2995,6 +5556,10 @@
         "text": {
           "input": 2.0,
           "output": 12.0
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 6.0
         }
       }
     },
@@ -3038,70 +5603,6 @@
         }
       }
     },
-    "google.gemma-3-12b-it": {
-      "USD": {
-        "text": {
-          "input": 0.09,
-          "output": 0.29
-        }
-      }
-    },
-    "google.gemma-3-27b-it": {
-      "USD": {
-        "text": {
-          "input": 0.23,
-          "output": 0.38
-        }
-      }
-    },
-    "google.gemma-3-4b-it": {
-      "USD": {
-        "text": {
-          "input": 0.04,
-          "output": 0.08
-        }
-      }
-    },
-    "global.anthropic.claude-sonnet-4-5-20250929-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "global.anthropic.claude-sonnet-4-20250514-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "global.anthropic.claude-haiku-4-5-20251001-v1:0": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 5.0
-        }
-      }
-    },
-    "global.amazon.nova-2-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 2.5
-        }
-      }
-    },
-    "gpt-3.5-turbo": {
-      "USD": {
-        "text": {
-          "input": 0.5,
-          "output": 1.5
-        }
-      }
-    },
     "gpt-3.5-turbo-0125": {
       "USD": {
         "text": {
@@ -3118,43 +5619,11 @@
         }
       }
     },
-    "gpt-3.5-turbo-16k": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 4.0
-        }
-      }
-    },
-    "gpt-3.5-turbo-instruct": {
-      "USD": {
-        "text": {
-          "input": 1.5,
-          "output": 2.0
-        }
-      }
-    },
-    "gpt-4": {
-      "USD": {
-        "text": {
-          "input": 30.0,
-          "output": 60.0
-        }
-      }
-    },
     "gpt-4-0125-preview": {
       "USD": {
         "text": {
           "input": 10.0,
           "output": 30.0
-        }
-      }
-    },
-    "gpt-4-0314": {
-      "USD": {
-        "text": {
-          "input": 30.0,
-          "output": 60.0
         }
       }
     },
@@ -3166,22 +5635,6 @@
         }
       }
     },
-    "gpt-4-1106-preview": {
-      "USD": {
-        "text": {
-          "input": 10.0,
-          "output": 30.0
-        }
-      }
-    },
-    "gpt-4-turbo": {
-      "USD": {
-        "text": {
-          "input": 10.0,
-          "output": 30.0
-        }
-      }
-    },
     "gpt-4-turbo-2024-04-09": {
       "USD": {
         "text": {
@@ -3190,35 +5643,15 @@
         }
       }
     },
-    "gpt-4-turbo-preview": {
-      "USD": {
-        "text": {
-          "input": 10.0,
-          "output": 30.0
-        }
-      }
-    },
-    "gpt-4.1": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 8.0
-        }
-      }
-    },
     "gpt-4.1-2025-04-14": {
       "USD": {
         "text": {
           "input": 2.0,
           "output": 8.0
-        }
-      }
-    },
-    "gpt-4.1-mini": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 1.6
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 4.0
         }
       }
     },
@@ -3227,14 +5660,10 @@
         "text": {
           "input": 0.4,
           "output": 1.6
-        }
-      }
-    },
-    "gpt-4.1-nano": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.4
+        },
+        "batch": {
+          "input": 0.2,
+          "output": 0.8
         }
       }
     },
@@ -3243,46 +5672,10 @@
         "text": {
           "input": 0.1,
           "output": 0.4
-        }
-      }
-    },
-    "gpt-4o": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-4o-2024-05-13": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 15.0
-        }
-      }
-    },
-    "gpt-4o-2024-08-06": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-4o-2024-11-20": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-4o-audio-preview": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
+        },
+        "batch": {
+          "input": 0.05,
+          "output": 0.2
         }
       }
     },
@@ -3295,14 +5688,6 @@
       }
     },
     "gpt-4o-audio-preview-2025-06-03": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-audio": {
       "USD": {
         "text": {
           "input": 2.5,
@@ -3326,14 +5711,6 @@
         }
       }
     },
-    "gpt-audio-mini": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 2.4
-        }
-      }
-    },
     "gpt-audio-mini-2025-10-06": {
       "USD": {
         "text": {
@@ -3347,22 +5724,6 @@
         "text": {
           "input": 0.6,
           "output": 2.4
-        }
-      }
-    },
-    "gpt-4o-mini": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
-    "gpt-4o-mini-2024-07-18": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
         }
       }
     },
@@ -3398,19 +5759,15 @@
         }
       }
     },
-    "gpt-4o-mini-search-preview": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
     "gpt-4o-mini-search-preview-2025-03-11": {
       "USD": {
         "text": {
           "input": 0.15,
           "output": 0.6
+        },
+        "batch": {
+          "input": 0.075,
+          "output": 0.3
         }
       }
     },
@@ -3454,19 +5811,15 @@
         }
       }
     },
-    "gpt-4o-search-preview": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
     "gpt-4o-search-preview-2025-03-11": {
       "USD": {
         "text": {
           "input": 2.5,
           "output": 10.0
+        },
+        "batch": {
+          "input": 1.25,
+          "output": 5.0
         }
       }
     },
@@ -3494,22 +5847,6 @@
         }
       }
     },
-    "gpt-5": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-5.1": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
     "gpt-5.1-2025-11-13": {
       "USD": {
         "text": {
@@ -3523,14 +5860,6 @@
         "text": {
           "input": 1.25,
           "output": 10.0
-        }
-      }
-    },
-    "gpt-5.2": {
-      "USD": {
-        "text": {
-          "input": 1.75,
-          "output": 14.0
         }
       }
     },
@@ -3558,14 +5887,6 @@
         }
       }
     },
-    "gpt-5.2-pro": {
-      "USD": {
-        "text": {
-          "input": 21.0,
-          "output": 168.0
-        }
-      }
-    },
     "gpt-5.2-pro-2025-12-11": {
       "USD": {
         "text": {
@@ -3579,14 +5900,10 @@
         "text": {
           "input": 2.5,
           "output": 15.0
-        }
-      }
-    },
-    "gpt-5.4-pro": {
-      "USD": {
-        "text": {
-          "input": 30.0,
-          "output": 180.0
+        },
+        "batch": {
+          "input": 1.25,
+          "output": 7.5
         }
       }
     },
@@ -3595,14 +5912,10 @@
         "text": {
           "input": 30.0,
           "output": 180.0
-        }
-      }
-    },
-    "gpt-5-pro": {
-      "USD": {
-        "text": {
+        },
+        "batch": {
           "input": 15.0,
-          "output": 120.0
+          "output": 90.0
         }
       }
     },
@@ -3611,18 +5924,14 @@
         "text": {
           "input": 15.0,
           "output": 120.0
+        },
+        "batch": {
+          "input": 7.5,
+          "output": 60.0
         }
       }
     },
     "gpt-5-2025-08-07": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-5-chat": {
       "USD": {
         "text": {
           "input": 1.25,
@@ -3638,75 +5947,11 @@
         }
       }
     },
-    "gpt-5-codex": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-5.1-codex": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-5.1-codex-max": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "gpt-5.1-codex-mini": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 2.0
-        }
-      }
-    },
-    "gpt-5.2-codex": {
-      "USD": {
-        "text": {
-          "input": 1.75,
-          "output": 14.0
-        }
-      }
-    },
-    "gpt-5.3-codex": {
-      "USD": {
-        "text": {
-          "input": 1.75,
-          "output": 14.0
-        }
-      }
-    },
-    "gpt-5-mini": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 2.0
-        }
-      }
-    },
     "gpt-5-mini-2025-08-07": {
       "USD": {
         "text": {
           "input": 0.25,
           "output": 2.0
-        }
-      }
-    },
-    "gpt-5-nano": {
-      "USD": {
-        "text": {
-          "input": 0.05,
-          "output": 0.4
         }
       }
     },
@@ -3779,14 +6024,6 @@
         "text": {
           "input": 3.0,
           "output": 15.0
-        }
-      }
-    },
-    "deepseek-r1-distill-llama-70b": {
-      "USD": {
-        "text": {
-          "input": 0.99,
-          "output": 0.99
         }
       }
     },
@@ -3867,38 +6104,6 @@
         "text": {
           "input": 0.0,
           "output": 0.0
-        }
-      }
-    },
-    "nova-micro-v1": {
-      "USD": {
-        "text": {
-          "input": 0.035,
-          "output": 0.14
-        }
-      }
-    },
-    "nova-lite-v1": {
-      "USD": {
-        "text": {
-          "input": 0.06,
-          "output": 0.24
-        }
-      }
-    },
-    "nova-premier-v1": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 12.5
-        }
-      }
-    },
-    "nova-pro-v1": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 3.2
         }
       }
     },
@@ -4062,14 +6267,6 @@
         }
       }
     },
-    "jamba-large-1.7": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 8.0
-        }
-      }
-    },
     "jamba-mini-1.6": {
       "USD": {
         "text": {
@@ -4094,31 +6291,7 @@
         }
       }
     },
-    "jp.anthropic.claude-sonnet-4-5-20250929-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.3,
-          "output": 16.5
-        }
-      }
-    },
-    "jp.anthropic.claude-haiku-4-5-20251001-v1:0": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 5.5
-        }
-      }
-    },
     "deepseek-llama3.3-70b": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
-    "deepseek-r1-0528": {
       "USD": {
         "text": {
           "input": 0.2,
@@ -4318,46 +6491,6 @@
         }
       }
     },
-    "meta.llama3-3-70b-instruct-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.72,
-          "output": 0.72
-        }
-      }
-    },
-    "meta.llama4-maverick-17b-instruct-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.24,
-          "output": 0.97
-        }
-      }
-    },
-    "meta.llama4-scout-17b-instruct-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.17,
-          "output": 0.66
-        }
-      }
-    },
-    "minimax.minimax-m2": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 1.2
-        }
-      }
-    },
-    "minimax.minimax-m2.1": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 1.2
-        }
-      }
-    },
     "MiniMax-M2.1": {
       "USD": {
         "text": {
@@ -4395,78 +6528,6 @@
         "text": {
           "input": 0.3,
           "output": 1.2
-        }
-      }
-    },
-    "mistral.devstral-2-123b": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "mistral.magistral-small-2509": {
-      "USD": {
-        "text": {
-          "input": 0.5,
-          "output": 1.5
-        }
-      }
-    },
-    "mistral.ministral-3-14b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.2
-        }
-      }
-    },
-    "mistral.ministral-3-3b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.1
-        }
-      }
-    },
-    "mistral.ministral-3-8b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.15
-        }
-      }
-    },
-    "mistral.mistral-large-3-675b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.5,
-          "output": 1.5
-        }
-      }
-    },
-    "mistral.voxtral-mini-3b-2507": {
-      "USD": {
-        "text": {
-          "input": 0.04,
-          "output": 0.04
-        }
-      }
-    },
-    "mistral.voxtral-small-24b-2507": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.3
-        }
-      }
-    },
-    "codestral-2508": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.9
         }
       }
     },
@@ -4527,14 +6588,6 @@
       }
     },
     "devstral-medium-latest": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "devstral-2512": {
       "USD": {
         "text": {
           "input": 0.4,
@@ -4606,22 +6659,6 @@
         }
       }
     },
-    "mistral-large-2407": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 9.0
-        }
-      }
-    },
-    "mistral-large-2411": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
     "mistral-large-latest": {
       "USD": {
         "text": {
@@ -4631,14 +6668,6 @@
       }
     },
     "mistral-large-3": {
-      "USD": {
-        "text": {
-          "input": 0.5,
-          "output": 1.5
-        }
-      }
-    },
-    "mistral-large-2512": {
       "USD": {
         "text": {
           "input": 0.5,
@@ -4798,35 +6827,11 @@
         }
       }
     },
-    "pixtral-large-2411": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
     "pixtral-large-latest": {
       "USD": {
         "text": {
           "input": 2.0,
           "output": 6.0
-        }
-      }
-    },
-    "moonshot.kimi-k2-thinking": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 2.5
-        }
-      }
-    },
-    "moonshotai.kimi-k2.5": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 3.0
         }
       }
     },
@@ -4851,14 +6856,6 @@
         "text": {
           "input": 1.15,
           "output": 8.0
-        }
-      }
-    },
-    "kimi-k2.5": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 3.0
         }
       }
     },
@@ -4895,14 +6892,6 @@
       }
     },
     "kimi-thinking-preview": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 2.5
-        }
-      }
-    },
-    "kimi-k2-thinking": {
       "USD": {
         "text": {
           "input": 0.6,
@@ -4995,22 +6984,6 @@
         "text": {
           "input": 2.0,
           "output": 5.0
-        }
-      }
-    },
-    "morph-v3-fast": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 1.2
-        }
-      }
-    },
-    "morph-v3-large": {
-      "USD": {
-        "text": {
-          "input": 0.9,
-          "output": 1.9
         }
       }
     },
@@ -5182,38 +7155,6 @@
         }
       }
     },
-    "nvidia.nemotron-nano-12b-v2": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
-    "nvidia.nemotron-nano-9b-v2": {
-      "USD": {
-        "text": {
-          "input": 0.06,
-          "output": 0.23
-        }
-      }
-    },
-    "nvidia.nemotron-nano-3-30b": {
-      "USD": {
-        "text": {
-          "input": 0.06,
-          "output": 0.24
-        }
-      }
-    },
-    "o1": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 60.0
-        }
-      }
-    },
     "o1-2024-12-17": {
       "USD": {
         "text": {
@@ -5222,27 +7163,15 @@
         }
       }
     },
-    "o1-pro": {
-      "USD": {
-        "text": {
-          "input": 150.0,
-          "output": 600.0
-        }
-      }
-    },
     "o1-pro-2025-03-19": {
       "USD": {
         "text": {
           "input": 150.0,
           "output": 600.0
-        }
-      }
-    },
-    "o3": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 8.0
+        },
+        "batch": {
+          "input": 75.0,
+          "output": 300.0
         }
       }
     },
@@ -5254,27 +7183,15 @@
         }
       }
     },
-    "o3-deep-research": {
-      "USD": {
-        "text": {
-          "input": 10.0,
-          "output": 40.0
-        }
-      }
-    },
     "o3-deep-research-2025-06-26": {
       "USD": {
         "text": {
           "input": 10.0,
           "output": 40.0
-        }
-      }
-    },
-    "o3-mini": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 4.4
+        },
+        "batch": {
+          "input": 5.0,
+          "output": 20.0
         }
       }
     },
@@ -5286,27 +7203,15 @@
         }
       }
     },
-    "o3-pro": {
-      "USD": {
-        "text": {
-          "input": 20.0,
-          "output": 80.0
-        }
-      }
-    },
     "o3-pro-2025-06-10": {
       "USD": {
         "text": {
           "input": 20.0,
           "output": 80.0
-        }
-      }
-    },
-    "o4-mini": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 4.4
+        },
+        "batch": {
+          "input": 10.0,
+          "output": 40.0
         }
       }
     },
@@ -5318,19 +7223,15 @@
         }
       }
     },
-    "o4-mini-deep-research": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 8.0
-        }
-      }
-    },
     "o4-mini-deep-research-2025-06-26": {
       "USD": {
         "text": {
           "input": 2.0,
           "output": 8.0
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 4.0
         }
       }
     },
@@ -5683,38 +7584,6 @@
         "text": {
           "input": 0.0,
           "output": 0.0
-        }
-      }
-    },
-    "openai.gpt-oss-120b-1:0": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
-    "openai.gpt-oss-20b-1:0": {
-      "USD": {
-        "text": {
-          "input": 0.07,
-          "output": 0.3
-        }
-      }
-    },
-    "openai.gpt-oss-safeguard-120b": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
-    "openai.gpt-oss-safeguard-20b": {
-      "USD": {
-        "text": {
-          "input": 0.075,
-          "output": 0.3
         }
       }
     },
@@ -6406,14 +8275,6 @@
         }
       }
     },
-    "gpt-oss-20b": {
-      "USD": {
-        "text": {
-          "input": 0.09,
-          "output": 0.36
-        }
-      }
-    },
     "llava-v1.6-mistral-7b-hf": {
       "USD": {
         "text": {
@@ -6502,31 +8363,7 @@
         }
       }
     },
-    "llama-3.1-70b-instruct": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 1.0
-        }
-      }
-    },
-    "llama-3.1-8b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.2
-        }
-      }
-    },
     "mistral-7b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.07,
-          "output": 0.28
-        }
-      }
-    },
-    "mixtral-8x7b-instruct": {
       "USD": {
         "text": {
           "input": 0.07,
@@ -6566,22 +8403,6 @@
         }
       }
     },
-    "sonar": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 1.0
-        }
-      }
-    },
-    "sonar-deep-research": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 8.0
-        }
-      }
-    },
     "sonar-medium-chat": {
       "USD": {
         "text": {
@@ -6598,27 +8419,11 @@
         }
       }
     },
-    "sonar-pro": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
     "sonar-reasoning": {
       "USD": {
         "text": {
           "input": 1.0,
           "output": 5.0
-        }
-      }
-    },
-    "sonar-reasoning-pro": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 8.0
         }
       }
     },
@@ -6723,62 +8528,6 @@
         "text": {
           "input": 0.0,
           "output": 0.0
-        }
-      }
-    },
-    "qwen.qwen3-coder-480b-a35b-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.22,
-          "output": 1.8
-        }
-      }
-    },
-    "qwen.qwen3-235b-a22b-2507-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.22,
-          "output": 0.88
-        }
-      }
-    },
-    "qwen.qwen3-coder-30b-a3b-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
-    "qwen.qwen3-32b-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
-    "qwen.qwen3-next-80b-a3b": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 1.2
-        }
-      }
-    },
-    "qwen.qwen3-vl-235b-a22b": {
-      "USD": {
-        "text": {
-          "input": 0.53,
-          "output": 2.66
-        }
-      }
-    },
-    "qwen.qwen3-coder-next": {
-      "USD": {
-        "text": {
-          "input": 0.5,
-          "output": 1.2
         }
       }
     },
@@ -7171,6 +8920,10 @@
         "text": {
           "input": 0.13,
           "output": 0.0
+        },
+        "batch": {
+          "input": 0.065,
+          "output": 0.0
         }
       }
     },
@@ -7178,6 +8931,10 @@
       "USD": {
         "text": {
           "input": 0.02,
+          "output": 0.0
+        },
+        "batch": {
+          "input": 0.01,
           "output": 0.0
         }
       }
@@ -7194,6 +8951,10 @@
       "USD": {
         "text": {
           "input": 0.1,
+          "output": 0.0
+        },
+        "batch": {
+          "input": 0.05,
           "output": 0.0
         }
       }
@@ -7427,174 +9188,6 @@
         "text": {
           "input": 0.6,
           "output": 3.6
-        }
-      }
-    },
-    "us.amazon.nova-lite-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.06,
-          "output": 0.24
-        }
-      }
-    },
-    "us.amazon.nova-micro-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.035,
-          "output": 0.14
-        }
-      }
-    },
-    "us.amazon.nova-premier-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 12.5
-        }
-      }
-    },
-    "us.amazon.nova-pro-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 3.2
-        }
-      }
-    },
-    "us.anthropic.claude-haiku-4-5-20251001-v1:0": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 5.5
-        }
-      }
-    },
-    "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "us.anthropic.claude-opus-4-1-20250805-v1:0": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "us.anthropic.claude-sonnet-4-5-20250929-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.3,
-          "output": 16.5
-        }
-      }
-    },
-    "au.anthropic.claude-haiku-4-5-20251001-v1:0": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 5.5
-        }
-      }
-    },
-    "us.anthropic.claude-opus-4-20250514-v1:0": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "us.anthropic.claude-opus-4-5-20251101-v1:0": {
-      "USD": {
-        "text": {
-          "input": 5.5,
-          "output": 27.5
-        }
-      }
-    },
-    "global.anthropic.claude-opus-4-5-20251101-v1:0": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "eu.anthropic.claude-opus-4-5-20251101-v1:0": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "us.anthropic.claude-sonnet-4-20250514-v1:0": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "us.deepseek.r1-v1:0": {
-      "USD": {
-        "text": {
-          "input": 1.35,
-          "output": 5.4
-        }
-      }
-    },
-    "us.deepseek.v3.2": {
-      "USD": {
-        "text": {
-          "input": 0.62,
-          "output": 1.85
-        }
-      }
-    },
-    "eu.deepseek.v3.2": {
-      "USD": {
-        "text": {
-          "input": 0.74,
-          "output": 2.22
-        }
-      }
-    },
-    "us.meta.llama3-3-70b-instruct-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.72,
-          "output": 0.72
-        }
-      }
-    },
-    "us.meta.llama4-maverick-17b-instruct-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.24,
-          "output": 0.97
-        }
-      }
-    },
-    "us.meta.llama4-scout-17b-instruct-v1:0": {
-      "USD": {
-        "text": {
-          "input": 0.17,
-          "output": 0.66
-        }
-      }
-    },
-    "us.mistral.pixtral-large-2502-v1:0": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
         }
       }
     },
@@ -8206,222 +9799,6 @@
         }
       }
     },
-    "claude-3-5-haiku": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 5.0
-        }
-      }
-    },
-    "claude-3-5-haiku@20241022": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 5.0
-        }
-      }
-    },
-    "claude-haiku-4-5@20251001": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 5.0
-        }
-      }
-    },
-    "claude-3-5-sonnet": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "claude-3-5-sonnet@20240620": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "claude-3-7-sonnet@20250219": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "claude-3-haiku": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 1.25
-        }
-      }
-    },
-    "claude-3-haiku@20240307": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 1.25
-        }
-      }
-    },
-    "claude-3-opus": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "claude-3-opus@20240229": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "claude-3-sonnet": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "claude-3-sonnet@20240229": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "claude-opus-4": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "claude-opus-4-1@20250805": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "claude-opus-4-5@20251101": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "claude-opus-4-6@default": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "claude-sonnet-4-5@20250929": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "claude-opus-4@20250514": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "claude-sonnet-4": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "claude-sonnet-4@20250514": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "mistralai/codestral-2@001": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.9
-        }
-      }
-    },
-    "codestral-2": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.9
-        }
-      }
-    },
-    "codestral-2@001": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.9
-        }
-      }
-    },
-    "mistralai/codestral-2": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.9
-        }
-      }
-    },
-    "codestral-2501": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
-    "codestral@2405": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
-    "codestral@latest": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
     "deepseek-ai/deepseek-v3.1-maas": {
       "USD": {
         "text": {
@@ -8435,6 +9812,10 @@
         "text": {
           "input": 0.56,
           "output": 1.68
+        },
+        "batch": {
+          "input": 0.28,
+          "output": 0.84
         }
       }
     },
@@ -8443,94 +9824,6 @@
         "text": {
           "input": 1.35,
           "output": 5.4
-        }
-      }
-    },
-    "meta/llama-3.1-405b-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 16.0
-        }
-      }
-    },
-    "meta/llama-3.1-70b-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "meta/llama-3.1-8b-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "meta/llama-3.2-90b-vision-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "meta/llama-4-maverick-17b-128e-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.35,
-          "output": 1.15
-        }
-      }
-    },
-    "meta/llama-4-maverick-17b-16e-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.35,
-          "output": 1.15
-        }
-      }
-    },
-    "meta/llama-4-scout-17b-128e-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 0.7
-        }
-      }
-    },
-    "meta/llama-4-scout-17b-16e-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 0.7
-        }
-      }
-    },
-    "meta/llama3-405b-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "meta/llama3-70b-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "meta/llama3-8b-instruct-maas": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
         }
       }
     },
@@ -8563,94 +9856,6 @@
         "text": {
           "input": 1.0,
           "output": 3.2
-        }
-      }
-    },
-    "mistral-medium-3": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "mistral-medium-3@001": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "mistralai/mistral-medium-3": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "mistralai/mistral-medium-3@001": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "mistral-large@2407": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
-    "mistral-large@2411-001": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
-    "mistral-large@latest": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
-    "mistral-nemo@2407": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 3.0
-        }
-      }
-    },
-    "mistral-nemo@latest": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.15
-        }
-      }
-    },
-    "mistral-small-2503": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 3.0
-        }
-      }
-    },
-    "mistral-small-2503@001": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 3.0
         }
       }
     },
@@ -8910,22 +10115,6 @@
         }
       }
     },
-    "grok-3": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "grok-3-beta": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
     "grok-3-fast-beta": {
       "USD": {
         "text": {
@@ -8947,22 +10136,6 @@
         "text": {
           "input": 3.0,
           "output": 15.0
-        }
-      }
-    },
-    "grok-3-mini": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.5
-        }
-      }
-    },
-    "grok-3-mini-beta": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.5
         }
       }
     },
@@ -8998,20 +10171,25 @@
         }
       }
     },
-    "grok-4": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
     "grok-4-fast-reasoning": {
       "USD": {
         "text": {
           "input": 0.2,
           "output": 0.5
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.2,
+            "output": 0.5
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.4,
+            "output": 0.5
+          }
+        ]
       }
     },
     "grok-4-fast-non-reasoning": {
@@ -9019,7 +10197,20 @@
         "text": {
           "input": 0.2,
           "output": 0.5
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.2,
+            "output": 0.5
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.4,
+            "output": 0.5
+          }
+        ]
       }
     },
     "grok-4-0709": {
@@ -9027,7 +10218,20 @@
         "text": {
           "input": 3.0,
           "output": 15.0
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 3.0,
+            "output": 15.0
+          },
+          {
+            "tier_start": 128000,
+            "input": 6.0,
+            "output": 15.0
+          }
+        ]
       }
     },
     "grok-4-latest": {
@@ -9035,7 +10239,20 @@
         "text": {
           "input": 3.0,
           "output": 15.0
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 3.0,
+            "output": 15.0
+          },
+          {
+            "tier_start": 128000,
+            "input": 6.0,
+            "output": 15.0
+          }
+        ]
       }
     },
     "grok-4-1-fast": {
@@ -9043,7 +10260,20 @@
         "text": {
           "input": 0.2,
           "output": 0.5
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.2,
+            "output": 0.5
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.4,
+            "output": 0.5
+          }
+        ]
       }
     },
     "grok-4-1-fast-reasoning": {
@@ -9051,7 +10281,20 @@
         "text": {
           "input": 0.2,
           "output": 0.5
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.2,
+            "output": 0.5
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.4,
+            "output": 0.5
+          }
+        ]
       }
     },
     "grok-4-1-fast-reasoning-latest": {
@@ -9059,7 +10302,20 @@
         "text": {
           "input": 0.2,
           "output": 0.5
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.2,
+            "output": 0.5
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.4,
+            "output": 0.5
+          }
+        ]
       }
     },
     "grok-4-1-fast-non-reasoning": {
@@ -9067,7 +10323,20 @@
         "text": {
           "input": 0.2,
           "output": 0.5
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.2,
+            "output": 0.5
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.4,
+            "output": 0.5
+          }
+        ]
       }
     },
     "grok-4-1-fast-non-reasoning-latest": {
@@ -9075,7 +10344,20 @@
         "text": {
           "input": 0.2,
           "output": 0.5
-        }
+        },
+        "tiered": [
+          {
+            "tier_start": 0,
+            "tier_end": 128000,
+            "input": 0.2,
+            "output": 0.5
+          },
+          {
+            "tier_start": 128000,
+            "input": 0.4,
+            "output": 0.5
+          }
+        ]
       }
     },
     "grok-4.20-multi-agent-beta-0309": {
@@ -9118,14 +10400,6 @@
         }
       }
     },
-    "grok-code-fast-1": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 1.5
-        }
-      }
-    },
     "grok-code-fast-1-0825": {
       "USD": {
         "text": {
@@ -9142,42 +10416,6 @@
         }
       }
     },
-    "zai.glm-4.7": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 2.2
-        }
-      }
-    },
-    "zai.glm-4.7-flash": {
-      "USD": {
-        "text": {
-          "input": 0.07,
-          "output": 0.4
-        }
-      }
-    },
-    "glm-5": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 3.2
-        },
-        "cache": {
-          "read_input": 0.5
-        }
-      },
-      "CNY": {
-        "text": {
-          "input": 4.0,
-          "output": 18.0
-        },
-        "cache": {
-          "read_input": 2.0
-        }
-      }
-    },
     "glm-5-code": {
       "USD": {
         "text": {
@@ -9189,59 +10427,6 @@
         }
       }
     },
-    "glm-4.7": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 2.2
-        },
-        "cache": {
-          "read_input": 0.3
-        }
-      },
-      "CNY": {
-        "text": {
-          "input": 2.0,
-          "output": 8.0
-        },
-        "cache": {
-          "read_input": 1.0
-        }
-      }
-    },
-    "glm-4.6": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 2.2
-        },
-        "cache": {
-          "read_input": 0.3
-        }
-      }
-    },
-    "glm-4.5": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 2.2
-        },
-        "cache": {
-          "read_input": 0.3
-        }
-      }
-    },
-    "glm-4.5v": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 1.8
-        },
-        "cache": {
-          "read_input": 0.3
-        }
-      }
-    },
     "glm-4.5-x": {
       "USD": {
         "text": {
@@ -9250,26 +10435,6 @@
         },
         "cache": {
           "read_input": 1.1
-        }
-      }
-    },
-    "glm-4.5-air": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 1.1
-        },
-        "cache": {
-          "read_input": 0.1
-        }
-      },
-      "CNY": {
-        "text": {
-          "input": 0.8,
-          "output": 2.0
-        },
-        "cache": {
-          "read_input": 0.4
         }
       }
     },
@@ -11703,14 +12868,6 @@
         }
       }
     },
-    "qwen3-8b": {
-      "USD": {
-        "text": {
-          "input": 0.04,
-          "output": 0.14
-        }
-      }
-    },
     "dolphin3-8b": {
       "USD": {
         "text": {
@@ -11919,14 +13076,6 @@
         }
       }
     },
-    "claude-sonnet-4-6@default": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
     "openai.gpt-oss-120b": {
       "USD": {
         "text": {
@@ -11943,47 +13092,7 @@
         }
       }
     },
-    "kat-coder-pro-v2": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 1.2
-        }
-      }
-    },
-    "reka-edge": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.1
-        }
-      }
-    },
-    "mimo-v2-omni": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "mimo-v2-pro": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 3.0
-        }
-      }
-    },
-    "minimax-m2.7": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 1.2
-        }
-      }
-    },
-    "mistral-small-2603": {
+    "openai.gpt-oss-safeguard-120b": {
       "USD": {
         "text": {
           "input": 0.15,
@@ -11991,1932 +13100,11 @@
         }
       }
     },
-    "glm-5-turbo": {
-      "USD": {
-        "text": {
-          "input": 1.2,
-          "output": 4.0
-        },
-        "cache": {
-          "read_input": 0.6
-        }
-      },
-      "CNY": {
-        "text": {
-          "input": 5.0,
-          "output": 22.0
-        },
-        "cache": {
-          "read_input": 2.5
-        }
-      }
-    },
-    "grok-4.20-multi-agent-beta": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
-    "grok-4.20-beta": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
-    "nemotron-3-super-120b-a12b:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "nemotron-3-super-120b-a12b": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.5
-        }
-      }
-    },
-    "seed-2.0-lite": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 2.0
-        }
-      }
-    },
-    "qwen3.5-9b": {
-      "USD": {
-        "text": {
-          "input": 0.05,
-          "output": 0.15
-        }
-      }
-    },
-    "mercury-2": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 0.75
-        }
-      }
-    },
-    "gpt-5.3-chat": {
-      "USD": {
-        "text": {
-          "input": 1.75,
-          "output": 14.0
-        }
-      }
-    },
-    "seed-2.0-mini": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.4
-        }
-      }
-    },
-    "qwen3.5-35b-a3b": {
-      "USD": {
-        "text": {
-          "input": 0.1625,
-          "output": 1.3
-        }
-      }
-    },
-    "qwen3.5-27b": {
-      "USD": {
-        "text": {
-          "input": 0.195,
-          "output": 1.56
-        }
-      }
-    },
-    "qwen3.5-122b-a10b": {
-      "USD": {
-        "text": {
-          "input": 0.26,
-          "output": 2.08
-        }
-      }
-    },
-    "qwen3.5-flash-02-23": {
-      "USD": {
-        "text": {
-          "input": 0.065,
-          "output": 0.26
-        }
-      }
-    },
-    "lfm-2-24b-a2b": {
-      "USD": {
-        "text": {
-          "input": 0.03,
-          "output": 0.12
-        }
-      }
-    },
-    "aion-2.0": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 1.6
-        }
-      }
-    },
-    "claude-sonnet-4.6": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "qwen3.5-plus-02-15": {
-      "USD": {
-        "text": {
-          "input": 0.26,
-          "output": 1.56
-        }
-      }
-    },
-    "qwen3.5-397b-a17b": {
-      "USD": {
-        "text": {
-          "input": 0.39,
-          "output": 2.34
-        }
-      }
-    },
-    "minimax-m2.5:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "minimax-m2.5": {
-      "USD": {
-        "text": {
-          "input": 0.19,
-          "output": 1.15
-        }
-      }
-    },
-    "qwen3-max-thinking": {
-      "USD": {
-        "text": {
-          "input": 0.78,
-          "output": 3.9
-        }
-      }
-    },
-    "claude-opus-4.6": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "qwen3-coder-next": {
-      "USD": {
-        "text": {
-          "input": 0.12,
-          "output": 0.75
-        }
-      }
-    },
-    "free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "step-3.5-flash:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "step-3.5-flash": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.3
-        }
-      }
-    },
-    "trinity-large-preview:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "solar-pro-3": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
-    "minimax-m2-her": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 1.2
-        }
-      }
-    },
-    "palmyra-x5": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 6.0
-        }
-      }
-    },
-    "lfm-2.5-1.2b-thinking:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "lfm-2.5-1.2b-instruct:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "glm-4.7-flash": {
-      "USD": {
-        "text": {
-          "input": 0.06,
-          "output": 0.4
-        },
-        "cache": {
-          "read_input": 0.03
-        }
-      },
-      "CNY": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "olmo-3.1-32b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
-    "seed-1.6-flash": {
+    "openai.gpt-oss-safeguard-20b": {
       "USD": {
         "text": {
           "input": 0.075,
           "output": 0.3
-        }
-      }
-    },
-    "seed-1.6": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 2.0
-        }
-      }
-    },
-    "minimax-m2.1": {
-      "USD": {
-        "text": {
-          "input": 0.27,
-          "output": 0.95
-        }
-      }
-    },
-    "mistral-small-creative": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.3
-        }
-      }
-    },
-    "olmo-3.1-32b-think": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.5
-        }
-      }
-    },
-    "mimo-v2-flash": {
-      "USD": {
-        "text": {
-          "input": 0.09,
-          "output": 0.29
-        }
-      }
-    },
-    "nemotron-3-nano-30b-a3b:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "nemotron-3-nano-30b-a3b": {
-      "USD": {
-        "text": {
-          "input": 0.05,
-          "output": 0.2
-        }
-      }
-    },
-    "gpt-5.2-chat": {
-      "USD": {
-        "text": {
-          "input": 1.75,
-          "output": 14.0
-        }
-      }
-    },
-    "relace-search": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 3.0
-        }
-      }
-    },
-    "glm-4.6v": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.9
-        },
-        "cache": {
-          "read_input": 0.15
-        }
-      }
-    },
-    "deepseek-v3.1-nex-n1": {
-      "USD": {
-        "text": {
-          "input": 0.135,
-          "output": 0.5
-        }
-      }
-    },
-    "rnj-1-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.15
-        }
-      }
-    },
-    "nova-2-lite-v1": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 2.5
-        }
-      }
-    },
-    "ministral-14b-2512": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.2
-        }
-      }
-    },
-    "ministral-8b-2512": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.15
-        }
-      }
-    },
-    "ministral-3b-2512": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.1
-        }
-      }
-    },
-    "trinity-mini:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "trinity-mini": {
-      "USD": {
-        "text": {
-          "input": 0.045,
-          "output": 0.15
-        }
-      }
-    },
-    "deepseek-v3.2-speciale": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 1.2
-        }
-      }
-    },
-    "intellect-3": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 1.1
-        }
-      }
-    },
-    "claude-opus-4.5": {
-      "USD": {
-        "text": {
-          "input": 5.0,
-          "output": 25.0
-        }
-      }
-    },
-    "olmo-3-32b-think": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.5
-        }
-      }
-    },
-    "grok-4.1-fast": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.5
-        }
-      }
-    },
-    "cogito-v2.1-671b": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 1.25
-        }
-      }
-    },
-    "gpt-5.1-chat": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "kat-coder-pro": {
-      "USD": {
-        "text": {
-          "input": 0.207,
-          "output": 0.828
-        }
-      }
-    },
-    "sonar-pro-search": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "voxtral-small-24b-2507": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.3
-        }
-      }
-    },
-    "gpt-oss-safeguard-20b": {
-      "USD": {
-        "text": {
-          "input": 0.075,
-          "output": 0.3
-        }
-      }
-    },
-    "nemotron-nano-12b-v2-vl:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "nemotron-nano-12b-v2-vl": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
-    "minimax-m2": {
-      "USD": {
-        "text": {
-          "input": 0.255,
-          "output": 1.0
-        }
-      }
-    },
-    "lfm2-8b-a1b": {
-      "USD": {
-        "text": {
-          "input": 0.01,
-          "output": 0.02
-        }
-      }
-    },
-    "lfm-2.2-6b": {
-      "USD": {
-        "text": {
-          "input": 0.01,
-          "output": 0.02
-        }
-      }
-    },
-    "granite-4.0-h-micro": {
-      "USD": {
-        "text": {
-          "input": 0.017,
-          "output": 0.11
-        }
-      }
-    },
-    "gpt-5-image-mini": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 2.0
-        }
-      }
-    },
-    "claude-haiku-4.5": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 5.0
-        }
-      }
-    },
-    "qwen3-vl-8b-thinking": {
-      "USD": {
-        "text": {
-          "input": 0.117,
-          "output": 1.365
-        }
-      }
-    },
-    "qwen3-vl-8b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.08,
-          "output": 0.5
-        }
-      }
-    },
-    "gpt-5-image": {
-      "USD": {
-        "text": {
-          "input": 10.0,
-          "output": 10.0
-        }
-      }
-    },
-    "llama-3.3-nemotron-super-49b-v1.5": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.4
-        }
-      }
-    },
-    "ernie-4.5-21b-a3b-thinking": {
-      "USD": {
-        "text": {
-          "input": 0.07,
-          "output": 0.28
-        }
-      }
-    },
-    "qwen3-vl-30b-a3b-thinking": {
-      "USD": {
-        "text": {
-          "input": 0.13,
-          "output": 1.56
-        }
-      }
-    },
-    "qwen3-vl-30b-a3b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.13,
-          "output": 0.52
-        }
-      }
-    },
-    "claude-sonnet-4.5": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "deepseek-v3.2-exp": {
-      "USD": {
-        "text": {
-          "input": 0.27,
-          "output": 0.41
-        }
-      }
-    },
-    "cydonia-24b-v4.1": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.5
-        }
-      }
-    },
-    "relace-apply-3": {
-      "USD": {
-        "text": {
-          "input": 0.85,
-          "output": 1.25
-        }
-      }
-    },
-    "qwen3-max": {
-      "USD": {
-        "text": {
-          "input": 0.78,
-          "output": 3.9
-        }
-      }
-    },
-    "qwen3-coder-plus": {
-      "USD": {
-        "text": {
-          "input": 0.65,
-          "output": 3.25
-        }
-      }
-    },
-    "deepseek-v3.1-terminus": {
-      "USD": {
-        "text": {
-          "input": 0.21,
-          "output": 0.79
-        }
-      }
-    },
-    "grok-4-fast": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.5
-        }
-      }
-    },
-    "tongyi-deepresearch-30b-a3b": {
-      "USD": {
-        "text": {
-          "input": 0.09,
-          "output": 0.45
-        }
-      }
-    },
-    "qwen3-coder-flash": {
-      "USD": {
-        "text": {
-          "input": 0.195,
-          "output": 0.975
-        }
-      }
-    },
-    "qwen3-next-80b-a3b-instruct:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "longcat-flash-chat": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.8
-        }
-      }
-    },
-    "qwen-plus-2025-07-28:thinking": {
-      "USD": {
-        "text": {
-          "input": 0.26,
-          "output": 0.78
-        }
-      }
-    },
-    "qwen-plus-2025-07-28": {
-      "USD": {
-        "text": {
-          "input": 0.26,
-          "output": 0.78
-        }
-      }
-    },
-    "nemotron-nano-9b-v2:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "nemotron-nano-9b-v2": {
-      "USD": {
-        "text": {
-          "input": 0.04,
-          "output": 0.16
-        }
-      }
-    },
-    "kimi-k2-0905": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "qwen3-30b-a3b-thinking-2507": {
-      "USD": {
-        "text": {
-          "input": 0.08,
-          "output": 0.4
-        }
-      }
-    },
-    "hermes-4-70b": {
-      "USD": {
-        "text": {
-          "input": 0.13,
-          "output": 0.4
-        }
-      }
-    },
-    "hermes-4-405b": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 3.0
-        }
-      }
-    },
-    "deepseek-chat-v3.1": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.75
-        }
-      }
-    },
-    "mistral-medium-3.1": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "ernie-4.5-21b-a3b": {
-      "USD": {
-        "text": {
-          "input": 0.07,
-          "output": 0.28
-        }
-      }
-    },
-    "ernie-4.5-vl-28b-a3b": {
-      "USD": {
-        "text": {
-          "input": 0.14,
-          "output": 0.56
-        }
-      }
-    },
-    "gpt-oss-120b:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "gpt-oss-20b:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "claude-opus-4.1": {
-      "USD": {
-        "text": {
-          "input": 15.0,
-          "output": 75.0
-        }
-      }
-    },
-    "qwen3-coder-30b-a3b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.07,
-          "output": 0.27
-        }
-      }
-    },
-    "qwen3-30b-a3b-instruct-2507": {
-      "USD": {
-        "text": {
-          "input": 0.09,
-          "output": 0.3
-        }
-      }
-    },
-    "glm-4.5-air:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "qwen3-235b-a22b-thinking-2507": {
-      "USD": {
-        "text": {
-          "input": 0.1495,
-          "output": 1.495
-        }
-      }
-    },
-    "glm-4-32b": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.1
-        },
-        "cache": {
-          "read_input": 0.05
-        }
-      }
-    },
-    "qwen3-coder:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "qwen3-coder": {
-      "USD": {
-        "text": {
-          "input": 0.22,
-          "output": 1.0
-        }
-      }
-    },
-    "ui-tars-1.5-7b": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.2
-        }
-      }
-    },
-    "qwen3-235b-a22b-2507": {
-      "USD": {
-        "text": {
-          "input": 0.071,
-          "output": 0.1
-        }
-      }
-    },
-    "router": {
-      "USD": {
-        "text": {
-          "input": 0.85,
-          "output": 3.4
-        }
-      }
-    },
-    "kimi-k2": {
-      "USD": {
-        "text": {
-          "input": 0.57,
-          "output": 2.3
-        }
-      }
-    },
-    "devstral-medium": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.0
-        }
-      }
-    },
-    "devstral-small": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.3
-        }
-      }
-    },
-    "dolphin-mistral-24b-venice-edition:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "gemma-3n-e2b-it:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "hunyuan-a13b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.14,
-          "output": 0.57
-        }
-      }
-    },
-    "deepseek-r1t2-chimera": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 1.1
-        }
-      }
-    },
-    "ernie-4.5-vl-424b-a47b": {
-      "USD": {
-        "text": {
-          "input": 0.42,
-          "output": 1.25
-        }
-      }
-    },
-    "ernie-4.5-300b-a47b": {
-      "USD": {
-        "text": {
-          "input": 0.28,
-          "output": 1.1
-        }
-      }
-    },
-    "mercury": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 0.75
-        }
-      }
-    },
-    "mistral-small-3.2-24b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.075,
-          "output": 0.2
-        }
-      }
-    },
-    "minimax-m1": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 2.2
-        }
-      }
-    },
-    "gemini-2.5-pro-preview": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "gemma-3n-e4b-it:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "gemma-3n-e4b-it": {
-      "USD": {
-        "text": {
-          "input": 0.02,
-          "output": 0.04
-        }
-      }
-    },
-    "gemini-2.5-pro-preview-05-06": {
-      "USD": {
-        "text": {
-          "input": 1.25,
-          "output": 10.0
-        }
-      }
-    },
-    "spotlight": {
-      "USD": {
-        "text": {
-          "input": 0.18,
-          "output": 0.18
-        }
-      }
-    },
-    "maestro-reasoning": {
-      "USD": {
-        "text": {
-          "input": 0.9,
-          "output": 3.3
-        }
-      }
-    },
-    "virtuoso-large": {
-      "USD": {
-        "text": {
-          "input": 0.75,
-          "output": 1.2
-        }
-      }
-    },
-    "coder-large": {
-      "USD": {
-        "text": {
-          "input": 0.5,
-          "output": 0.8
-        }
-      }
-    },
-    "mercury-coder": {
-      "USD": {
-        "text": {
-          "input": 0.25,
-          "output": 0.75
-        }
-      }
-    },
-    "qwen3-4b:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "llama-guard-4-12b": {
-      "USD": {
-        "text": {
-          "input": 0.18,
-          "output": 0.18
-        }
-      }
-    },
-    "qwen3-30b-a3b": {
-      "USD": {
-        "text": {
-          "input": 0.08,
-          "output": 0.28
-        }
-      }
-    },
-    "qwen3-14b": {
-      "USD": {
-        "text": {
-          "input": 0.06,
-          "output": 0.24
-        }
-      }
-    },
-    "qwen3-32b": {
-      "USD": {
-        "text": {
-          "input": 0.08,
-          "output": 0.24
-        }
-      }
-    },
-    "qwen3-235b-a22b": {
-      "USD": {
-        "text": {
-          "input": 0.455,
-          "output": 1.82
-        }
-      }
-    },
-    "o4-mini-high": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 4.4
-        }
-      }
-    },
-    "qwen2.5-coder-7b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.03,
-          "output": 0.09
-        }
-      }
-    },
-    "llemma_7b": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 1.2
-        }
-      }
-    },
-    "codellama-7b-instruct-solidity": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 1.2
-        }
-      }
-    },
-    "llama-3.1-nemotron-ultra-253b-v1": {
-      "USD": {
-        "text": {
-          "input": 0.6,
-          "output": 1.8
-        }
-      }
-    },
-    "llama-4-maverick": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.6
-        }
-      }
-    },
-    "llama-4-scout": {
-      "USD": {
-        "text": {
-          "input": 0.08,
-          "output": 0.3
-        }
-      }
-    },
-    "qwen2.5-vl-32b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
-    "deepseek-chat-v3-0324": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.77
-        }
-      }
-    },
-    "mistral-small-3.1-24b-instruct:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "mistral-small-3.1-24b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.03,
-          "output": 0.11
-        }
-      }
-    },
-    "olmo-2-0325-32b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.05,
-          "output": 0.2
-        }
-      }
-    },
-    "gemma-3-4b-it:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "gemma-3-4b-it": {
-      "USD": {
-        "text": {
-          "input": 0.04,
-          "output": 0.08
-        }
-      }
-    },
-    "gemma-3-12b-it:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "gemma-3-12b-it": {
-      "USD": {
-        "text": {
-          "input": 0.04,
-          "output": 0.13
-        }
-      }
-    },
-    "command-a": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "gemma-3-27b-it:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "skyfall-36b-v2": {
-      "USD": {
-        "text": {
-          "input": 0.55,
-          "output": 0.8
-        }
-      }
-    },
-    "qwq-32b": {
-      "USD": {
-        "text": {
-          "input": 0.15,
-          "output": 0.58
-        }
-      }
-    },
-    "claude-3.7-sonnet": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "claude-3.7-sonnet:thinking": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 15.0
-        }
-      }
-    },
-    "mistral-saba": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 0.6
-        }
-      }
-    },
-    "llama-guard-3-8b": {
-      "USD": {
-        "text": {
-          "input": 0.02,
-          "output": 0.06
-        }
-      }
-    },
-    "o3-mini-high": {
-      "USD": {
-        "text": {
-          "input": 1.1,
-          "output": 4.4
-        }
-      }
-    },
-    "qwen-vl-plus": {
-      "USD": {
-        "text": {
-          "input": 0.1365,
-          "output": 0.4095
-        }
-      }
-    },
-    "aion-1.0": {
-      "USD": {
-        "text": {
-          "input": 4.0,
-          "output": 8.0
-        }
-      }
-    },
-    "aion-1.0-mini": {
-      "USD": {
-        "text": {
-          "input": 0.7,
-          "output": 1.4
-        }
-      }
-    },
-    "aion-rp-llama-3.1-8b": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 1.6
-        }
-      }
-    },
-    "qwen-vl-max": {
-      "USD": {
-        "text": {
-          "input": 0.52,
-          "output": 2.08
-        }
-      }
-    },
-    "qwen2.5-vl-72b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 0.8
-        }
-      }
-    },
-    "mistral-small-24b-instruct-2501": {
-      "USD": {
-        "text": {
-          "input": 0.05,
-          "output": 0.08
-        }
-      }
-    },
-    "deepseek-r1-distill-qwen-32b": {
-      "USD": {
-        "text": {
-          "input": 0.29,
-          "output": 0.29
-        }
-      }
-    },
-    "minimax-01": {
-      "USD": {
-        "text": {
-          "input": 0.2,
-          "output": 1.1
-        }
-      }
-    },
-    "phi-4": {
-      "USD": {
-        "text": {
-          "input": 0.065,
-          "output": 0.14
-        }
-      }
-    },
-    "l3.1-70b-hanami-x1": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 3.0
-        }
-      }
-    },
-    "l3.3-euryale-70b": {
-      "USD": {
-        "text": {
-          "input": 0.65,
-          "output": 0.75
-        }
-      }
-    },
-    "llama-3.3-70b-instruct:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "llama-3.3-70b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.1,
-          "output": 0.32
-        }
-      }
-    },
-    "qwen-2.5-coder-32b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.66,
-          "output": 1.0
-        }
-      }
-    },
-    "unslopnemo-12b": {
-      "USD": {
-        "text": {
-          "input": 0.4,
-          "output": 0.4
-        }
-      }
-    },
-    "claude-3.5-haiku": {
-      "USD": {
-        "text": {
-          "input": 0.8,
-          "output": 4.0
-        }
-      }
-    },
-    "magnum-v4-72b": {
-      "USD": {
-        "text": {
-          "input": 3.0,
-          "output": 5.0
-        }
-      }
-    },
-    "claude-3.5-sonnet": {
-      "USD": {
-        "text": {
-          "input": 6.0,
-          "output": 30.0
-        }
-      }
-    },
-    "qwen-2.5-7b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.04,
-          "output": 0.1
-        }
-      }
-    },
-    "llama-3.1-nemotron-70b-instruct": {
-      "USD": {
-        "text": {
-          "input": 1.2,
-          "output": 1.2
-        }
-      }
-    },
-    "inflection-3-productivity": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "inflection-3-pi": {
-      "USD": {
-        "text": {
-          "input": 2.5,
-          "output": 10.0
-        }
-      }
-    },
-    "rocinante-12b": {
-      "USD": {
-        "text": {
-          "input": 0.17,
-          "output": 0.43
-        }
-      }
-    },
-    "llama-3.2-3b-instruct:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "llama-3.2-3b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.051,
-          "output": 0.34
-        }
-      }
-    },
-    "llama-3.2-1b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.027,
-          "output": 0.2
-        }
-      }
-    },
-    "llama-3.2-11b-vision-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.049,
-          "output": 0.049
-        }
-      }
-    },
-    "qwen-2.5-72b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.12,
-          "output": 0.39
-        }
-      }
-    },
-    "l3.1-euryale-70b": {
-      "USD": {
-        "text": {
-          "input": 0.85,
-          "output": 0.85
-        }
-      }
-    },
-    "hermes-3-llama-3.1-70b": {
-      "USD": {
-        "text": {
-          "input": 0.3,
-          "output": 0.3
-        }
-      }
-    },
-    "hermes-3-llama-3.1-405b:free": {
-      "USD": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "hermes-3-llama-3.1-405b": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 1.0
-        }
-      }
-    },
-    "l3-lunaris-8b": {
-      "USD": {
-        "text": {
-          "input": 0.04,
-          "output": 0.05
-        }
-      }
-    },
-    "mistral-nemo": {
-      "USD": {
-        "text": {
-          "input": 0.02,
-          "output": 0.04
-        }
-      }
-    },
-    "gemma-2-27b-it": {
-      "USD": {
-        "text": {
-          "input": 0.65,
-          "output": 0.65
-        }
-      }
-    },
-    "gemma-2-9b-it": {
-      "USD": {
-        "text": {
-          "input": 0.03,
-          "output": 0.09
-        }
-      }
-    },
-    "l3-euryale-70b": {
-      "USD": {
-        "text": {
-          "input": 1.48,
-          "output": 1.48
-        }
-      }
-    },
-    "hermes-2-pro-llama-3-8b": {
-      "USD": {
-        "text": {
-          "input": 0.14,
-          "output": 0.14
-        }
-      }
-    },
-    "gpt-4o:extended": {
-      "USD": {
-        "text": {
-          "input": 6.0,
-          "output": 18.0
-        }
-      }
-    },
-    "llama-3-8b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.03,
-          "output": 0.04
-        }
-      }
-    },
-    "llama-3-70b-instruct": {
-      "USD": {
-        "text": {
-          "input": 0.51,
-          "output": 0.74
-        }
-      }
-    },
-    "mixtral-8x22b-instruct": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
-    "wizardlm-2-8x22b": {
-      "USD": {
-        "text": {
-          "input": 0.62,
-          "output": 0.62
-        }
-      }
-    },
-    "mistral-large": {
-      "USD": {
-        "text": {
-          "input": 2.0,
-          "output": 6.0
-        }
-      }
-    },
-    "gpt-3.5-turbo-0613": {
-      "USD": {
-        "text": {
-          "input": 1.0,
-          "output": 2.0
-        }
-      }
-    },
-    "goliath-120b": {
-      "USD": {
-        "text": {
-          "input": 3.75,
-          "output": 7.5
-        }
-      }
-    },
-    "mistral-7b-instruct-v0.1": {
-      "USD": {
-        "text": {
-          "input": 0.11,
-          "output": 0.19
-        }
-      }
-    },
-    "weaver": {
-      "USD": {
-        "text": {
-          "input": 0.75,
-          "output": 1.0
-        }
-      }
-    },
-    "remm-slerp-l2-13b": {
-      "USD": {
-        "text": {
-          "input": 0.45,
-          "output": 0.65
-        }
-      }
-    },
-    "mythomax-l2-13b": {
-      "USD": {
-        "text": {
-          "input": 0.06,
-          "output": 0.06
-        }
-      }
-    },
-    "glm-4.7-flashx": {
-      "CNY": {
-        "text": {
-          "input": 0.5,
-          "output": 3.0
-        },
-        "cache": {
-          "read_input": 0.25
-        }
-      }
-    },
-    "glm-4-plus": {
-      "CNY": {
-        "text": {
-          "input": 5.0,
-          "output": 5.0
-        },
-        "cache": {
-          "read_input": 2.5
-        },
-        "batch": {
-          "input": 2.5,
-          "output": 2.5
-        }
-      }
-    },
-    "glm-4-air-250414": {
-      "CNY": {
-        "text": {
-          "input": 0.5,
-          "output": 0.5
-        },
-        "cache": {
-          "read_input": 0.25
-        },
-        "batch": {
-          "input": 0.25,
-          "output": 0.25
-        }
-      }
-    },
-    "glm-4-airx": {
-      "CNY": {
-        "text": {
-          "input": 10.0,
-          "output": 10.0
-        },
-        "cache": {
-          "read_input": 5.0
-        }
-      }
-    },
-    "glm-4-long": {
-      "CNY": {
-        "text": {
-          "input": 1.0,
-          "output": 1.0
-        },
-        "cache": {
-          "read_input": 0.5
-        },
-        "batch": {
-          "input": 0.5,
-          "output": 0.5
-        }
-      }
-    },
-    "glm-4-assistant": {
-      "CNY": {
-        "text": {
-          "input": 5.0,
-          "output": 5.0
-        },
-        "cache": {
-          "read_input": 2.5
-        }
-      }
-    },
-    "glm-z1-air": {
-      "CNY": {
-        "text": {
-          "input": 0.5,
-          "output": 0.5
-        },
-        "cache": {
-          "read_input": 0.25
-        }
-      }
-    },
-    "glm-z1-airx": {
-      "CNY": {
-        "text": {
-          "input": 5.0,
-          "output": 5.0
-        },
-        "cache": {
-          "read_input": 2.5
-        }
-      }
-    },
-    "glm-z1-flashx": {
-      "CNY": {
-        "text": {
-          "input": 0.1,
-          "output": 0.1
-        },
-        "cache": {
-          "read_input": 0.05
-        }
-      }
-    },
-    "glm-4-flashx-250414": {
-      "CNY": {
-        "text": {
-          "input": 0.1,
-          "output": 0.1
-        },
-        "cache": {
-          "read_input": 0.05
-        },
-        "batch": {
-          "input": 0.05,
-          "output": 0.05
-        }
-      }
-    },
-    "glm-4-flash-250414": {
-      "CNY": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
-        }
-      }
-    },
-    "glm-z1-flash": {
-      "CNY": {
-        "text": {
-          "input": 0.0,
-          "output": 0.0
         }
       }
     }
