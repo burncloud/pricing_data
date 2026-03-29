@@ -113,6 +113,151 @@
           "out": 20.0
         }
       }
+    },
+    "gpt-4o": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://openai.com/api/pricing",
+      "_notes": "GPT-4o flagship model. $2.50 input / $10.00 output / $1.25 cached input per MTok.",
+      "USD": {
+        "text": {
+          "in": 2.50,
+          "out": 10.00
+        },
+        "cache": {
+          "in": 1.25
+        }
+      }
+    },
+    "gpt-4o-mini": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://openai.com/api/pricing",
+      "_notes": "GPT-4o mini. $0.15 input / $0.60 output / $0.075 cached input per MTok.",
+      "USD": {
+        "text": {
+          "in": 0.15,
+          "out": 0.60
+        },
+        "cache": {
+          "in": 0.075
+        }
+      }
+    },
+    "gpt-4-turbo": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://openai.com/api/pricing",
+      "_notes": "GPT-4 Turbo. $10.00 input / $30.00 output per MTok. No cache pricing.",
+      "USD": {
+        "text": {
+          "in": 10.00,
+          "out": 30.00
+        }
+      }
+    },
+    "o1": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://openai.com/api/pricing",
+      "_notes": "OpenAI o1. $15.00 input / $60.00 output / $7.50 cached input per MTok.",
+      "USD": {
+        "text": {
+          "in": 15.00,
+          "out": 60.00
+        },
+        "cache": {
+          "in": 7.50
+        }
+      }
+    },
+    "o1-mini": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://openai.com/api/pricing",
+      "_notes": "OpenAI o1-mini (2024-09-12). $3.00 input / $12.00 output / $1.50 cached input per MTok.",
+      "USD": {
+        "text": {
+          "in": 3.00,
+          "out": 12.00
+        },
+        "cache": {
+          "in": 1.50
+        }
+      }
+    },
+    "o3": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://openai.com/api/pricing",
+      "_notes": "OpenAI o3. $2.00 input / $8.00 output / $0.50 cached input per MTok.",
+      "USD": {
+        "text": {
+          "in": 2.00,
+          "out": 8.00
+        },
+        "cache": {
+          "in": 0.50
+        }
+      }
+    },
+    "o3-mini": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://openai.com/api/pricing",
+      "_notes": "OpenAI o3-mini. $1.10 input / $4.40 output / $0.55 cached input per MTok.",
+      "USD": {
+        "text": {
+          "in": 1.10,
+          "out": 4.40
+        },
+        "cache": {
+          "in": 0.55
+        }
+      }
+    },
+    "claude-3-5-sonnet-20241022": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude 3.5 Sonnet (Oct 2022). $3.00 input / $15.00 output / $0.30 cache read per MTok.",
+      "USD": {
+        "text": {
+          "in": 3.00,
+          "out": 15.00
+        },
+        "cache": {
+          "in": 0.30
+        }
+      }
+    },
+    "claude-3-5-haiku-20241022": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude 3.5 Haiku (Oct 2022). $1.00 input / $5.00 output / $0.10 cache read per MTok.",
+      "USD": {
+        "text": {
+          "in": 1.00,
+          "out": 5.00
+        },
+        "cache": {
+          "in": 0.10
+        }
+      }
+    },
+    "claude-3-opus-20240229": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude 3 Opus. $15.00 input / $75.00 output per MTok. No cache pricing documented.",
+      "USD": {
+        "text": {
+          "in": 15.00,
+          "out": 75.00
+        }
+      }
+    },
+    "claude-3-haiku-20240307": {
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+      "_notes": "Claude 3 Haiku (deprecated, retiring 2026-04-19). $0.25 input / $1.25 output per MTok.",
+      "USD": {
+        "text": {
+          "in": 0.25,
+          "out": 1.25
+        }
+      }
     }
   }
 }

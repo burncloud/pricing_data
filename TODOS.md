@@ -1,27 +1,27 @@
 # TODOS
 
-## P1 — Fix OpenAI Playwright Fetcher
+## P1 — Concurrent Fetcher Execution
 
-**What:** `scripts/fetch/openai.py` fails in CI with Playwright timeout (`waiting for locator("text=/1M tokens/") to be visible`). OpenAI pricing page structure changed. 144 OpenAI models are currently aggregator-only.
+**What:** `scripts/fetch_all.py` runs all 15 fetchers sequentially. Switch to `ThreadPoolExecutor` for parallel HTTP calls.
 
-**Why:** OpenAI is the most-referenced provider. Accurate first-party prices matter. Currently relying solely on LiteLLM/OpenRouter for OpenAI pricing.
+**Why:** With 15 fetchers, sequential execution takes ~15-30s on a fast connection but could degrade to 5-8 minutes if 3-4 Chinese sites time out. Parallelism would cap total time at `max(individual_fetcher_time)` instead of the sum.
 
-**Context:** Anthropic, Google, DeepSeek fetchers are working. OpenAI alone is broken. Options: (a) fix the Playwright selector to match current page structure, (b) switch to scraping the OpenAI pricing API endpoint if one exists, (c) expand manual_overrides.json to cover key OpenAI models with verified prices.
+**Context:** All fetchers already handle their own exceptions and return `FetchResult`. Thread safety is not a concern — each fetcher writes to its own file in `sources/{date}/`. The main risk is that Playwright fetchers (OpenAI, Zhipu) may not be thread-safe.
 
-**Effort:** M (human ~2h / CC ~20 min)
+**Effort:** S (human ~2h / CC ~15 min)
 **Priority:** P1
-**Depends on:** Nothing.
+**Depends on:** Verify Playwright thread safety first (or keep Playwright fetchers sequential).
 
 ---
 
-## P2 — Chinese Providers Beyond Zhipu
+## P2 — Together AI / Fireworks AI Fetchers
 
-**What:** Add fetchers for Baidu (文心), Moonshot (Kimi), MiniMax, Qwen/DashScope with direct CNY pricing.
+**What:** Add first-party price fetchers for Together AI and Fireworks AI.
 
-**Why:** These are listed in the design doc as targets. Currently only Zhipu (bigmodel.cn) has a direct fetcher. Other Chinese providers are aggregator-only.
+**Why:** Both are popular inference providers with many hosted models. Currently aggregator-only (LiteLLM/OpenRouter at p50/p70), so their models don't pass the admission gate.
 
-**Context:** Zhipu required Playwright + custom parser. Other providers likely need similar approaches. DashScope has an API. Moonshot has a pricing page.
+**Context:** Together AI pricing page may require JS rendering. Fireworks AI has a pricing API endpoint. Deferred from v7.0 plan due to complexity.
 
-**Effort:** XL (human ~1 week / CC ~60 min per provider)
+**Effort:** L (human ~1 week / CC ~45 min per provider)
 **Priority:** P2
 **Depends on:** Nothing blocking.
