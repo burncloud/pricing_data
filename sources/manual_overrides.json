@@ -44,9 +44,9 @@
       }
     },
     "gemini-3-pro-image-preview": {
-      "_verified_at": "2026-03-28",
-      "_verified_source": "https://ai.google.dev/pricing",
-      "_notes": "Image generation model. Text+image input: $2.00/MTok. Text/thinking output: $12.00/MTok (text.output). Image output: $0.134/img (1K/2K) — image.output is a per-image flat fee. Batch: 50% off.",
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "_notes": "Image generation model. Text+image input: $2.00/MTok. Text/thinking output: $12.00/MTok. Image output: $120.00/MTok (1120 tokens per 1K/2K image, 2000 tokens per 4K). Batch: 50% off.",
       "endpoints": {
         "generativelanguage.googleapis.com": {
           "base_url": "https://generativelanguage.googleapis.com",
@@ -57,20 +57,21 @@
               "output": 12.00
             },
             "image": {
-              "output": 0.134
+              "output": 120.0
             }
           },
           "batch": {
             "input": 1.00,
-            "output": 6.00
+            "output": 6.00,
+            "image_output": 60.0
           }
         }
       }
     },
     "gemini-2.5-flash-image": {
-      "_verified_at": "2026-03-28",
-      "_verified_source": "https://ai.google.dev/pricing",
-      "_notes": "Image generation model. Text+image input: $0.30/MTok. No text output — images only at $0.039/img (image.output is $/image flat fee). Batch: $0.15/MTok input.",
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "_notes": "Image generation model. Text+image input: $0.30/MTok. Text output: $2.50/MTok. Image output: $30.00/MTok (1290 tokens per 1K image). Batch: 50% off.",
       "endpoints": {
         "generativelanguage.googleapis.com": {
           "base_url": "https://generativelanguage.googleapis.com",
@@ -78,23 +79,24 @@
           "pricing": {
             "text": {
               "input": 0.30,
-              "output": 0.0
+              "output": 2.50
             },
             "image": {
-              "output": 0.039
+              "output": 30.0
             }
           },
           "batch": {
             "input": 0.15,
-            "output": 0.0
+            "output": 1.25,
+            "image_output": 15.0
           }
         }
       }
     },
     "gemini-3.1-flash-image-preview": {
-      "_verified_at": "2026-03-28",
-      "_verified_source": "https://ai.google.dev/pricing",
-      "_notes": "Image generation model (Flash variant of Gemini 3.1). Text+image input: $0.50/MTok. Text output: $3.00/MTok. image.output TBD — verify on official page before adding.",
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "_notes": "Image generation model (Flash variant of Gemini 3.1). Text+image input: $0.50/MTok. Text output: $3.00/MTok. Image output: $60.00/MTok (747 tokens at 0.5K, 1120 at 1K, 1680 at 2K, 2520 at 4K). Batch: 50% off.",
       "endpoints": {
         "generativelanguage.googleapis.com": {
           "base_url": "https://generativelanguage.googleapis.com",
@@ -103,7 +105,15 @@
             "text": {
               "input": 0.50,
               "output": 3.00
+            },
+            "image": {
+              "output": 60.0
             }
+          },
+          "batch": {
+            "input": 0.25,
+            "output": 1.50,
+            "image_output": 30.0
           }
         }
       }

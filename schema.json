@@ -88,7 +88,7 @@
     },
     "ImageModalityPricing": {
       "type": "object",
-      "description": "Pricing for image modality. Units differ: input is $/1M tokens (image input); output is $/image (flat fee per generated image).",
+      "description": "Pricing for image modality. All prices are per 1M tokens.",
       "properties": {
         "input": {
           "type": "number",
@@ -98,7 +98,7 @@
         "output": {
           "type": "number",
           "minimum": 0,
-          "description": "Flat fee per generated output image (NOT per-token)"
+          "description": "Price per 1M image output tokens"
         }
       }
     },
@@ -130,6 +130,11 @@
           "type": "number",
           "minimum": 0,
           "description": "Batch API output price per 1M tokens"
+        },
+        "image_output": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Batch API price per 1M image output tokens"
         }
       }
     },

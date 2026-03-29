@@ -371,7 +371,7 @@ class PricingMerger:
         - OpenRouter: remove provider prefix (openai/gpt-4o -> gpt-4o)
         - All others: keep as-is
         """
-        if source == "openrouter" and "/" in model_id:
+        if source in ("openrouter", "litellm") and "/" in model_id:
             return model_id.split("/", 1)[1]
         return model_id
 
