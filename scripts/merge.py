@@ -18,9 +18,10 @@ Output format: v7.0 — pricing-only, no metadata, simplified field names.
 Provider is inferred from model_id prefix by consumers (see infer_provider() in config.py).
 
 Modality field rules:
-- text.*  : any source may contribute
-- audio.* : MODALITY_AUTHORITATIVE_SOURCES only (blocks litellm, openrouter)
-- image.* : MODALITY_AUTHORITATIVE_SOURCES only (blocks litellm, openrouter)
+- text.*        : any source may contribute
+- audio.*       : MODALITY_AUTHORITATIVE_SOURCES only (blocks litellm, openrouter)
+- image.*       : MODALITY_AUTHORITATIVE_SOURCES only (blocks litellm, openrouter)
+- cache/batch/tiered : first-party sources only (priority >= 100, blocks litellm, openrouter)
 
 Priority order (higher = more authoritative):
 1. manual_overrides (priority 200)
@@ -40,7 +41,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from scripts.config import config, infer_provider, MODALITY_AUTHORITATIVE_SOURCES
+from scripts.config import (
+    config, infer_provider, MODALITY_AUTHORITATIVE_SOURCES,
+    PRICE_ANOMALY_THRESHOLDS, FIRST_PARTY_PRIORITY_THRESHOLD,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -172,8 +176,16 @@ class PricingMerger:
         if not all_sources:
             raise ValueError("No source data found")
 
-        # Merge with priority resolution → v6.0 output
-        merged_models = self._merge_with_priority(all_sources, warnings)
+        # Merge with priority resolution
+        raw_merged, source_map = self._merge_with_priority(all_sources, warnings)
+
+        # Filter anomalous prices
+        filtered, anomalous = self._filter_anomalous_prices(raw_merged)
+
+        # Admission gate: only models with first-party verified sources
+        admitted, unverified = self._apply_admission_gate(filtered, source_map)
+
+        merged_models = admitted
 
         output = {
             "version": "7.0",
@@ -185,13 +197,32 @@ class PricingMerger:
         # Validate against schema
         self._validate(output)
 
+        # Generate validation report
+        from scripts.validate import generate_validation_report
+        generate_validation_report(
+            included=admitted,
+            anomalous=anomalous,
+            unverified=unverified,
+            source_map=source_map,
+            output_dir=config.repo_root,
+        )
+
         return output, warnings
 
     def _collect_sources(self, sources_dir: Path) -> List[Dict[str, Any]]:
-        """Collect all source JSON files, including manual overrides."""
+        """Collect all source JSON files, including manual overrides.
+
+        Each source entry includes:
+        - name: source identifier
+        - data: the full JSON data (models, status, etc.)
+        - fetched_url: the URL the crawler actually fetched (None for non-crawler sources)
+        """
         sources = []
 
         # Load manual overrides first (highest priority, priority=200)
+        # Note: manual_overrides have NO fetched_url — they are human-verified, not crawled.
+        # The admission gate will only admit them if they also appear in a crawler source,
+        # OR if they are explicitly allowed via _verified_source metadata.
         manual_override_path = config.data_dir / "manual_overrides.json"
         if manual_override_path.exists():
             try:
@@ -202,6 +233,7 @@ class PricingMerger:
                     sources.append({
                         "name": "manual_overrides",
                         "data": {"models": converted, "status": "success"},
+                        "fetched_url": None,
                     })
                     logger.info(f"Loaded manual overrides: {len(converted)} models")
             except (json.JSONDecodeError, KeyError) as e:
@@ -225,6 +257,7 @@ class PricingMerger:
                     sources.append({
                         "name": source_file.stem,
                         "data": data,
+                        "fetched_url": data.get("fetched_url"),
                     })
                     logger.info(f"Loaded source: {source_file.name} ({model_count} models)")
 
@@ -237,26 +270,32 @@ class PricingMerger:
         self,
         sources: List[Dict[str, Any]],
         warnings: List[str]
-    ) -> Dict[str, Any]:
+    ) -> Tuple[Dict[str, Any], Dict[str, Dict[str, list]]]:
         """
         Merge models from all sources into v5.0 nested modality pricing.
+
+        Returns:
+            Tuple of (merged_models, source_map) where source_map is
+            model_id → currency → [(source_name, ep_data, priority, fetched_url), ...]
 
         For each model:
         - Group all endpoint entries by currency
         - Highest-priority source wins base pricing per currency
-        - Lower-priority sources contribute missing batch_pricing / cache_pricing
+        - Lower-priority FIRST-PARTY sources (priority >= 100) may fill missing cache/batch/tiered
+        - Aggregators (litellm p70, openrouter p50) cannot contribute any pricing fields
         - audio.* and image.* only from MODALITY_AUTHORITATIVE_SOURCES
         - Warn on price drift within the same currency
         - Warn on completeness gaps across currencies
         """
         merged = {}
 
-        # model_id → { currency → [(source_name, ep_data, priority), ...] }
-        model_currency_sources: Dict[str, Dict[str, List[Tuple[str, Dict, int]]]] = {}
+        # model_id → { currency → [(source_name, ep_data, priority, fetched_url), ...] }
+        model_currency_sources: Dict[str, Dict[str, List[Tuple[str, Dict, int, Optional[str]]]]] = {}
 
         for source in sources:
             source_name = source["name"]
             priority = config.get_source_priority(source_name)
+            fetched_url = source.get("fetched_url")
 
             for model_id, model_data in source["data"]["models"].items():
                 normalized_id = self._normalize_model_id(model_id, source_name)
@@ -269,7 +308,7 @@ class PricingMerger:
                     if currency not in model_currency_sources[normalized_id]:
                         model_currency_sources[normalized_id][currency] = []
                     model_currency_sources[normalized_id][currency].append(
-                        (source_name, ep_data, priority)
+                        (source_name, ep_data, priority, fetched_url)
                     )
 
         for model_id, currency_map in model_currency_sources.items():
@@ -281,24 +320,38 @@ class PricingMerger:
             for currency, source_list in currency_map.items():
                 source_list.sort(key=lambda x: x[2], reverse=True)
 
-                winner_name, winner_ep, _ = source_list[0]
+                winner_name, winner_ep, _, _ = source_list[0]
 
                 # Build v5.0 modality entry from winner's pricing
                 entry = _to_v5_pricing(winner_ep.get("pricing", {}), winner_name)
 
-                # Pass through cache/batch/tiered from winner
+                # Pass through cache/batch/tiered from winner.
+                # Safe: the winner is always the highest-priority source. A model is
+                # only admitted if it has a first-party source (priority >= 100,
+                # fetched_url set), so the winner's optional fields are first-party origin.
                 for field in ("cache", "batch", "tiered"):
                     if field in winner_ep:
                         entry[field] = copy.deepcopy(winner_ep[field])
 
-                # Lower-priority sources contribute missing optional fields only
-                for src_name, ep_data, _ in source_list[1:]:
-                    for field in ("cache", "batch", "tiered"):
-                        if field not in entry and field in ep_data:
-                            entry[field] = copy.deepcopy(ep_data[field])
-                            logger.debug(
-                                f"Field-merged {model_id}[{currency}].{field} from {src_name}"
-                            )
+                # Iterate over lower-priority sources for enrichment and drift checks.
+                for src_name, ep_data, src_priority, _ in source_list[1:]:
+                    # cache/batch/tiered: first-party sources only (priority >= 100).
+                    # FIRST_PARTY_PRIORITY_THRESHOLD is reused intentionally — the same
+                    # policy as the admission gate: only crawler-verified first-party
+                    # sources are trusted for pricing. Aggregators (litellm p70,
+                    # openrouter p50) cannot contribute any pricing fields.
+                    if src_priority >= FIRST_PARTY_PRIORITY_THRESHOLD:
+                        for field in ("cache", "batch", "tiered"):
+                            if field not in entry and field in ep_data:
+                                entry[field] = copy.deepcopy(ep_data[field])
+                                logger.debug(
+                                    f"Field-merged {model_id}[{currency}].{field} from {src_name}"
+                                )
+                    else:
+                        logger.debug(
+                            f"Skipping {src_name} (p{src_priority}) "
+                            f"field enrichment for {model_id}"
+                        )
 
                     # Modality fields from lower-priority AUTHORITATIVE sources only
                     if src_name in MODALITY_AUTHORITATIVE_SOURCES:
@@ -360,7 +413,7 @@ class PricingMerger:
 
             merged[model_id] = pricing
 
-        return merged
+        return merged, model_currency_sources
 
     def _check_pricing_completeness(
         self,
@@ -387,6 +440,123 @@ class PricingMerger:
                 )
                 warnings.append(warning)
                 logger.warning(warning)
+
+    @staticmethod
+    def _filter_anomalous_prices(
+        merged: Dict[str, Any],
+    ) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+        """
+        Remove models with prices above anomaly thresholds or negative prices.
+
+        Uses strict > comparison: price exactly at threshold passes.
+        If ANY modality in a model is anomalous, the whole model is rejected.
+        Zero prices ($0/$0) are treated as free tier and pass through.
+
+        Returns:
+            (filtered_models, anomalous_list)
+        """
+        filtered = {}
+        anomalous: List[Dict[str, Any]] = []
+        modalities = ("text", "audio", "image", "video")
+
+        for model_id, currency_map in merged.items():
+            is_anomalous = False
+            for currency, entry in currency_map.items():
+                for modality in modalities:
+                    mod_data = entry.get(modality)
+                    if not isinstance(mod_data, dict):
+                        continue
+                    thresholds = PRICE_ANOMALY_THRESHOLDS.get(modality, {})
+                    for direction in ("input", "output"):
+                        price = mod_data.get(direction)
+                        if price is None:
+                            continue
+                        if price < 0:
+                            anomalous.append({
+                                "model": model_id,
+                                "reason": f"negative {modality}.{direction}: {price}",
+                                "value": price,
+                            })
+                            is_anomalous = True
+                        elif direction in thresholds and price > thresholds[direction]:
+                            anomalous.append({
+                                "model": model_id,
+                                "reason": (
+                                    f"{modality}.{direction} ${price}/MTok "
+                                    f"> ${thresholds[direction]} threshold"
+                                ),
+                                "value": price,
+                            })
+                            is_anomalous = True
+
+            if not is_anomalous:
+                filtered[model_id] = currency_map
+            else:
+                logger.warning(f"Anomalous price: excluding {model_id}")
+
+        if anomalous:
+            logger.info(
+                f"Anomaly filter: excluded {len(merged) - len(filtered)} models "
+                f"({len(anomalous)} anomalous prices found)"
+            )
+
+        return filtered, anomalous
+
+    @staticmethod
+    def _apply_admission_gate(
+        models: Dict[str, Any],
+        source_map: Dict[str, Dict[str, list]],
+    ) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
+        """
+        Only admit models that have at least one crawler-verified source.
+
+        A source is crawler-verified if:
+        1. It has a fetched_url (proves a crawler actually fetched from an official page), OR
+        2. It is manual_overrides with priority >= 200 (human-verified with _verified_source)
+
+        Aggregator sources (litellm, openrouter) have fetched_url pointing to their
+        API, but their priority < FIRST_PARTY_PRIORITY_THRESHOLD so they don't count.
+
+        Returns:
+            (admitted_models, unverified_list)
+        """
+        admitted = {}
+        unverified: List[Dict[str, Any]] = []
+
+        for model_id, pricing in models.items():
+            sources_for_model = source_map.get(model_id, {})
+            has_verified_source = False
+            max_priority = 0
+            all_sources = set()
+            for currency_sources in sources_for_model.values():
+                for src_name, _, priority, fetched_url in currency_sources:
+                    all_sources.add(src_name)
+                    if priority > max_priority:
+                        max_priority = priority
+                    # Crawler-verified: has URL AND is a first-party source (not aggregator)
+                    if fetched_url and priority >= FIRST_PARTY_PRIORITY_THRESHOLD:
+                        has_verified_source = True
+                    # Manual overrides: human-verified, allowed at priority 200
+                    if src_name == "manual_overrides" and priority >= 200:
+                        has_verified_source = True
+
+            if has_verified_source:
+                admitted[model_id] = pricing
+            else:
+                unverified.append({
+                    "model": model_id,
+                    "sources": sorted(all_sources),
+                    "max_priority": max_priority,
+                })
+                logger.debug(f"Admission gate: excluding {model_id} (no verified source)")
+
+        if unverified:
+            logger.info(
+                f"Admission gate: excluded {len(unverified)} unverified models, "
+                f"admitted {len(admitted)}"
+            )
+
+        return admitted, unverified
 
     def _normalize_model_id(self, model_id: str, source: str) -> str:
         """

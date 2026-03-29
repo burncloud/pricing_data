@@ -28,10 +28,13 @@ class FetchResult:
     raw_response: Optional[Dict[str, Any]] = None
     error: Optional[str] = None
     models_count: int = 0
+    # Verification evidence: URL actually fetched and HTTP status received
+    fetched_url: Optional[str] = None
+    http_status: Optional[int] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
-        return {
+        result = {
             "source": self.source,
             "fetched_at": self.fetched_at,
             "status": "success" if self.success else "error",
@@ -40,6 +43,11 @@ class FetchResult:
             "models": self.models,
             "raw_response": self.raw_response,
         }
+        if self.fetched_url is not None:
+            result["fetched_url"] = self.fetched_url
+        if self.http_status is not None:
+            result["http_status"] = self.http_status
+        return result
 
     @classmethod
     def error_result(cls, source: str, error: str) -> "FetchResult":
@@ -133,6 +141,8 @@ class BaseFetcher(ABC):
                 models=models,
                 raw_response=raw_response,
                 models_count=len(models),
+                fetched_url=self.fetcher_config.url,
+                http_status=getattr(response, "status_code", None),
             )
 
         except requests.Timeout:
@@ -287,6 +297,8 @@ class BaseFetcher(ABC):
                     raw_response=data.get("raw_response"),
                     error=data.get("error"),
                     models_count=data.get("models_count", 0),
+                    fetched_url=data.get("fetched_url"),
+                    http_status=data.get("http_status"),
                 )
             except (json.JSONDecodeError, KeyError) as e:
                 logger.warning(f"Failed to load cache: {e}")

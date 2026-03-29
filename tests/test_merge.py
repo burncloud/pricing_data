@@ -42,6 +42,29 @@ def _model(ep_key, pricing, *, currency="USD", base_url="", metadata=None,
     return entry
 
 
+# URLs for first-party fetchers — source files must include fetched_url
+# to pass the admission gate (proves data came from a real crawler).
+_SOURCE_URLS = {
+    "openai": "https://openai.com/api/pricing",
+    "anthropic": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+    "google": "https://ai.google.dev/pricing",
+    "deepseek": "https://api-docs.deepseek.com/quick_start/pricing",
+    "zhipu": "https://open.bigmodel.cn/pricing",
+    "aliyun": "https://dashscope.console.aliyun.com",
+    "litellm": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
+    "openrouter": "https://openrouter.ai/api/v1/models",
+}
+
+
+def _source(models, *, source_name=None, fetched_url=None):
+    """Wrap models dict into a source file format with fetched_url."""
+    data = {"status": "success", "models": models}
+    url = fetched_url or (source_name and _SOURCE_URLS.get(source_name))
+    if url:
+        data["fetched_url"] = url
+    return data
+
+
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -49,59 +72,51 @@ def _model(ep_key, pricing, *, currency="USD", base_url="", metadata=None,
 @pytest.fixture
 def sample_openai_data():
     """Sample OpenAI pricing data (source endpoint-keyed format)."""
-    return {
-        "status": "success",
-        "models": {
-            "gpt-4o": _model(
-                "api.openai.com",
-                {"input": 2.50, "output": 10.00},
-                base_url="https://api.openai.com/v1",
-                metadata={"provider": "openai"},
-            ),
-            "gpt-4o-mini": _model(
-                "api.openai.com",
-                {"input": 0.15, "output": 0.60},
-                base_url="https://api.openai.com/v1",
-                metadata={"provider": "openai"},
-            ),
-        },
-    }
+    return _source({
+        "gpt-4o": _model(
+            "api.openai.com",
+            {"input": 2.50, "output": 10.00},
+            base_url="https://api.openai.com/v1",
+            metadata={"provider": "openai"},
+        ),
+        "gpt-4o-mini": _model(
+            "api.openai.com",
+            {"input": 0.15, "output": 0.60},
+            base_url="https://api.openai.com/v1",
+            metadata={"provider": "openai"},
+        ),
+    }, source_name="openai")
 
 
 @pytest.fixture
 def sample_openrouter_data():
     """Sample OpenRouter pricing data (source endpoint-keyed format)."""
-    return {
-        "status": "success",
-        "models": {
-            "openai/gpt-4o": _model(
-                "openrouter.ai",
-                {"input": 2.50, "output": 10.00},
-                base_url="https://openrouter.ai/api/v1",
-                metadata={"provider": "openai"},
-            ),
-            "openai/gpt-4o-mini": _model(
-                "openrouter.ai",
-                {"input": 0.15, "output": 0.60},
-                base_url="https://openrouter.ai/api/v1",
-                metadata={"provider": "openai"},
-            ),
-            "anthropic/claude-3.5-sonnet": _model(
-                "openrouter.ai",
-                {"input": 3.00, "output": 15.00},
-                base_url="https://openrouter.ai/api/v1",
-                metadata={"provider": "anthropic"},
-            ),
-        },
-    }
+    return _source({
+        "openai/gpt-4o": _model(
+            "openrouter.ai",
+            {"input": 2.50, "output": 10.00},
+            base_url="https://openrouter.ai/api/v1",
+            metadata={"provider": "openai"},
+        ),
+        "openai/gpt-4o-mini": _model(
+            "openrouter.ai",
+            {"input": 0.15, "output": 0.60},
+            base_url="https://openrouter.ai/api/v1",
+            metadata={"provider": "openai"},
+        ),
+        "anthropic/claude-3.5-sonnet": _model(
+            "openrouter.ai",
+            {"input": 3.00, "output": 15.00},
+            base_url="https://openrouter.ai/api/v1",
+            metadata={"provider": "anthropic"},
+        ),
+    }, source_name="openrouter")
 
 
 @pytest.fixture
 def sample_chinese_data():
     """Sample Chinese provider data (source endpoint-keyed, CNY)."""
-    return {
-        "status": "success",
-        "models": {
+    return _source({
             "qwen-max": _model(
                 "dashscope.aliyuncs.com",
                 {"input": 40.0, "output": 120.0},
@@ -116,8 +131,7 @@ def sample_chinese_data():
                 base_url="https://open.bigmodel.cn/api/paas/v4",
                 metadata={"provider": "zhipu"},
             ),
-        },
-    }
+        }, source_name="aliyun")
 
 
 class TestPricingMerger:
@@ -223,8 +237,19 @@ class TestPricingMerger:
         with open(sources_dir / "openai.json", "w") as f:
             json.dump(sample_openai_data, f)
 
-        with open(sources_dir / "chinese-all.json", "w") as f:
-            json.dump(sample_chinese_data, f)
+        # Split into per-provider files so each gets correct priority (100)
+        aliyun_data = {"status": "success", "fetched_url": "https://dashscope.console.aliyun.com", "models": {
+            k: v for k, v in sample_chinese_data["models"].items()
+            if k.startswith("qwen")
+        }}
+        zhipu_data = {"status": "success", "fetched_url": "https://open.bigmodel.cn/pricing", "models": {
+            k: v for k, v in sample_chinese_data["models"].items()
+            if k.startswith("glm")
+        }}
+        with open(sources_dir / "aliyun.json", "w") as f:
+            json.dump(aliyun_data, f)
+        with open(sources_dir / "zhipu.json", "w") as f:
+            json.dump(zhipu_data, f)
 
         merger = PricingMerger()
 
@@ -357,17 +382,17 @@ class TestNormalization:
 
     def _merge_single(self, model_data, tmp_path):
         """Helper: merge a single model and return its currency pricing entry."""
-        source = {"status": "success", "models": {"test-model": model_data}}
+        source = {"status": "success", "fetched_url": "https://openai.com/api/pricing", "models": {"gpt-test": model_data}}
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True, exist_ok=True)
-        with open(sources_dir / "test.json", "w") as f:
+        with open(sources_dir / "openai.json", "w") as f:
             json.dump(source, f)
         merger = PricingMerger()
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
              patch.object(config, "data_dir", tmp_path):
             result, _ = merger.merge_all("2024-01-01")
         # Return the model dict (v7.0: model IS the currency map)
-        return result["models"]["test-model"]
+        return result["models"]["gpt-test"]
 
     def test_unit_field_removed(self, tmp_path):
         """unit field in source pricing does not appear in merged output."""
@@ -523,6 +548,7 @@ class TestMinModelsGuard:
         }
         openai_data = {
             "status": "success",
+            "fetched_url": _SOURCE_URLS["openai"],
             "models": {
                 "gpt-4o": _model(
                     "api.openai.com",
@@ -553,20 +579,31 @@ class TestMinModelsGuard:
 
     def test_source_accepted_at_min_models(self, tmp_path):
         """Source with exactly min_models models is accepted."""
-        models = {}
+        or_models = {}
+        google_models = {}
         for i in range(50):
-            models[f"provider/model-{i}"] = _model(
+            model_id = f"gemini-model-{i}"
+            or_models[f"google/{model_id}"] = _model(
                 "openrouter.ai",
                 {"input": 1.0, "output": 2.0},
-                metadata={"provider": "provider"},
+                metadata={"provider": "google"},
             )
-        openrouter_data = {"status": "success", "models": models}
+            # First-party source so models pass admission gate
+            google_models[model_id] = _model(
+                "generativelanguage.googleapis.com",
+                {"input": 1.0, "output": 2.0},
+                metadata={"provider": "google"},
+            )
+        openrouter_data = {"status": "success", "models": or_models}
+        google_data = {"status": "success", "fetched_url": _SOURCE_URLS["google"], "models": google_models}
 
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
 
         with open(sources_dir / "openrouter.json", "w") as f:
             json.dump(openrouter_data, f)
+        with open(sources_dir / "google.json", "w") as f:
+            json.dump(google_data, f)
 
         merger = PricingMerger()
 
@@ -578,12 +615,13 @@ class TestMinModelsGuard:
 
 
 class TestFieldLevelEnrichment:
-    """Lower-priority sources contribute missing batch/cache/tiered pricing."""
+    """Only first-party sources (priority >= 100) may contribute cache/batch/tiered fields."""
 
-    def test_batch_pricing_merged_from_litellm(self, tmp_path):
-        """openai (priority 100) has no batch_pricing; litellm (70) contributes it."""
+    def test_batch_pricing_not_merged_from_litellm(self, tmp_path):
+        """openai (priority 100) has no batch_pricing; litellm (70) cannot contribute it."""
         openai_data = {
             "status": "success",
+            "fetched_url": "https://openai.com/api/pricing",
             "models": {
                 "gpt-4o": _model(
                     "api.openai.com",
@@ -594,6 +632,7 @@ class TestFieldLevelEnrichment:
         }
         litellm_data = {
             "status": "success",
+            "fetched_url": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
             "models": {
                 "gpt-4o": _model(
                     "litellm",
@@ -617,16 +656,16 @@ class TestFieldLevelEnrichment:
              patch.object(config, "min_models_guard", {}):
             result, _ = merger.merge_all("2024-01-01")
 
-        model = result["models"]["gpt-4o"]
-        usd = model["USD"]
+        usd = result["models"]["gpt-4o"]["USD"]
         assert usd["text"]["input"] == pytest.approx(2.50)
-        assert "batch" in usd
-        assert usd["batch"]["input"] == pytest.approx(1.25)
+        # litellm's batch pricing must NOT appear — unverified source
+        assert "batch" not in usd
 
-    def test_tiered_pricing_merged_from_litellm(self, tmp_path):
-        """litellm tiered_pricing is merged into the winner's USD entry."""
+    def test_tiered_pricing_not_merged_from_litellm(self, tmp_path):
+        """litellm tiered_pricing must NOT be merged — unverified source."""
         openai_data = {
             "status": "success",
+            "fetched_url": "https://openai.com/api/pricing",
             "models": {
                 "gpt-4o": _model(
                     "api.openai.com",
@@ -637,6 +676,7 @@ class TestFieldLevelEnrichment:
         }
         litellm_data = {
             "status": "success",
+            "fetched_url": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
             "models": {
                 "gpt-4o": _model(
                     "litellm",
@@ -664,13 +704,14 @@ class TestFieldLevelEnrichment:
             result, _ = merger.merge_all("2024-01-01")
 
         usd = result["models"]["gpt-4o"]["USD"]
-        assert "tiered" in usd
-        assert len(usd["tiered"]) == 2
+        # litellm's tiered pricing must NOT appear — unverified source
+        assert "tiered" not in usd
 
     def test_winner_batch_pricing_not_overwritten(self, tmp_path):
         """When winner already has batch_pricing, lower source cannot overwrite it."""
         openai_data = {
             "status": "success",
+            "fetched_url": "https://openai.com/api/pricing",
             "models": {
                 "gpt-4o": _model(
                     "api.openai.com",
@@ -682,6 +723,7 @@ class TestFieldLevelEnrichment:
         }
         litellm_data = {
             "status": "success",
+            "fetched_url": "https://raw.githubusercontent.com/BerriAI/litellm/main/model_prices_and_context_window.json",
             "models": {
                 "gpt-4o": _model(
                     "litellm",
@@ -709,6 +751,50 @@ class TestFieldLevelEnrichment:
         usd = result["models"]["gpt-4o"]["USD"]
         assert usd["batch"]["input"] == pytest.approx(1.25)
 
+    def test_batch_pricing_merged_from_second_first_party(self, tmp_path):
+        """A second first-party source (priority 100) CAN fill missing batch pricing."""
+        openai_data = {
+            "status": "success",
+            "fetched_url": "https://openai.com/api/pricing",
+            "models": {
+                "gpt-4o": _model(
+                    "api.openai.com",
+                    {"input": 2.50, "output": 10.0},
+                    metadata={"provider": "openai"},
+                ),
+            },
+        }
+        # anthropic source has priority 100 and a fetched_url — first-party
+        second_first_party_data = {
+            "status": "success",
+            "fetched_url": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+            "models": {
+                "gpt-4o": _model(
+                    "api.anthropic.com",
+                    {"input": 2.50, "output": 10.0},
+                    batch_pricing={"input": 1.25, "output": 5.0},
+                ),
+            },
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "openai.json", "w") as f:
+            json.dump(openai_data, f)
+        with open(sources_dir / "anthropic.json", "w") as f:
+            json.dump(second_first_party_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        usd = result["models"]["gpt-4o"]["USD"]
+        # second first-party source (anthropic p100) CAN contribute missing batch
+        assert "batch" in usd
+        assert usd["batch"]["input"] == pytest.approx(1.25)
+
 
 class TestDerivedPricing:
     """
@@ -729,7 +815,7 @@ class TestDerivedPricing:
             cache_pricing=existing_cache,
             batch_pricing=existing_batch,
         )
-        source = {"status": "success", "models": {model_id: model}}
+        source = {"status": "success", "fetched_url": _SOURCE_URLS["zhipu"], "models": {model_id: model}}
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True, exist_ok=True)
         with open(sources_dir / "zhipu.json", "w") as f:
@@ -783,7 +869,7 @@ class TestDerivedPricing:
             currency="USD",
             metadata={"provider": "deepseek"},
         )
-        source = {"status": "success", "models": {"deepseek-chat": model}}
+        source = {"status": "success", "fetched_url": _SOURCE_URLS["deepseek"], "models": {"deepseek-chat": model}}
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True, exist_ok=True)
         with open(sources_dir / "deepseek.json", "w") as f:
@@ -803,6 +889,7 @@ class TestDerivedPricing:
         """
         zhipu_data = {
             "status": "success",
+            "fetched_url": _SOURCE_URLS["zhipu"],
             "models": {
                 "glm-4-plus": _model(
                     "open.bigmodel.cn",
@@ -855,7 +942,7 @@ class TestDerivedPricing:
             {"input": 5.0, "output": 5.0},
             currency="CNY",
         )
-        source = {"status": "success", "models": {"glm-4-plus": model}}
+        source = {"status": "success", "fetched_url": _SOURCE_URLS["zhipu"], "models": {"glm-4-plus": model}}
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True, exist_ok=True)
         with open(sources_dir / "zhipu.json", "w") as f:
@@ -980,3 +1067,270 @@ class TestPricingCompletenessCheck:
         _, warnings = self._merge_two_sources(model_usd, model_cny, tmp_path)
 
         assert not any("batch" in w for w in warnings)
+
+
+class TestAnomalyFilter:
+    """Tests for _filter_anomalous_prices() in merge pipeline."""
+
+    def _merge_with_source(self, model_id, model_data, source_name, tmp_path):
+        """Helper: merge a single model from a named source."""
+        source = {"status": "success", "fetched_url": _SOURCE_URLS.get(source_name, ""), "models": {model_id: model_data}}
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True, exist_ok=True)
+        with open(sources_dir / f"{source_name}.json", "w") as f:
+            json.dump(source, f)
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path):
+            return merger.merge_all("2024-01-01")
+
+    def test_anomalous_price_rejected(self, tmp_path):
+        """Model with $540K/MTok output is filtered out."""
+        model = _model(
+            "api.deepseek.com",
+            {"input": 0.28, "output": 540000.0},
+            metadata={"provider": "deepseek"},
+        )
+        result, _ = self._merge_with_source("deepseek-bad", model, "deepseek", tmp_path)
+        assert "deepseek-bad" not in result["models"]
+
+    def test_negative_price_rejected(self, tmp_path):
+        """Model with negative price (OpenRouter sentinel) is filtered out."""
+        model = _model(
+            "api.deepseek.com",
+            {"input": -1.0, "output": 2.0},
+            metadata={"provider": "deepseek"},
+        )
+        result, _ = self._merge_with_source("deepseek-neg", model, "deepseek", tmp_path)
+        assert "deepseek-neg" not in result["models"]
+
+    def test_zero_price_passes_filter(self, tmp_path):
+        """Free tier model ($0/$0) is not anomalous."""
+        model = _model(
+            "generativelanguage.googleapis.com",
+            {"input": 0.0, "output": 0.0},
+            metadata={"provider": "google"},
+        )
+        result, _ = self._merge_with_source("gemini-free", model, "google", tmp_path)
+        assert "gemini-free" in result["models"]
+
+    def test_threshold_boundary_passes(self, tmp_path):
+        """Price exactly at threshold ($200.00) passes (strict >)."""
+        model = _model(
+            "api.openai.com",
+            {"input": 200.0, "output": 200.0},
+            metadata={"provider": "openai"},
+        )
+        result, _ = self._merge_with_source("gpt-expensive", model, "openai", tmp_path)
+        assert "gpt-expensive" in result["models"]
+
+    def test_image_uses_500_threshold(self, tmp_path):
+        """Image output uses $500 threshold, not $200."""
+        # $400 image output — below $500 threshold, should pass
+        model_ok = _ep(
+            "generativelanguage.googleapis.com",
+            {"text": {"input": 1.0, "output": 2.0}, "image": {"output": 400.0}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("gemini-img-ok", model_ok, "google", tmp_path)
+        assert "gemini-img-ok" in result["models"]
+
+    def test_image_above_threshold_rejected(self, tmp_path):
+        """Image output above $500 threshold is rejected."""
+        model_bad = _ep(
+            "generativelanguage.googleapis.com",
+            {"text": {"input": 1.0, "output": 2.0}, "image": {"output": 600.0}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("gemini-img-bad", model_bad, "google", tmp_path)
+        assert "gemini-img-bad" not in result["models"]
+
+    def test_mixed_modality_anomaly_rejects_whole_model(self, tmp_path):
+        """Normal text + anomalous image → whole model rejected."""
+        model = _ep(
+            "generativelanguage.googleapis.com",
+            {"text": {"input": 1.0, "output": 2.0}, "image": {"output": 999.0}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("gemini-mixed", model, "google", tmp_path)
+        assert "gemini-mixed" not in result["models"]
+
+
+class TestAdmissionGate:
+    """Tests for _apply_admission_gate() in merge pipeline."""
+
+    def test_aggregator_only_rejected(self, tmp_path):
+        """Model with only litellm source (priority 70) is excluded."""
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "some-obscure-model": _model(
+                    "litellm",
+                    {"input": 1.0, "output": 2.0},
+                    metadata={"provider": "unknown"},
+                ),
+            },
+        }
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        assert "some-obscure-model" not in result["models"]
+
+    def test_first_party_passes(self, tmp_path):
+        """Model with google source (priority 100) is included."""
+        google_data = {
+            "status": "success",
+            "fetched_url": _SOURCE_URLS["google"],
+            "models": {
+                "gemini-2.5-pro": _model(
+                    "generativelanguage.googleapis.com",
+                    {"input": 1.25, "output": 10.0},
+                    metadata={"provider": "google"},
+                ),
+            },
+        }
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "google.json", "w") as f:
+            json.dump(google_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path):
+            result, _ = merger.merge_all("2024-01-01")
+
+        assert "gemini-2.5-pro" in result["models"]
+
+    def test_manual_overrides_passes(self, tmp_path):
+        """Model from manual_overrides (priority 200) is included."""
+        overrides = {
+            "models": {
+                "deepseek-chat": {
+                    "USD": {
+                        "text": {"input": 0.28, "output": 0.42},
+                    },
+                },
+            }
+        }
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+
+        with open(tmp_path / "manual_overrides.json", "w") as f:
+            json.dump(overrides, f)
+        # Need at least one source file for sources_dir to exist
+        with open(sources_dir / "dummy.json", "w") as f:
+            json.dump({"status": "error"}, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path):
+            result, _ = merger.merge_all("2024-01-01")
+
+        assert "deepseek-chat" in result["models"]
+
+    def test_multi_aggregator_below_threshold_rejected(self, tmp_path):
+        """litellm + openrouter both present but no first-party → rejected."""
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "some-model": _model(
+                    "litellm",
+                    {"input": 1.0, "output": 2.0},
+                ),
+            },
+        }
+        openrouter_data = {
+            "status": "success",
+            "models": {
+                "unknown/some-model": _model(
+                    "openrouter.ai",
+                    {"input": 1.0, "output": 2.0},
+                ),
+            },
+        }
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+        with open(sources_dir / "openrouter.json", "w") as f:
+            json.dump(openrouter_data, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        assert "some-model" not in result["models"]
+
+    def test_full_pipeline_integration(self, tmp_path):
+        """End-to-end: anomalous model filtered, aggregator-only excluded, first-party kept."""
+        # First-party model — should survive
+        google_data = {
+            "status": "success",
+            "fetched_url": _SOURCE_URLS["google"],
+            "models": {
+                "gemini-2.5-flash": _model(
+                    "generativelanguage.googleapis.com",
+                    {"input": 0.15, "output": 0.60},
+                ),
+            },
+        }
+        # Aggregator-only model — should be excluded by gate
+        litellm_data = {
+            "status": "success",
+            "models": {
+                "random-model": _model(
+                    "litellm",
+                    {"input": 1.0, "output": 2.0},
+                ),
+            },
+        }
+        # Manual override with anomalous price — should be excluded by anomaly filter
+        overrides = {
+            "models": {
+                "deepseek-bad": {
+                    "USD": {
+                        "text": {"input": 999999.0, "output": 0.0},
+                    },
+                },
+            }
+        }
+
+        sources_dir = tmp_path / "sources" / "2024-01-01"
+        sources_dir.mkdir(parents=True)
+        with open(sources_dir / "google.json", "w") as f:
+            json.dump(google_data, f)
+        with open(sources_dir / "litellm.json", "w") as f:
+            json.dump(litellm_data, f)
+        with open(tmp_path / "manual_overrides.json", "w") as f:
+            json.dump(overrides, f)
+
+        merger = PricingMerger()
+        with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
+             patch.object(config, "data_dir", tmp_path), \
+             patch.object(config, "repo_root", tmp_path), \
+             patch.object(config, "min_models_guard", {}):
+            result, _ = merger.merge_all("2024-01-01")
+
+        # Only gemini-2.5-flash survives
+        assert "gemini-2.5-flash" in result["models"]
+        assert "random-model" not in result["models"]
+        assert "deepseek-bad" not in result["models"]
+
+        # Validation report was generated
+        report_path = tmp_path / "validation_report.json"
+        assert report_path.exists()
+        with open(report_path) as f:
+            report = json.load(f)
+        assert report["summary"]["total_included"] == 1
+        assert report["summary"]["excluded_anomalous"] >= 1
+        assert report["summary"]["excluded_unverified"] >= 1

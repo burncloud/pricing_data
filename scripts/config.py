@@ -62,6 +62,20 @@ MODALITY_AUTHORITATIVE_SOURCES: frozenset = frozenset({
     "manual_overrides",
 })
 
+# Anomaly detection thresholds ($/MTok). Prices strictly above these are rejected.
+# Most expensive legitimate model today: claude-opus-4 at $75/MTok output.
+# $200 gives ~2.7x safety margin for text. Image output can be higher.
+PRICE_ANOMALY_THRESHOLDS: Dict[str, Dict[str, float]] = {
+    "text":  {"input": 200.0, "output": 200.0},
+    "audio": {"input": 200.0, "output": 200.0},
+    "image": {"input": 200.0, "output": 500.0},
+    "video": {"input": 200.0, "output": 200.0},
+}
+
+# Minimum source priority for a model to be included in pricing.json.
+# Sources at or above this threshold are considered "first-party verified".
+FIRST_PARTY_PRIORITY_THRESHOLD: int = 100
+
 
 @dataclass
 class ProviderPricingRules:

@@ -117,6 +117,7 @@ class ZhipuFetcher(BaseFetcher):
             fetched_at=datetime.now(timezone.utc).isoformat(),
             models=models,
             models_count=len(models),
+            fetched_url=self.fetcher_config.url,
         )
 
     # ------------------------------------------------------------------
