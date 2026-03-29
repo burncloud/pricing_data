@@ -71,16 +71,15 @@ def pick_display_currency(model: Dict) -> Tuple[str, Dict]:
     """
     Return (currency_code, currency_entry) for the best currency to display.
 
-    Priority: USD > CNY > first available
+    Priority: USD > CNY > first available. Model is the currency map directly.
     """
-    pricing = model.get("pricing", {})
-    if not pricing:
+    if not model:
         return "", {}
     for code in ("USD", "CNY"):
-        if code in pricing:
-            return code, pricing[code]
-    code = next(iter(pricing))
-    return code, pricing[code]
+        if code in model:
+            return code, model[code]
+    code = next(iter(model))
+    return code, model[code]
 
 
 def fmt_price(price: Optional[float], symbol: str = "$") -> str:
@@ -117,7 +116,7 @@ def _provider_sort_key(prov: str) -> tuple:
 def _model_sort_key(item: Tuple[str, Dict]) -> float:
     _, m = item
     _, entry = pick_display_currency(m)
-    return -(entry.get("text", {}).get("input_price") or 0.0)
+    return -(entry.get("text", {}).get("input") or 0.0)
 
 
 def render(data: Dict) -> str:
@@ -177,17 +176,17 @@ def render(data: Dict) -> str:
         if not entry:
             continue
         text_p = entry.get("text", {})
-        if not text_p.get("input_price"):
+        if not text_p.get("input"):
             continue
         sym = CURRENCY_SYMBOL.get(currency, currency)
         provider = infer_provider(mid)
         display_prov = PROVIDER_DISPLAY.get(provider, provider.replace("_", " ").title())
-        inp = fmt_price(text_p.get("input_price"), sym)
-        out = fmt_price(text_p.get("output_price"), sym)
-        cp = entry.get("cache_pricing", {})
-        bp = entry.get("batch_pricing", {})
-        cache = fmt_price(cp.get("cache_read_input_price"), sym) if cp else "—"
-        batch = fmt_price(bp.get("input_price"), sym) if bp else "—"
+        inp = fmt_price(text_p.get("input"), sym)
+        out = fmt_price(text_p.get("output"), sym)
+        cp = entry.get("cache", {})
+        bp = entry.get("batch", {})
+        cache = fmt_price(cp.get("read_input"), sym) if cp else "—"
+        batch = fmt_price(bp.get("input"), sym) if bp else "—"
         qr_rows.append(f"| `{mid}` | {display_prov} | {inp} | {out} | {cache} | {batch} | {currency} |")
 
     if qr_rows:
@@ -233,11 +232,11 @@ def render(data: Dict) -> str:
 
         # Detect which optional columns exist in this provider's models
         has_cache = any(
-            pick_display_currency(m)[1].get("cache_pricing")
+            pick_display_currency(m)[1].get("cache")
             for _, m in models_list
         )
         has_batch = any(
-            pick_display_currency(m)[1].get("batch_pricing")
+            pick_display_currency(m)[1].get("batch")
             for _, m in models_list
         )
         # Table header
@@ -262,19 +261,19 @@ def render(data: Dict) -> str:
             text_p = entry.get("text", {})
             sym = CURRENCY_SYMBOL.get(currency, currency)
 
-            inp = fmt_price(text_p.get("input_price"), sym)
-            out = fmt_price(text_p.get("output_price"), sym)
+            inp = fmt_price(text_p.get("input"), sym)
+            out = fmt_price(text_p.get("output"), sym)
 
             row_cols = [f"| `{mid}`", inp, out]
 
             if has_cache:
-                cp = entry.get("cache_pricing", {})
-                row_cols.append(fmt_price(cp.get("cache_read_input_price"), sym))
+                cp = entry.get("cache", {})
+                row_cols.append(fmt_price(cp.get("read_input"), sym))
 
             if has_batch:
-                bp = entry.get("batch_pricing", {})
-                row_cols.append(fmt_price(bp.get("input_price"), sym))
-                row_cols.append(fmt_price(bp.get("output_price"), sym))
+                bp = entry.get("batch", {})
+                row_cols.append(fmt_price(bp.get("input"), sym))
+                row_cols.append(fmt_price(bp.get("output"), sym))
 
             row_cols.append(f"{currency} |")
             lines.append(" | ".join(row_cols))

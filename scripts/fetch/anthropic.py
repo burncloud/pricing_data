@@ -177,7 +177,7 @@ class AnthropicFetcher(BaseFetcher):
                 "family": self._extract_family(model_id),
             }
             endpoint_entry = self._build_endpoint_entry(
-                {"input_price": input_price, "output_price": output_price}
+                {"input": input_price, "output": output_price}
             )
             models[model_id] = self._build_model_entry(endpoint_entry, metadata)
 

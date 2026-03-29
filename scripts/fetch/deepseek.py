@@ -137,10 +137,10 @@ class DeepSeekFetcher(BaseFetcher):
                 "family": self._extract_family(model_id),
             }
             cache_pricing = (
-                {"cache_read_input_price": cache_hit} if cache_hit is not None else None
+                {"read_input": cache_hit} if cache_hit is not None else None
             )
             endpoint_entry = self._build_endpoint_entry(
-                {"input_price": cache_miss, "output_price": output},
+                {"input": cache_miss, "output": output},
                 cache_pricing=cache_pricing,
             )
             models[model_id] = self._build_model_entry(endpoint_entry, metadata)

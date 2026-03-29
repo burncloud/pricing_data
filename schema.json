@@ -2,14 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://pricing.burn.cloud/schema.json",
   "title": "LLM Pricing Data Schema",
-  "description": "Schema for LLM API pricing data (v6.0 — pricing-only, no metadata)",
+  "description": "Schema for LLM API pricing data (v7.0 — pricing-only, simplified field names)",
   "type": "object",
   "required": ["version", "updated_at", "source", "models"],
   "properties": {
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+$",
-      "description": "Schema version (e.g., '6.0')"
+      "description": "Schema version (e.g., '7.0')"
     },
     "updated_at": {
       "type": "string",
@@ -23,28 +23,21 @@
     "models": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/Model"
+        "$ref": "#/definitions/ModelPricing"
       }
     }
   },
   "definitions": {
-    "Model": {
+    "ModelPricing": {
       "type": "object",
-      "description": "A single LLM model with pricing per currency. No metadata — provider is inferred from model_id prefix by consumers.",
-      "required": ["pricing"],
-      "properties": {
-        "pricing": {
-          "type": "object",
-          "description": "Pricing keyed by currency code (e.g. USD, CNY).",
-          "additionalProperties": {
-            "$ref": "#/definitions/CurrencyPricing"
-          }
-        }
+      "description": "Pricing keyed by currency code (e.g. USD, CNY). No metadata — provider is inferred from model_id prefix by consumers.",
+      "additionalProperties": {
+        "$ref": "#/definitions/CurrencyPricing"
       }
     },
     "CurrencyPricing": {
       "type": "object",
-      "description": "Pricing for a model in a specific currency. Each modality has its own namespace — fields are never reused across modalities.",
+      "description": "Pricing for a model in a specific currency. Each modality has its own namespace.",
       "properties": {
         "text": {
           "$ref": "#/definitions/ModalityPricing",
@@ -56,19 +49,19 @@
         },
         "image": {
           "$ref": "#/definitions/ImageModalityPricing",
-          "description": "Image pricing. input_price is $/1M tokens (image input tokens). output_price is $/image (flat per-image fee for generation models)."
+          "description": "Image pricing. input is $/1M tokens (image input tokens). output is $/image (flat per-image fee for generation models)."
         },
         "video": {
           "$ref": "#/definitions/ModalityPricing",
           "description": "Video token pricing ($/1M tokens). Present for video generation and understanding models."
         },
-        "cache_pricing": {
+        "cache": {
           "$ref": "#/definitions/CachePricing"
         },
-        "batch_pricing": {
+        "batch": {
           "$ref": "#/definitions/BatchPricing"
         },
-        "tiered_pricing": {
+        "tiered": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/PricingTier"
@@ -81,12 +74,12 @@
       "type": "object",
       "description": "Pricing for a single modality (text, audio, or video). Both fields are $/1M tokens.",
       "properties": {
-        "input_price": {
+        "input": {
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M input tokens"
         },
-        "output_price": {
+        "output": {
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M output tokens"
@@ -95,14 +88,14 @@
     },
     "ImageModalityPricing": {
       "type": "object",
-      "description": "Pricing for image modality. Units differ: input_price is $/1M tokens (image input); output_price is $/image (flat fee per generated image).",
+      "description": "Pricing for image modality. Units differ: input is $/1M tokens (image input); output is $/image (flat fee per generated image).",
       "properties": {
-        "input_price": {
+        "input": {
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M image input tokens"
         },
-        "output_price": {
+        "output": {
           "type": "number",
           "minimum": 0,
           "description": "Flat fee per generated output image (NOT per-token)"
@@ -112,12 +105,12 @@
     "CachePricing": {
       "type": "object",
       "properties": {
-        "cache_read_input_price": {
+        "read_input": {
           "type": "number",
           "minimum": 0,
           "description": "Price for reading from cache per 1M tokens"
         },
-        "cache_creation_input_price": {
+        "creation_input": {
           "type": ["number", "null"],
           "minimum": 0,
           "description": "Price for creating cache entry per 1M tokens"
@@ -126,14 +119,14 @@
     },
     "BatchPricing": {
       "type": "object",
-      "required": ["input_price", "output_price"],
+      "required": ["input", "output"],
       "properties": {
-        "input_price": {
+        "input": {
           "type": "number",
           "minimum": 0,
           "description": "Batch API input price per 1M tokens"
         },
-        "output_price": {
+        "output": {
           "type": "number",
           "minimum": 0,
           "description": "Batch API output price per 1M tokens"
@@ -142,7 +135,7 @@
     },
     "PricingTier": {
       "type": "object",
-      "required": ["tier_start", "input_price", "output_price"],
+      "required": ["tier_start", "input", "output"],
       "properties": {
         "tier_start": {
           "type": "integer",
@@ -154,12 +147,12 @@
           "minimum": 1,
           "description": "Exclusive end of token range (omitted for the last/open-ended tier)"
         },
-        "input_price": {
+        "input": {
           "type": "number",
           "minimum": 0,
           "description": "Input price per 1M tokens for this tier"
         },
-        "output_price": {
+        "output": {
           "type": "number",
           "minimum": 0,
           "description": "Output price per 1M tokens for this tier"

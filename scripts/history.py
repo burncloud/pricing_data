@@ -206,16 +206,14 @@ class HistoryManager:
             if snapshot and "models" in snapshot:
                 model_data = snapshot["models"].get(model_id)
                 if model_data:
-                    pricing = model_data.get("pricing", {})
-                    # Get USD pricing if available
-                    usd_pricing = pricing.get("USD", {})
+                    # v7.0: model_data IS the currency map
+                    usd_pricing = model_data.get("USD", {})
                     if usd_pricing:
-                        # v5.0: prices under "text"; fall back to flat for old snapshots
-                        usd_text = usd_pricing.get("text", usd_pricing)
+                        usd_text = usd_pricing.get("text", {})
                         history.append({
                             "date": date_str,
-                            "input_price": usd_text.get("input_price"),
-                            "output_price": usd_text.get("output_price"),
+                            "input": usd_text.get("input"),
+                            "output": usd_text.get("output"),
                         })
 
         return history

@@ -20,18 +20,18 @@ def sample_pricing_data():
         "source": "test",
         "models": {
             "gpt-4o": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 2.50,
-                        "output_price": 10.00,
+                "USD": {
+                    "text": {
+                        "input": 2.50,
+                        "output": 10.00,
                     }
                 }
             },
             "claude-3.5-sonnet": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 3.00,
-                        "output_price": 15.00,
+                "USD": {
+                    "text": {
+                        "input": 3.00,
+                        "output": 15.00,
                     }
                 }
             },
@@ -213,7 +213,7 @@ class TestHistoryManager:
         for i in range(5):
             day = date.today() - timedelta(days=i)
             data = sample_pricing_data.copy()
-            data["models"]["gpt-4o"]["pricing"]["USD"]["input_price"] = 2.50 + (i * 0.1)
+            data["models"]["gpt-4o"]["USD"]["text"]["input"] = 2.50 + (i * 0.1)
 
             snapshot_path = history_manager.history_dir / f"{day.isoformat()}.json"
             with open(snapshot_path, "w") as f:
@@ -225,7 +225,7 @@ class TestHistoryManager:
         # Check prices are present
         for entry in history:
             assert "date" in entry
-            assert "input_price" in entry
+            assert "input" in entry
 
     def test_write_gaps_file(self, history_manager, sample_pricing_data):
         """Test writing gaps file."""

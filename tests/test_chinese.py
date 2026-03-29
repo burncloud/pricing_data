@@ -154,36 +154,36 @@ class TestParsePageText:
         """GLM-5: input=4 CNY/MTok, output=18 CNY/MTok (already per-million on page)."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
         pricing = models["glm-5"]["endpoints"][self._EP]["pricing"]
-        assert pricing["input_price"] == pytest.approx(4.0)
-        assert pricing["output_price"] == pytest.approx(18.0)
+        assert pricing["input"] == pytest.approx(4.0)
+        assert pricing["output"] == pytest.approx(18.0)
 
     def test_flagship_tiered_uses_first_tier(self, fetcher):
         """GLM-5-Turbo has tiered pricing — first tier [0,32) is used."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
         pricing = models["glm-5-turbo"]["endpoints"][self._EP]["pricing"]
-        assert pricing["input_price"] == pytest.approx(5.0)
-        assert pricing["output_price"] == pytest.approx(22.0)
+        assert pricing["input"] == pytest.approx(5.0)
+        assert pricing["output"] == pytest.approx(22.0)
 
     def test_flagship_free_model(self, fetcher):
         """GLM-4.7-Flash is free — both prices are 0.0."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
         pricing = models["glm-4.7-flash"]["endpoints"][self._EP]["pricing"]
-        assert pricing["input_price"] == 0.0
-        assert pricing["output_price"] == 0.0
+        assert pricing["input"] == 0.0
+        assert pricing["output"] == 0.0
 
     def test_standard_price_per_million(self, fetcher):
         """GLM-4-Plus: 5 元 / 百万Tokens stored as 5.0 (already per-million)."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
         pricing = models["glm-4-plus"]["endpoints"][self._EP]["pricing"]
-        assert pricing["input_price"] == pytest.approx(5.0)
-        assert pricing["output_price"] == pytest.approx(5.0)
+        assert pricing["input"] == pytest.approx(5.0)
+        assert pricing["output"] == pytest.approx(5.0)
 
     def test_standard_free_model(self, fetcher):
         """GLM-4-Flash-250414 is free in standard section."""
         models = fetcher._parse_page_text(FULL_SNIPPET)
         pricing = models["glm-4-flash-250414"]["endpoints"][self._EP]["pricing"]
-        assert pricing["input_price"] == 0.0
-        assert pricing["output_price"] == 0.0
+        assert pricing["input"] == 0.0
+        assert pricing["output"] == 0.0
 
     def test_model_ids_lowercased(self, fetcher):
         """All model IDs must be lowercase."""
@@ -215,7 +215,7 @@ class TestParsePageText:
         models = fetcher._parse_page_text(text)
         assert len([k for k in models if "glm-5" in k]) >= 1
         # Flagship section prices win (4 not 5)
-        assert models["glm-5"]["endpoints"]["open.bigmodel.cn"]["pricing"]["input_price"] == pytest.approx(4.0)
+        assert models["glm-5"]["endpoints"]["open.bigmodel.cn"]["pricing"]["input"] == pytest.approx(4.0)
 
     def test_non_glm_lines_ignored(self, fetcher):
         """Non-GLM model names (qwen-max etc.) are not extracted."""
@@ -228,8 +228,8 @@ class TestParsePageText:
         models = fetcher._parse_page_text(FULL_SNIPPET)
         for model_id, data in models.items():
             ep = data["endpoints"].get("open.bigmodel.cn", {})
-            assert "cache_pricing" not in ep, f"{model_id}: cache_pricing should not be in fetch output"
-            assert "batch_pricing" not in ep, f"{model_id}: batch_pricing should not be in fetch output"
+            assert "cache" not in ep, f"{model_id}: cache_pricing should not be in fetch output"
+            assert "batch" not in ep, f"{model_id}: batch_pricing should not be in fetch output"
 
     def test_empty_page_returns_empty_dict(self, fetcher):
         """Page with no recognizable content returns empty dict."""

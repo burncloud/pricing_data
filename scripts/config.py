@@ -351,7 +351,7 @@ class Config:
             supported = rules.cache_supported_models
             if supported is None or model_id in supported:
                 cache_pricing = {
-                    "cache_read_input_price": round(input_price * rules.cache_read_ratio, 6)
+                    "read_input": round(input_price * rules.cache_read_ratio, 6)
                 }
 
         batch_pricing = None
@@ -359,8 +359,8 @@ class Config:
             supported = rules.batch_supported_models
             if supported is None or model_id in supported:
                 batch_pricing = {
-                    "input_price": round(input_price * rules.batch_discount, 6),
-                    "output_price": round(output_price * rules.batch_discount, 6),
+                    "input": round(input_price * rules.batch_discount, 6),
+                    "output": round(output_price * rules.batch_discount, 6),
                 }
 
         return cache_pricing, batch_pricing

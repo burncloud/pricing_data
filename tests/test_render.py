@@ -65,22 +65,19 @@ class TestFmtContext:
 # ---------------------------------------------------------------------------
 
 class TestPickDisplayCurrency:
-    def _model(self, pricing_dict):
-        return {"pricing": pricing_dict}
-
     def test_prefers_usd(self):
-        m = self._model({"USD": {"text": {"input_price": 2.5}}, "CNY": {"text": {"input_price": 18.0}}})
+        m = {"USD": {"text": {"input": 2.5}}, "CNY": {"text": {"input": 18.0}}}
         code, entry = pick_display_currency(m)
         assert code == "USD"
 
     def test_falls_back_to_cny(self):
-        m = self._model({"CNY": {"text": {"input_price": 18.0}}})
+        m = {"CNY": {"text": {"input": 18.0}}}
         code, entry = pick_display_currency(m)
         assert code == "CNY"
-        assert entry["text"]["input_price"] == pytest.approx(18.0)
+        assert entry["text"]["input"] == pytest.approx(18.0)
 
     def test_empty_pricing_returns_empty(self):
-        m = {"pricing": {}, "metadata": {}}
+        m = {}
         code, entry = pick_display_currency(m)
         assert code == ""
         assert entry == {}
@@ -99,14 +96,13 @@ def _v5_model(provider, currency, input_price, output_price, *,
     the model entry itself stores no provider. Pass a model_id starting with the
     right prefix when calling render() so infer_provider() groups correctly.
     """
-    text = {"input_price": input_price, "output_price": output_price}
+    text = {"input": input_price, "output": output_price}
     entry = {"text": text}
     if cache_read is not None:
-        entry["cache_pricing"] = {"cache_read_input_price": cache_read}
+        entry["cache"] = {"read_input": cache_read}
     if batch_in is not None:
-        entry["batch_pricing"] = {"input_price": batch_in, "output_price": batch_out or 0.0}
-    pricing = {currency: entry}
-    return {"pricing": pricing}
+        entry["batch"] = {"input": batch_in, "output": batch_out or 0.0}
+    return {currency: entry}
 
 
 def _make_data(models: dict) -> dict:
@@ -232,12 +228,12 @@ class TestRender:
         assert "Context" not in md
 
     def test_multimodal_audio_not_in_text_columns(self):
-        """TTS model with audio.output_price shows no text output price."""
+        """TTS model with audio.output shows no text output price."""
         model = {
-            "pricing": {"USD": {
-                "text": {"input_price": 0.5},
-                "audio": {"output_price": 10.0},
-            }},
+            "USD": {
+                "text": {"input": 0.5},
+                "audio": {"output": 10.0},
+            },
         }
         data = _make_data({"gemini-tts": model})
         md = render(data)

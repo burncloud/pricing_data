@@ -109,8 +109,8 @@ def sample_pricing_json():
             "gpt-4o": {
                 "pricing": {
                     "USD": {
-                        "input_price": 2.50,
-                        "output_price": 10.00,
+                        "input": 2.50,
+                        "output": 10.00,
                         "unit": "per_million_tokens",
                         "source": "openai",
                     }
@@ -126,8 +126,8 @@ def sample_pricing_json():
             "claude-3.5-sonnet": {
                 "pricing": {
                     "USD": {
-                        "input_price": 3.00,
-                        "output_price": 15.00,
+                        "input": 3.00,
+                        "output": 15.00,
                         "unit": "per_million_tokens",
                         "source": "anthropic",
                     }
@@ -143,8 +143,8 @@ def sample_pricing_json():
             "qwen-max": {
                 "pricing": {
                     "CNY": {
-                        "input_price": 0.04,
-                        "output_price": 0.12,
+                        "input": 0.04,
+                        "output": 0.12,
                         "unit": "per_thousand_tokens",
                         "source": "aliyun",
                     }
@@ -170,8 +170,8 @@ def sample_sources():
                 "gpt-4o": {
                     "pricing": {
                         "USD": {
-                            "input_price": 2.50,
-                            "output_price": 10.00,
+                            "input": 2.50,
+                            "output": 10.00,
                             "unit": "per_million_tokens",
                         }
                     },
@@ -180,8 +180,8 @@ def sample_sources():
                 "gpt-4o-mini": {
                     "pricing": {
                         "USD": {
-                            "input_price": 0.15,
-                            "output_price": 0.60,
+                            "input": 0.15,
+                            "output": 0.60,
                             "unit": "per_million_tokens",
                         }
                     },
@@ -197,8 +197,8 @@ def sample_sources():
                 "openai/gpt-4o": {
                     "pricing": {
                         "USD": {
-                            "input_price": 2.50,
-                            "output_price": 10.00,
+                            "input": 2.50,
+                            "output": 10.00,
                             "unit": "per_million_tokens",
                         }
                     },
@@ -207,8 +207,8 @@ def sample_sources():
                 "anthropic/claude-3.5-sonnet": {
                     "pricing": {
                         "USD": {
-                            "input_price": 3.00,
-                            "output_price": 15.00,
+                            "input": 3.00,
+                            "output": 15.00,
                             "unit": "per_million_tokens",
                         }
                     },

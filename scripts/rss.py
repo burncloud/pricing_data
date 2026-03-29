@@ -166,8 +166,8 @@ class RSSGenerator:
             SubElement(item, "pubDate").text = self._format_rfc822(date_str)
 
             # Price info
-            input_price = entry.get("input_price", "N/A")
-            output_price = entry.get("output_price", "N/A")
+            input_price = entry.get("input", "N/A")
+            output_price = entry.get("output", "N/A")
             SubElement(item, "description").text = (
                 f"Input: ${input_price}/M tokens, Output: ${output_price}/M tokens"
             )
@@ -308,12 +308,11 @@ def main() -> int:
 
             if prev_model:
                 # Compare prices
-                curr_pricing = model_data.get("pricing", {}).get("USD", {})
-                prev_pricing = prev_model.get("pricing", {}).get("USD", {})
+                curr_pricing = model_data.get("USD", {})
+                prev_pricing = prev_model.get("USD", {})
 
-                # v5.0: prices live under "text"; fall back to flat for old snapshots
-                curr_input = curr_pricing.get("text", curr_pricing).get("input_price")
-                prev_input = prev_pricing.get("text", prev_pricing).get("input_price")
+                curr_input = curr_pricing.get("text", {}).get("input")
+                prev_input = prev_pricing.get("text", {}).get("input")
 
                 if curr_input and prev_input and curr_input != prev_input:
                     pct = ((curr_input - prev_input) / prev_input) * 100

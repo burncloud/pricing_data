@@ -178,8 +178,8 @@ class OpenRouterFetcher(BaseFetcher):
                 return {}
 
             return {
-                "input_price": round(input_price, 6),
-                "output_price": round(output_price, 6),
+                "input": round(input_price, 6),
+                "output": round(output_price, 6),
             }
         except (ValueError, TypeError) as e:
             logger.debug(f"Skipping {model_id}: invalid price value — {e}")
@@ -195,8 +195,8 @@ class OpenRouterFetcher(BaseFetcher):
 
         try:
             return {
-                "cache_read_input_price": round(float(cache_read or 0) * self.PRICE_MULTIPLIER, 6),
-                "cache_creation_input_price": round(float(cache_write or 0) * self.PRICE_MULTIPLIER, 6),
+                "read_input": round(float(cache_read or 0) * self.PRICE_MULTIPLIER, 6),
+                "creation_input": round(float(cache_write or 0) * self.PRICE_MULTIPLIER, 6),
             }
         except (ValueError, TypeError):
             return {}

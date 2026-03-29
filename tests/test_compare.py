@@ -21,26 +21,26 @@ def current_pricing():
         "source": "test",
         "models": {
             "gpt-4o": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 2.50,  # Increased from 2.00
-                        "output_price": 10.00,
+                "USD": {
+                    "text": {
+                        "input": 2.50,  # Increased from 2.00
+                        "output": 10.00,
                     }
                 }
             },
             "claude-3.5-sonnet": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 3.00,
-                        "output_price": 15.00,  # Decreased from 20.00
+                "USD": {
+                    "text": {
+                        "input": 3.00,
+                        "output": 15.00,  # Decreased from 20.00
                     }
                 }
             },
             "new-model": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 1.00,
-                        "output_price": 2.00,
+                "USD": {
+                    "text": {
+                        "input": 1.00,
+                        "output": 2.00,
                     }
                 }
             },
@@ -57,26 +57,26 @@ def previous_pricing():
         "source": "test",
         "models": {
             "gpt-4o": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 2.00,
-                        "output_price": 10.00,
+                "USD": {
+                    "text": {
+                        "input": 2.00,
+                        "output": 10.00,
                     }
                 }
             },
             "claude-3.5-sonnet": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 3.00,
-                        "output_price": 20.00,
+                "USD": {
+                    "text": {
+                        "input": 3.00,
+                        "output": 20.00,
                     }
                 }
             },
             "removed-model": {
-                "pricing": {
-                    "USD": {
-                        "input_price": 5.00,
-                        "output_price": 10.00,
+                "USD": {
+                    "text": {
+                        "input": 5.00,
+                        "output": 10.00,
                     }
                 }
             },
@@ -238,10 +238,10 @@ class TestPriceComparator:
         current = {
             "models": {
                 "test-model": {
-                    "pricing": {
-                        "USD": {
-                            "input_price": 10.00,  # 0.5% increase from 9.95
-                            "output_price": 20.00,
+                    "USD": {
+                        "text": {
+                            "input": 10.00,  # 0.5% increase from 9.95
+                            "output": 20.00,
                         }
                     }
                 }
@@ -251,10 +251,10 @@ class TestPriceComparator:
         previous = {
             "models": {
                 "test-model": {
-                    "pricing": {
-                        "USD": {
-                            "input_price": 9.95,
-                            "output_price": 20.00,
+                    "USD": {
+                        "text": {
+                            "input": 9.95,
+                            "output": 20.00,
                         }
                     }
                 }
@@ -274,10 +274,10 @@ class TestPriceComparator:
             "openai": {
                 "models": {
                     "gpt-4o": {
-                        "pricing": {
-                            "USD": {
-                                "input_price": 2.50,
-                                "output_price": 10.00,
+                        "USD": {
+                            "text": {
+                                "input": 2.50,
+                                "output": 10.00,
                             }
                         }
                     }
@@ -286,10 +286,10 @@ class TestPriceComparator:
             "openrouter": {
                 "models": {
                     "gpt-4o": {
-                        "pricing": {
-                            "USD": {
-                                "input_price": 4.00,  # 60% higher
-                                "output_price": 10.00,
+                        "USD": {
+                            "text": {
+                                "input": 4.00,  # 60% higher
+                                "output": 10.00,
                             }
                         }
                     }
@@ -345,14 +345,16 @@ class TestMultiCurrencyComparison:
         current = {
             "models": {
                 "qwen-max": {
-                    "pricing": {
-                        "CNY": {
-                            "input_price": 0.05,  # Increased
-                            "output_price": 0.12,
-                        },
-                        "USD": {
-                            "input_price": 0.007,
-                            "output_price": 0.017,
+                    "CNY": {
+                        "text": {
+                            "input": 0.05,  # Increased
+                            "output": 0.12,
+                        }
+                    },
+                    "USD": {
+                        "text": {
+                            "input": 0.007,
+                            "output": 0.017,
                         }
                     }
                 }
@@ -362,14 +364,16 @@ class TestMultiCurrencyComparison:
         previous = {
             "models": {
                 "qwen-max": {
-                    "pricing": {
-                        "CNY": {
-                            "input_price": 0.04,
-                            "output_price": 0.12,
-                        },
-                        "USD": {
-                            "input_price": 0.007,
-                            "output_price": 0.017,
+                    "CNY": {
+                        "text": {
+                            "input": 0.04,
+                            "output": 0.12,
+                        }
+                    },
+                    "USD": {
+                        "text": {
+                            "input": 0.007,
+                            "output": 0.017,
                         }
                     }
                 }

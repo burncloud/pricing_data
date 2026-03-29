@@ -1,20 +1,18 @@
 """
 Merge pricing data from multiple sources into pricing.json.
 
-Output format: v6.0 — pricing-only, no metadata.
+Output format: v7.0 — pricing-only, no metadata, simplified field names.
   pricing.json → model → {
-    "pricing": {
-      "USD": {
-        "text": { "input_price": ..., "output_price": ... },
-        "audio": { "input_price": ..., "output_price": ... },   # optional
-        "image": { "input_price": ..., "output_price": ... },   # optional
-        "video": { "input_price": ..., "output_price": ... },   # optional
-        "cache_pricing": { ... },   # optional, at currency level
-        "batch_pricing":  { ... },  # optional, at currency level
-        "tiered_pricing": [ ... ],  # optional, at currency level
-      },
-      "CNY": { ... }
-    }
+    "USD": {
+      "text": { "input": ..., "output": ... },
+      "audio": { "input": ..., "output": ... },   # optional
+      "image": { "input": ..., "output": ... },   # optional
+      "video": { "input": ..., "output": ... },   # optional
+      "cache": { ... },   # optional, at currency level
+      "batch":  { ... },  # optional, at currency level
+      "tiered": [ ... ],  # optional, at currency level
+    },
+    "CNY": { ... }
   }
 
 Provider is inferred from model_id prefix by consumers (see infer_provider() in config.py).
@@ -56,40 +54,60 @@ def _flat_to_nested(pricing: Dict[str, Any], source_name: str) -> Dict[str, Any]
     """
     Convert flat pricing dict (from fetchers) to v5.0 nested modality.
 
-    Flat: { "input_price": x, "output_price": y, "image_output_price": z? }
-    Nested: { "text": {"input_price": x, "output_price": y}, "image": {"output_price": z} }
+    Flat: { "input": x, "output": y, "image_output": z? }
+    Nested: { "text": {"input": x, "output": y}, "image": {"output": z} }
 
     image.* and audio.* fields are only populated when source is authoritative.
     """
     result: Dict[str, Any] = {}
 
-    input_price = pricing.get("input_price")
-    # Treat null output_price as 0.0 (matches old merge.py behaviour: `or 0.0`)
-    output_price = pricing.get("output_price") or 0.0
+    # Accept both v7.0 ("input"/"output") and legacy ("input_price"/"output_price") keys
+    input_price = pricing.get("input") if pricing.get("input") is not None else pricing.get("input_price")
+    # Treat null output as 0.0 (matches old merge.py behaviour: `or 0.0`)
+    raw_output = pricing.get("output") if pricing.get("output") is not None else pricing.get("output_price")
+    output_price = raw_output or 0.0
 
     text: Dict[str, Any] = {}
     if input_price is not None:
-        text["input_price"] = input_price
-    text["output_price"] = output_price
+        text["input"] = input_price
+    text["output"] = output_price
     if text:
         result["text"] = text
 
-    # image_output_price is per-image fee (e.g. Google image gen models)
-    image_output_price = pricing.get("image_output_price")
+    # image_output is per-image fee (e.g. Google image gen models)
+    image_output_price = pricing.get("image_output") if pricing.get("image_output") is not None else pricing.get("image_output_price")
     if image_output_price is not None and source_name in MODALITY_AUTHORITATIVE_SOURCES:
-        result["image"] = {"output_price": image_output_price}
+        result["image"] = {"output": image_output_price}
 
     return result
 
 
+def _normalize_modality_fields(modality_dict: Dict[str, Any]) -> Dict[str, Any]:
+    """Rename legacy input_price/output_price keys to input/output within a modality dict."""
+    result = {}
+    for k, v in modality_dict.items():
+        if k == "input_price":
+            result["input"] = v
+        elif k == "output_price":
+            result["output"] = v
+        else:
+            result[k] = v
+    return result
+
+
 def _to_v5_pricing(pricing: Dict[str, Any], source_name: str) -> Dict[str, Any]:
-    """Return v5.0 pricing dict regardless of input format."""
+    """Return v7.0 pricing dict regardless of input format."""
     if _is_nested_pricing(pricing):
-        # Already nested — enforce source blocking for audio/image
+        # Already nested — enforce source blocking for audio/image, normalize field names
         if source_name not in MODALITY_AUTHORITATIVE_SOURCES:
-            result = {k: v for k, v in pricing.items() if k not in ("audio", "image")}
-            return result
-        return dict(pricing)
+            filtered = {k: v for k, v in pricing.items() if k not in ("audio", "image")}
+        else:
+            filtered = dict(pricing)
+        # Normalize legacy field names inside each modality dict
+        return {
+            modality: _normalize_modality_fields(v) if isinstance(v, dict) else v
+            for modality, v in filtered.items()
+        }
     return _flat_to_nested(pricing, source_name)
 
 
@@ -135,7 +153,7 @@ class PricingMerger:
         merged_models = self._merge_with_priority(all_sources, warnings)
 
         output = {
-            "version": "6.0",
+            "version": "7.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "source": "burncloud-official",
             "models": merged_models,
@@ -245,13 +263,13 @@ class PricingMerger:
                 entry = _to_v5_pricing(winner_ep.get("pricing", {}), winner_name)
 
                 # Pass through cache/batch/tiered from winner
-                for field in ("cache_pricing", "batch_pricing", "tiered_pricing"):
+                for field in ("cache", "batch", "tiered"):
                     if field in winner_ep:
                         entry[field] = copy.deepcopy(winner_ep[field])
 
                 # Lower-priority sources contribute missing optional fields only
                 for src_name, ep_data, _ in source_list[1:]:
-                    for field in ("cache_pricing", "batch_pricing", "tiered_pricing"):
+                    for field in ("cache", "batch", "tiered"):
                         if field not in entry and field in ep_data:
                             entry[field] = copy.deepcopy(ep_data[field])
                             logger.debug(
@@ -269,12 +287,12 @@ class PricingMerger:
                                 )
 
                     # Price drift check within same currency (text.input_price)
-                    base_input = entry.get("text", {}).get("input_price")
+                    base_input = entry.get("text", {}).get("input")
                     other_p = ep_data.get("pricing", {})
                     if _is_nested_pricing(other_p):
-                        other_input = other_p.get("text", {}).get("input_price")
+                        other_input = other_p.get("text", {}).get("input")
                     else:
-                        other_input = other_p.get("input_price")
+                        other_input = other_p.get("input")
                     if base_input and other_input:
                         drift = abs(base_input - other_input) / base_input
                         if drift > config.price_drift_warning_threshold:
@@ -286,29 +304,26 @@ class PricingMerger:
                             warnings.append(warning)
                             logger.warning(warning)
 
-                # Normalize cache_pricing field names
-                if "cache_pricing" in entry:
-                    cache = entry["cache_pricing"]
-                    cache.pop("unit", None)
-                    if "cache_write_input_price" in cache:
-                        cache["cache_creation_input_price"] = cache.pop("cache_write_input_price")
+                # Normalize cache field names (unit field cleanup)
+                if "cache" in entry:
+                    entry["cache"].pop("unit", None)
 
                 # Apply provider-level derived pricing for missing optional fields.
                 if _provider and _provider != "unknown":
                     text_p = entry.get("text", {})
-                    text_input = text_p.get("input_price", 0) or 0
-                    text_output = text_p.get("output_price", 0) or 0
+                    text_input = text_p.get("input", 0) or 0
+                    text_output = text_p.get("output", 0) or 0
                     cache_d, batch_d = config.get_derived_pricing(
                         _provider, model_id, text_input, text_output
                     )
-                    if "cache_pricing" not in entry and cache_d:
-                        entry["cache_pricing"] = cache_d
+                    if "cache" not in entry and cache_d:
+                        entry["cache"] = cache_d
                         logger.debug(
                             f"Derived cache_pricing for {model_id}[{currency}] "
                             f"from {_provider} rules"
                         )
-                    if "batch_pricing" not in entry and batch_d:
-                        entry["batch_pricing"] = batch_d
+                    if "batch" not in entry and batch_d:
+                        entry["batch"] = batch_d
                         logger.debug(
                             f"Derived batch_pricing for {model_id}[{currency}] "
                             f"from {_provider} rules"
@@ -319,7 +334,7 @@ class PricingMerger:
             # Quality check: completeness across currencies
             self._check_pricing_completeness(model_id, pricing, warnings)
 
-            merged[model_id] = {"pricing": pricing}
+            merged[model_id] = pricing
 
         return merged
 
@@ -337,7 +352,7 @@ class PricingMerger:
         if len(currencies) < 2:
             return
 
-        for field in ("batch_pricing", "cache_pricing"):
+        for field in ("batch", "cache"):
             currencies_with = [c for c in currencies if field in pricing[c]]
             currencies_without = [c for c in currencies if field not in pricing[c]]
 

@@ -42,8 +42,8 @@ class TestBasicPricing:
 
         ep = models["gpt-4o"]["endpoints"]["api.openai.com"]
         assert "gpt-4o" in models
-        assert ep["pricing"]["input_price"] == pytest.approx(2.5)
-        assert ep["pricing"]["output_price"] == pytest.approx(10.0)
+        assert ep["pricing"]["input"] == pytest.approx(2.5)
+        assert ep["pricing"]["output"] == pytest.approx(10.0)
 
     def test_model_missing_input_cost_skipped(self, fetcher):
         data = {
@@ -87,10 +87,10 @@ class TestBatchPricing:
         models = fetcher._parse_models(resp)
 
         ep = models["gpt-4o"]["endpoints"]["api.openai.com"]
-        assert "batch_pricing" in ep
-        bp = ep["batch_pricing"]
-        assert bp["input_price"] == pytest.approx(1.25)
-        assert bp["output_price"] == pytest.approx(5.0)
+        assert "batch" in ep
+        bp = ep["batch"]
+        assert bp["input"] == pytest.approx(1.25)
+        assert bp["output"] == pytest.approx(5.0)
 
     def test_no_batch_pricing_when_fields_absent(self, fetcher):
         data = {
@@ -102,7 +102,7 @@ class TestBatchPricing:
         }
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
-        assert "batch_pricing" not in models["gpt-4o"]["endpoints"]["api.openai.com"]
+        assert "batch" not in models["gpt-4o"]["endpoints"]["api.openai.com"]
 
     def test_batch_pricing_partial_fields_skipped(self, fetcher):
         """Only one of the two batch fields present — no batch_pricing."""
@@ -117,7 +117,7 @@ class TestBatchPricing:
         }
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
-        assert "batch_pricing" not in models["gpt-4o"]["endpoints"]["api.openai.com"]
+        assert "batch" not in models["gpt-4o"]["endpoints"]["api.openai.com"]
 
 
 # ---------------------------------------------------------------------------
@@ -130,7 +130,7 @@ class TestExplicitTieredPricing:
             "qwen/qwen-max": {
                 "input_cost_per_token": 2e-6,
                 "output_cost_per_token": 6e-6,
-                "tiered_pricing": [
+                "tiered": [
                     {"range": [0, 128000], "input_cost_per_token": 2e-6, "output_cost_per_token": 6e-6},
                     {"range": [128000, None], "input_cost_per_token": 4e-6, "output_cost_per_token": 6e-6},
                 ],
@@ -140,14 +140,14 @@ class TestExplicitTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["qwen-max"]["endpoints"]["litellm"]["tiered_pricing"]
+        tiers = models["qwen-max"]["endpoints"]["litellm"]["tiered"]
         assert len(tiers) == 2
         assert tiers[0]["tier_start"] == 0
         assert tiers[0]["tier_end"] == 128000
-        assert tiers[0]["input_price"] == pytest.approx(2.0)
+        assert tiers[0]["input"] == pytest.approx(2.0)
         assert tiers[1]["tier_start"] == 128000
         assert "tier_end" not in tiers[1]  # last tier: open-ended
-        assert tiers[1]["input_price"] == pytest.approx(4.0)
+        assert tiers[1]["input"] == pytest.approx(4.0)
 
     def test_explicit_tiered_output_price_preserved(self, fetcher):
         """output_cost_per_token in tier entry is used when present."""
@@ -155,7 +155,7 @@ class TestExplicitTieredPricing:
             "qwen/qwen-max": {
                 "input_cost_per_token": 2e-6,
                 "output_cost_per_token": 6e-6,
-                "tiered_pricing": [
+                "tiered": [
                     {"range": [0, 128000], "input_cost_per_token": 2e-6, "output_cost_per_token": 6e-6},
                     {"range": [128000, None], "input_cost_per_token": 4e-6, "output_cost_per_token": 12e-6},
                 ],
@@ -165,9 +165,9 @@ class TestExplicitTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["qwen-max"]["endpoints"]["litellm"]["tiered_pricing"]
-        assert tiers[0]["output_price"] == pytest.approx(6.0)
-        assert tiers[1]["output_price"] == pytest.approx(12.0)
+        tiers = models["qwen-max"]["endpoints"]["litellm"]["tiered"]
+        assert tiers[0]["output"] == pytest.approx(6.0)
+        assert tiers[1]["output"] == pytest.approx(12.0)
 
     def test_explicit_tiered_missing_output_uses_base(self, fetcher):
         """When tier has no output_cost_per_token, use base output price."""
@@ -175,7 +175,7 @@ class TestExplicitTieredPricing:
             "qwen/qwen-max": {
                 "input_cost_per_token": 2e-6,
                 "output_cost_per_token": 6e-6,
-                "tiered_pricing": [
+                "tiered": [
                     {"range": [0, 128000], "input_cost_per_token": 2e-6},
                     {"range": [128000, None], "input_cost_per_token": 4e-6},
                 ],
@@ -185,10 +185,10 @@ class TestExplicitTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["qwen-max"]["endpoints"]["litellm"]["tiered_pricing"]
+        tiers = models["qwen-max"]["endpoints"]["litellm"]["tiered"]
         # Both tiers get base output_cost_per_token (6e-6 * 1M = 6.0)
-        assert tiers[0]["output_price"] == pytest.approx(6.0)
-        assert tiers[1]["output_price"] == pytest.approx(6.0)
+        assert tiers[0]["output"] == pytest.approx(6.0)
+        assert tiers[1]["output"] == pytest.approx(6.0)
 
 
 # ---------------------------------------------------------------------------
@@ -209,10 +209,10 @@ class TestInlineTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["claude-3-5-sonnet"]["endpoints"]["api.anthropic.com"]["tiered_pricing"]
+        tiers = models["claude-3-5-sonnet"]["endpoints"]["api.anthropic.com"]["tiered"]
         assert len(tiers) == 2
-        assert tiers[0] == {"tier_start": 0, "tier_end": 128000, "input_price": pytest.approx(3.0), "output_price": pytest.approx(15.0)}
-        assert tiers[1] == {"tier_start": 128000, "input_price": pytest.approx(6.0), "output_price": pytest.approx(15.0)}
+        assert tiers[0] == {"tier_start": 0, "tier_end": 128000, "input": pytest.approx(3.0), "output": pytest.approx(15.0)}
+        assert tiers[1] == {"tier_start": 128000, "input": pytest.approx(6.0), "output": pytest.approx(15.0)}
 
     def test_three_tier_inline(self, fetcher):
         """above_128k + above_200k → three tiers."""
@@ -228,7 +228,7 @@ class TestInlineTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["gemini-1.5-pro"]["endpoints"]["generativelanguage.googleapis.com"]["tiered_pricing"]
+        tiers = models["gemini-1.5-pro"]["endpoints"]["generativelanguage.googleapis.com"]["tiered"]
         assert len(tiers) == 3
         assert tiers[0]["tier_start"] == 0
         assert tiers[0]["tier_end"] == 128000
@@ -250,9 +250,9 @@ class TestInlineTieredPricing:
         resp = _make_response(data)
         models = fetcher._parse_models(resp)
 
-        tiers = models["gemini-1.5-pro"]["endpoints"]["generativelanguage.googleapis.com"]["tiered_pricing"]
+        tiers = models["gemini-1.5-pro"]["endpoints"]["generativelanguage.googleapis.com"]["tiered"]
         for tier in tiers:
-            assert tier["output_price"] == pytest.approx(5.0)
+            assert tier["output"] == pytest.approx(5.0)
 
 
 # ---------------------------------------------------------------------------
@@ -406,7 +406,7 @@ class TestErrorHandling:
             "openai/gpt-4o": {
                 "input_cost_per_token": 2.5e-6,
                 "output_cost_per_token": 10e-6,
-                "tiered_pricing": "not-a-list",  # invalid
+                "tiered": "not-a-list",  # invalid
                 "litellm_provider": "openai",
             }
         }
@@ -420,7 +420,7 @@ class TestErrorHandling:
             "openai/gpt-4o": {
                 "input_cost_per_token": 2.5e-6,
                 "output_cost_per_token": 10e-6,
-                "tiered_pricing": [
+                "tiered": [
                     {"input_cost_per_token": 2e-6},  # missing 'range'
                 ],
                 "litellm_provider": "openai",

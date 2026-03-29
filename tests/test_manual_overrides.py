@@ -33,11 +33,11 @@ def valid_overrides():
                         "base_url": "https://api.deepseek.com/v1",
                         "currency": "USD",
                         "pricing": {
-                            "input_price": 0.28,
-                            "output_price": 0.42,
+                            "input": 0.28,
+                            "output": 0.42,
                         },
-                        "cache_pricing": {
-                            "cache_read_input_price": 0.028,
+                        "cache": {
+                            "read_input": 0.028,
                         },
                     }
                 },
@@ -55,8 +55,8 @@ def valid_overrides():
                         "base_url": "https://generativelanguage.googleapis.com",
                         "currency": "USD",
                         "pricing": {
-                            "input_price": 0.50,
-                            "output_price": 10.00,
+                            "input": 0.50,
+                            "output": 10.00,
                         },
                     }
                 },
@@ -108,9 +108,9 @@ class TestManualOverridesFetcher:
 
         model = result.models["deepseek-chat"]
         ep = model["endpoints"]["api.deepseek.com"]
-        assert ep["pricing"]["input_price"] == 0.28
-        assert ep["pricing"]["output_price"] == 0.42
-        assert ep["cache_pricing"]["cache_read_input_price"] == 0.028
+        assert ep["pricing"]["input"] == 0.28
+        assert ep["pricing"]["output"] == 0.42
+        assert ep["cache"]["read_input"] == 0.028
         assert model["metadata"]["provider"] == "deepseek"
 
     def test_file_not_found_returns_empty_success(self, mock_config, tmp_path):

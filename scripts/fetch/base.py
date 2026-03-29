@@ -212,11 +212,11 @@ class BaseFetcher(ABC):
             "pricing": pricing,
         }
         if cache_pricing is not None:
-            entry["cache_pricing"] = cache_pricing
+            entry["cache"] = cache_pricing
         if batch_pricing is not None:
-            entry["batch_pricing"] = batch_pricing
+            entry["batch"] = batch_pricing
         if tiered_pricing is not None:
-            entry["tiered_pricing"] = tiered_pricing
+            entry["tiered"] = tiered_pricing
         return entry
 
     def _build_model_entry(

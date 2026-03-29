@@ -189,23 +189,19 @@ class PriceComparator:
         """Compare prices for a single model across currencies."""
         changes = []
 
-        curr_pricing = current.get("pricing", {})
-        prev_pricing = previous.get("pricing", {})
-
-        # Check each currency
-        all_currencies = set(curr_pricing.keys()) | set(prev_pricing.keys())
+        # v7.0: model IS the currency map
+        all_currencies = set(current.keys()) | set(previous.keys())
 
         for currency in all_currencies:
-            curr = curr_pricing.get(currency, {})
-            prev = prev_pricing.get(currency, {})
+            curr = current.get(currency, {})
+            prev = previous.get(currency, {})
 
-            # v5.0 nested modality format: prices live under "text"
-            curr_text = curr.get("text", curr)  # fall back to flat for old snapshots
-            prev_text = prev.get("text", prev)
-            curr_input = curr_text.get("input_price")
-            curr_output = curr_text.get("output_price")
-            prev_input = prev_text.get("input_price")
-            prev_output = prev_text.get("output_price")
+            curr_text = curr.get("text", {})
+            prev_text = prev.get("text", {})
+            curr_input = curr_text.get("input")
+            curr_output = curr_text.get("output")
+            prev_input = prev_text.get("input")
+            prev_output = prev_text.get("output")
 
             # Check if anything changed
             if curr_input != prev_input or curr_output != prev_output:
@@ -244,10 +240,10 @@ class PriceComparator:
 
         for source_name, data in sources_data.items():
             for model_id, model_data in data.get("models", {}).items():
-                pricing = model_data.get("pricing", {}).get("USD", {})
+                pricing = model_data.get("USD", {})
 
-                input_price = pricing.get("input_price")
-                output_price = pricing.get("output_price")
+                input_price = pricing.get("text", {}).get("input")
+                output_price = pricing.get("text", {}).get("output")
 
                 if input_price is not None:
                     if model_id not in model_prices:

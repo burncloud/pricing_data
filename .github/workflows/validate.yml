@@ -25,31 +25,31 @@ jobs:
 
       - name: Check all prices are non-negative
         run: |
-          # v5.0: prices are nested under .text / .audio / .image modality keys
+          # v7.0: model IS the currency map — .value | to_entries[] gives currency entries
           # Check text prices (input + output)
           if jq -e '
-            [.models | to_entries[] | .value.pricing | to_entries[] | .value |
+            [.models | to_entries[] | .value | to_entries[] | .value |
             (.text // {}) |
-            select((.input_price != null and .input_price < 0) or
-                   (.output_price != null and .output_price < 0))] | length > 0
+            select((.input != null and .input < 0) or
+                   (.output != null and .output < 0))] | length > 0
           ' pricing.json | grep -q true; then
             echo "❌ Negative text prices found"
             exit 1
           fi
           # Check audio output prices
           if jq -e '
-            [.models | to_entries[] | .value.pricing | to_entries[] | .value |
+            [.models | to_entries[] | .value | to_entries[] | .value |
             (.audio // {}) |
-            select(.output_price != null and .output_price < 0)] | length > 0
+            select(.output != null and .output < 0)] | length > 0
           ' pricing.json | grep -q true; then
             echo "❌ Negative audio prices found"
             exit 1
           fi
           # Check image output prices
           if jq -e '
-            [.models | to_entries[] | .value.pricing | to_entries[] | .value |
+            [.models | to_entries[] | .value | to_entries[] | .value |
             (.image // {}) |
-            select(.output_price != null and .output_price < 0)] | length > 0
+            select(.output != null and .output < 0)] | length > 0
           ' pricing.json | grep -q true; then
             echo "❌ Negative image prices found"
             exit 1
