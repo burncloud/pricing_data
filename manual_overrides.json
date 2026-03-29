@@ -1,148 +1,116 @@
 {
-  "_schema": "manual_overrides/3.0",
-  "_note": "Human-verified prices. Priority 200 — beats ALL automated sources. Never edit without visiting the official URL and confirming the price yourself.",
+  "_schema": "manual_overrides/5.0",
+  "_note": "Human-verified prices ($/MTok). Priority 200 — beats ALL automated sources. Format matches pricing.json v7.0. Never edit without visiting the official URL and confirming the price yourself.",
   "_workflow": "Discrepancy found? 1) Visit official_url  2) Confirm price  3) Add entry here  4) Commit",
   "models": {
     "deepseek-chat": {
       "_verified_at": "2026-03-28",
       "_verified_source": "https://api-docs.deepseek.com/quick_start/pricing",
-      "_notes": "deepseek-chat = DeepSeek-V3.2 (non-thinking). Official: $0.028 cache-hit input, $0.28 cache-miss input, $0.42 output. OpenRouter alias routes to an older version at $0.32/$0.89 — do NOT use openrouter for this model's canonical price.",
-      "endpoints": {
-        "api.deepseek.com": {
-          "base_url": "https://api.deepseek.com/v1",
-          "currency": "USD",
-          "pricing": {
-            "text": {
-              "input": 0.28,
-              "output": 0.42
-            }
-          },
-          "cache": {
-            "read_input": 0.028
-          }
+      "_notes": "deepseek-chat = DeepSeek-V3.2 (non-thinking). Official: $0.028 cache-hit input, $0.28 cache-miss input, $0.42 output.",
+      "USD": {
+        "text": {
+          "input": 0.28,
+          "output": 0.42
+        },
+        "cache": {
+          "read_input": 0.028
         }
       }
     },
     "deepseek-reasoner": {
       "_verified_at": "2026-03-28",
       "_verified_source": "https://api-docs.deepseek.com/quick_start/pricing",
-      "_notes": "deepseek-reasoner = DeepSeek-V3.2 (thinking mode). Same pricing as deepseek-chat per official table (colspan=2). $0.028 cache-hit input, $0.28 cache-miss input, $0.42 output.",
-      "endpoints": {
-        "api.deepseek.com": {
-          "base_url": "https://api.deepseek.com/v1",
-          "currency": "USD",
-          "pricing": {
-            "text": {
-              "input": 0.28,
-              "output": 0.42
-            }
-          },
-          "cache": {
-            "read_input": 0.028
-          }
+      "_notes": "deepseek-reasoner = DeepSeek-V3.2 (thinking mode). Same pricing as deepseek-chat.",
+      "USD": {
+        "text": {
+          "input": 0.28,
+          "output": 0.42
+        },
+        "cache": {
+          "read_input": 0.028
         }
       }
     },
     "gemini-3-pro-image-preview": {
-      "_verified_at": "2026-03-28",
-      "_verified_source": "https://ai.google.dev/pricing",
-      "_notes": "Image generation model. Text+image input: $2.00/MTok. Text/thinking output: $12.00/MTok (text.output_price). Image output: $0.134/img (1K/2K) — image.output_price is a per-image flat fee. Batch: 50% off.",
-      "endpoints": {
-        "generativelanguage.googleapis.com": {
-          "base_url": "https://generativelanguage.googleapis.com",
-          "currency": "USD",
-          "pricing": {
-            "text": {
-              "input": 2.00,
-              "output": 12.00
-            },
-            "image": {
-              "output": 0.134
-            }
-          },
-          "batch": {
-            "input": 1.00,
-            "output": 6.00
-          }
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "_notes": "Image generation model. Text+image input: $2.00/MTok. Text output: $12.00/MTok. Image output: $120.00/MTok. Batch: 50% off.",
+      "USD": {
+        "text": {
+          "input": 2.0,
+          "output": 12.0
+        },
+        "image": {
+          "output": 120.0
+        },
+        "batch": {
+          "input": 1.0,
+          "output": 6.0,
+          "image_output": 60.0
         }
       }
     },
     "gemini-2.5-flash-image": {
-      "_verified_at": "2026-03-28",
-      "_verified_source": "https://ai.google.dev/pricing",
-      "_notes": "Image generation model. Text+image input: $0.30/MTok. No text output — images only at $0.039/img (image.output_price is $/image flat fee). Batch: $0.15/MTok input.",
-      "endpoints": {
-        "generativelanguage.googleapis.com": {
-          "base_url": "https://generativelanguage.googleapis.com",
-          "currency": "USD",
-          "pricing": {
-            "text": {
-              "input": 0.30,
-              "output": 0.0
-            },
-            "image": {
-              "output": 0.039
-            }
-          },
-          "batch": {
-            "input": 0.15,
-            "output": 0.0
-          }
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "_notes": "Image generation model. Text+image input: $0.30/MTok. Text output: $2.50/MTok. Image output: $30.00/MTok. Batch: 50% off.",
+      "USD": {
+        "text": {
+          "input": 0.3,
+          "output": 2.5
+        },
+        "image": {
+          "output": 30.0
+        },
+        "batch": {
+          "input": 0.15,
+          "output": 1.25,
+          "image_output": 15.0
         }
       }
     },
     "gemini-3.1-flash-image-preview": {
-      "_verified_at": "2026-03-28",
-      "_verified_source": "https://ai.google.dev/pricing",
-      "_notes": "Image generation model (Flash variant of Gemini 3.1). Text+image input: $0.50/MTok. Text output: $3.00/MTok. image.output_price TBD — verify on official page before adding.",
-      "endpoints": {
-        "generativelanguage.googleapis.com": {
-          "base_url": "https://generativelanguage.googleapis.com",
-          "currency": "USD",
-          "pricing": {
-            "text": {
-              "input": 0.50,
-              "output": 3.00
-            }
-          }
+      "_verified_at": "2026-03-29",
+      "_verified_source": "https://ai.google.dev/gemini-api/docs/pricing",
+      "_notes": "Image generation model. Text+image input: $0.50/MTok. Text output: $3.00/MTok. Image output: $60.00/MTok. Batch: 50% off.",
+      "USD": {
+        "text": {
+          "input": 0.5,
+          "output": 3.0
+        },
+        "image": {
+          "output": 60.0
+        },
+        "batch": {
+          "input": 0.25,
+          "output": 1.5,
+          "image_output": 30.0
         }
       }
     },
     "gemini-2.5-flash-preview-tts": {
       "_verified_at": "2026-03-28",
       "_verified_source": "https://ai.google.dev/pricing",
-      "_notes": "TTS model. Official: $0.50 text input / $10.00 audio output per MTok. LiteLLM has stale data ($0.30/$2.50) — likely from an earlier Preview pricing. Output is AUDIO at $10.00 — stored in audio.output_price, NOT text.output_price.",
-      "endpoints": {
-        "generativelanguage.googleapis.com": {
-          "base_url": "https://generativelanguage.googleapis.com",
-          "currency": "USD",
-          "pricing": {
-            "text": {
-              "input": 0.50
-            },
-            "audio": {
-              "output": 10.00
-            }
-          }
+      "_notes": "TTS model. $0.50 text input / $10.00 audio output per MTok.",
+      "USD": {
+        "text": {
+          "input": 0.5
+        },
+        "audio": {
+          "output": 10.0
         }
       }
     },
     "gemini-2.5-pro-preview-tts": {
       "_verified_at": "2026-03-28",
       "_verified_source": "https://ai.google.dev/pricing",
-      "_notes": "TTS model. Official: $1.00 text input / $20.00 audio output per MTok. LiteLLM mistakenly uses standard Gemini 2.5 Pro prices ($1.25/$10.00). Output is AUDIO at $20.00 — stored in audio.output_price, NOT text.output_price.",
-      "endpoints": {
-        "generativelanguage.googleapis.com": {
-          "base_url": "https://generativelanguage.googleapis.com",
-          "currency": "USD",
-          "pricing": {
-            "text": {
-              "input": 1.00
-            },
-            "audio": {
-              "output": 20.00
-            }
-          }
+      "_notes": "TTS model. $1.00 text input / $20.00 audio output per MTok.",
+      "USD": {
+        "text": {
+          "input": 1.0
+        },
+        "audio": {
+          "output": 20.0
         }
       }
     }

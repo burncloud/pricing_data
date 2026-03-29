@@ -21,48 +21,34 @@ def mock_config(tmp_path):
 @pytest.fixture
 def valid_overrides():
     return {
-        "_schema": "manual_overrides/2.0",
+        "_schema": "manual_overrides/5.0",
         "_note": "Human-verified prices.",
         "models": {
             "deepseek-chat": {
                 "_verified_at": "2026-03-28",
                 "_verified_source": "https://api-docs.deepseek.com/quick_start/pricing",
                 "_notes": "Official pricing.",
-                "endpoints": {
-                    "api.deepseek.com": {
-                        "base_url": "https://api.deepseek.com/v1",
-                        "currency": "USD",
-                        "pricing": {
-                            "input": 0.28,
-                            "output": 0.42,
-                        },
-                        "cache": {
-                            "read_input": 0.028,
-                        },
-                    }
-                },
-                "metadata": {
-                    "provider": "deepseek",
-                    "family": "deepseek-chat",
+                "USD": {
+                    "text": {
+                        "input": 0.28,
+                        "output": 0.42,
+                    },
+                    "cache": {
+                        "read_input": 0.028,
+                    },
                 },
             },
             "gemini-2.5-flash-preview-tts": {
                 "_verified_at": "2026-03-28",
                 "_verified_source": "https://ai.google.dev/pricing",
                 "_notes": "TTS model.",
-                "endpoints": {
-                    "generativelanguage.googleapis.com": {
-                        "base_url": "https://generativelanguage.googleapis.com",
-                        "currency": "USD",
-                        "pricing": {
-                            "input": 0.50,
-                            "output": 10.00,
-                        },
-                    }
-                },
-                "metadata": {
-                    "provider": "google",
-                    "family": "gemini-2.5",
+                "USD": {
+                    "text": {
+                        "input": 0.50,
+                    },
+                    "audio": {
+                        "output": 10.00,
+                    },
                 },
             },
         },
@@ -98,8 +84,8 @@ class TestManualOverridesFetcher:
         assert "_verified_source" not in model
         assert "_notes" not in model
 
-    def test_preserves_pricing_fields(self, mock_config, tmp_path, valid_overrides):
-        """pricing, cache_pricing, metadata must be preserved."""
+    def test_converts_to_endpoints_format(self, mock_config, tmp_path, valid_overrides):
+        """v5.0 currency format is converted to endpoints format for merge pipeline."""
         overrides_file = tmp_path / "manual_overrides.json"
         overrides_file.write_text(json.dumps(valid_overrides))
 
@@ -107,11 +93,24 @@ class TestManualOverridesFetcher:
         result = fetcher.fetch()
 
         model = result.models["deepseek-chat"]
-        ep = model["endpoints"]["api.deepseek.com"]
-        assert ep["pricing"]["input"] == 0.28
-        assert ep["pricing"]["output"] == 0.42
+        ep = model["endpoints"]["manual_USD"]
+        assert ep["currency"] == "USD"
+        assert ep["pricing"]["text"]["input"] == 0.28
+        assert ep["pricing"]["text"]["output"] == 0.42
         assert ep["cache"]["read_input"] == 0.028
-        assert model["metadata"]["provider"] == "deepseek"
+
+    def test_tts_model_pricing(self, mock_config, tmp_path, valid_overrides):
+        """TTS model with audio modality is correctly converted."""
+        overrides_file = tmp_path / "manual_overrides.json"
+        overrides_file.write_text(json.dumps(valid_overrides))
+
+        fetcher = ManualOverridesFetcher(mock_config)
+        result = fetcher.fetch()
+
+        model = result.models["gemini-2.5-flash-preview-tts"]
+        ep = model["endpoints"]["manual_USD"]
+        assert ep["pricing"]["text"]["input"] == 0.50
+        assert ep["pricing"]["audio"]["output"] == 10.00
 
     def test_file_not_found_returns_empty_success(self, mock_config, tmp_path):
         """Missing file is not an error — returns success with 0 models."""
@@ -136,14 +135,13 @@ class TestManualOverridesFetcher:
         assert result.error is not None
         assert "JSON" in result.error or "json" in result.error.lower()
 
-    def test_skips_entry_without_pricing(self, mock_config, tmp_path):
-        """Model entry missing 'endpoints' field is skipped with a warning."""
+    def test_skips_entry_without_currency(self, mock_config, tmp_path):
+        """Model entry with no currency pricing dict is skipped."""
         data = {
             "models": {
                 "some-model": {
                     "_verified_at": "2026-03-28",
-                    "metadata": {"provider": "test"},
-                    # no "endpoints" key
+                    "_notes": "no pricing here",
                 }
             }
         }
@@ -173,7 +171,7 @@ class TestManualOverridesFetcher:
 
     def test_empty_models_section(self, mock_config, tmp_path):
         """File with empty models dict returns success with 0 models."""
-        data = {"_schema": "manual_overrides/1.0", "models": {}}
+        data = {"_schema": "manual_overrides/5.0", "models": {}}
         (tmp_path / "manual_overrides.json").write_text(json.dumps(data))
 
         fetcher = ManualOverridesFetcher(mock_config)
@@ -224,3 +222,24 @@ class TestManualOverridesFetcher:
         assert reloaded is not None
         assert reloaded.success is True
         assert "deepseek-chat" in reloaded.models
+
+    def test_batch_pricing_preserved(self, mock_config, tmp_path):
+        """batch pricing at currency level is converted to endpoint format."""
+        data = {
+            "models": {
+                "test-model": {
+                    "USD": {
+                        "text": {"input": 1.0, "output": 2.0},
+                        "batch": {"input": 0.5, "output": 1.0},
+                    }
+                }
+            }
+        }
+        (tmp_path / "manual_overrides.json").write_text(json.dumps(data))
+
+        fetcher = ManualOverridesFetcher(mock_config)
+        result = fetcher.fetch()
+
+        ep = result.models["test-model"]["endpoints"]["manual_USD"]
+        assert ep["pricing"]["text"]["input"] == 1.0
+        assert ep["batch"]["input"] == 0.5

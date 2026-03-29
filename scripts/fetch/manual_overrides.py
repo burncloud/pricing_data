@@ -99,10 +99,11 @@ class ManualOverridesFetcher(BaseFetcher):
 
     def _parse_overrides(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Convert manual_overrides.json model entries into the standard format.
+        Convert manual_overrides.json (v5.0 pricing.json format) into the
+        endpoints-based format expected by the merge pipeline.
 
-        Strips metadata-only fields (_verified_at, _verified_source, _notes)
-        so the output is compatible with the merge pipeline.
+        v5.0 input:  model → { "USD": { "text": {...}, "cache": {...} } }
+        pipeline output: model → { "endpoints": { "manual": { "currency": "USD", "pricing": {...}, "cache": {...} } } }
         """
         raw_models = data.get("models", {})
         models: Dict[str, Any] = {}
@@ -112,18 +113,32 @@ class ManualOverridesFetcher(BaseFetcher):
                 logger.warning(f"manual_overrides: skipping {model_id!r} — not a dict")
                 continue
 
-            # Strip annotation fields
-            clean: Dict[str, Any] = {
-                k: v for k, v in entry.items() if not k.startswith("_")
-            }
+            # Collect currency keys (anything not starting with "_")
+            currencies = {k: v for k, v in entry.items() if not k.startswith("_") and isinstance(v, dict)}
 
-            if not clean.get("endpoints"):
+            if not currencies:
                 logger.warning(
-                    f"manual_overrides: skipping {model_id!r} — missing 'endpoints' field"
+                    f"manual_overrides: skipping {model_id!r} — no currency pricing found"
                 )
                 continue
 
-            models[model_id] = clean
+            endpoints: Dict[str, Any] = {}
+            for currency, pricing_data in currencies.items():
+                # Separate modality pricing from optional fields (cache, batch, tiered)
+                optional_fields = ("cache", "batch", "tiered")
+                pricing = {k: v for k, v in pricing_data.items() if k not in optional_fields}
+                ep: Dict[str, Any] = {
+                    "currency": currency,
+                    "pricing": pricing,
+                }
+                for field in optional_fields:
+                    if field in pricing_data:
+                        ep[field] = pricing_data[field]
+
+                ep_key = f"manual_{currency}"
+                endpoints[ep_key] = ep
+
+            models[model_id] = {"endpoints": endpoints}
 
         return models
 

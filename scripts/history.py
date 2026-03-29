@@ -5,7 +5,6 @@ Creates daily snapshots and manages retention (365 days).
 """
 import json
 import logging
-import shutil
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple

@@ -127,6 +127,29 @@ class PricingMerger:
                 return json.load(f)
         return {}
 
+    @staticmethod
+    def _convert_manual_overrides(raw_models: Dict[str, Any]) -> Dict[str, Any]:
+        """Convert manual_overrides v5.0 format to endpoints format for merge."""
+        _optional = ("cache", "batch", "tiered")
+        result: Dict[str, Any] = {}
+        for model_id, entry in raw_models.items():
+            if not isinstance(entry, dict):
+                continue
+            endpoints: Dict[str, Any] = {}
+            for key, val in entry.items():
+                if key.startswith("_") or not isinstance(val, dict):
+                    continue
+                currency = key
+                pricing = {k: v for k, v in val.items() if k not in _optional}
+                ep: Dict[str, Any] = {"currency": currency, "pricing": pricing}
+                for f in _optional:
+                    if f in val:
+                        ep[f] = val[f]
+                endpoints[f"manual_{currency}"] = ep
+            if endpoints:
+                result[model_id] = {"endpoints": endpoints}
+        return result
+
     def merge_all(self, date_str: str) -> Tuple[Dict[str, Any], List[str]]:
         """
         Merge all source files into pricing.json.
@@ -169,17 +192,18 @@ class PricingMerger:
         sources = []
 
         # Load manual overrides first (highest priority, priority=200)
-        manual_override_path = config.data_dir / "sources" / "manual_overrides.json"
+        manual_override_path = config.data_dir / "manual_overrides.json"
         if manual_override_path.exists():
             try:
                 with open(manual_override_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 if data.get("models"):
+                    converted = self._convert_manual_overrides(data["models"])
                     sources.append({
                         "name": "manual_overrides",
-                        "data": {**data, "status": "success"},
+                        "data": {"models": converted, "status": "success"},
                     })
-                    logger.info(f"Loaded manual overrides: {len(data['models'])} models")
+                    logger.info(f"Loaded manual overrides: {len(converted)} models")
             except (json.JSONDecodeError, KeyError) as e:
                 logger.warning(f"Failed to load manual overrides: {e}")
 

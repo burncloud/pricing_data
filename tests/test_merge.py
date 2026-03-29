@@ -428,12 +428,11 @@ class TestManualOverrides:
         """manual_overrides source gets priority 200 — highest of all sources."""
         overrides = {
             "models": {
-                "gemini-3-pro": _model(
-                    "generativelanguage.googleapis.com",
-                    {"input": 2.0, "output": 0.0},
-                    base_url="https://generativelanguage.googleapis.com",
-                    metadata={"provider": "google"},
-                ),
+                "gemini-3-pro": {
+                    "USD": {
+                        "text": {"input": 2.0, "output": 0.0},
+                    },
+                },
             }
         }
         openai_data = {
@@ -450,8 +449,7 @@ class TestManualOverrides:
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
 
-        overrides_dir = tmp_path / "sources"
-        with open(overrides_dir / "manual_overrides.json", "w") as f:
+        with open(tmp_path / "manual_overrides.json", "w") as f:
             json.dump(overrides, f)
 
         with open(sources_dir / "openai.json", "w") as f:
@@ -470,11 +468,11 @@ class TestManualOverrides:
         """manual_overrides (priority 200) beats openrouter (priority 50) for same model."""
         overrides = {
             "models": {
-                "gpt-4o": _model(
-                    "api.openai.com",
-                    {"input": 9.99, "output": 0.0},
-                    metadata={"provider": "openai"},
-                ),
+                "gpt-4o": {
+                    "USD": {
+                        "text": {"input": 9.99, "output": 0.0},
+                    },
+                },
             }
         }
         openrouter_data = {
@@ -492,8 +490,7 @@ class TestManualOverrides:
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
 
-        overrides_dir = tmp_path / "sources"
-        with open(overrides_dir / "manual_overrides.json", "w") as f:
+        with open(tmp_path / "manual_overrides.json", "w") as f:
             json.dump(overrides, f)
 
         with open(sources_dir / "openrouter.json", "w") as f:

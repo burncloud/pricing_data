@@ -3,7 +3,6 @@ Base class for all data fetchers with retry logic and error handling.
 """
 import json
 import logging
-import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
