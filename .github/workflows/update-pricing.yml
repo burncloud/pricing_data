@@ -48,9 +48,6 @@ jobs:
           DATE=$(date +%Y-%m-%d)
           python -m scripts.merge "$DATE"
 
-      - name: Render human-readable table
-        run: python -m scripts.render
-
       - name: Check for changes
         id: changes
         run: |
@@ -65,7 +62,7 @@ jobs:
             echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "### Price changes detected" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
-            git diff --stat pricing.json pricing.md >> $GITHUB_STEP_SUMMARY
+            git diff --stat pricing.json >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           fi
 
@@ -74,7 +71,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add pricing.json pricing.md
+          git add pricing.json
           git commit -m "chore: update pricing data - $(date +%Y-%m-%d)"
           git push
 

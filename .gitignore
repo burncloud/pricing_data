@@ -27,6 +27,7 @@ sources/
 comparison.json
 daily-summary.xml
 pricing-updates.xml
+pricing.md
 validation_report.json
 
 # Logs
