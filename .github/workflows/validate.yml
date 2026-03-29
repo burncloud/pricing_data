@@ -25,16 +25,33 @@ jobs:
 
       - name: Check all prices are non-negative
         run: |
-          jq -e '
-            .models | to_entries[] | .value.pricing | to_entries[] | .value |
-            (.input_price >= 0) and (.output_price >= 0)
-          ' pricing.json | grep -v false || true
-          # Fail if any price is negative
+          # v5.0: prices are nested under .text / .audio / .image modality keys
+          # Check text prices (input + output)
           if jq -e '
             [.models | to_entries[] | .value.pricing | to_entries[] | .value |
-            select(.input_price < 0 or .output_price < 0)] | length > 0
+            (.text // {}) |
+            select((.input_price != null and .input_price < 0) or
+                   (.output_price != null and .output_price < 0))] | length > 0
           ' pricing.json | grep -q true; then
-            echo "❌ Negative prices found"
+            echo "❌ Negative text prices found"
+            exit 1
+          fi
+          # Check audio output prices
+          if jq -e '
+            [.models | to_entries[] | .value.pricing | to_entries[] | .value |
+            (.audio // {}) |
+            select(.output_price != null and .output_price < 0)] | length > 0
+          ' pricing.json | grep -q true; then
+            echo "❌ Negative audio prices found"
+            exit 1
+          fi
+          # Check image output prices
+          if jq -e '
+            [.models | to_entries[] | .value.pricing | to_entries[] | .value |
+            (.image // {}) |
+            select(.output_price != null and .output_price < 0)] | length > 0
+          ' pricing.json | grep -q true; then
+            echo "❌ Negative image prices found"
             exit 1
           fi
           echo "✅ All prices are non-negative"
