@@ -137,14 +137,14 @@ class TestPricingMerger:
              patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
 
-        assert result["version"] == "4.0"
+        assert result["version"] == "5.0"
         assert "models" in result
         assert len(result["models"]) == 2
         assert "gpt-4o" in result["models"]
         assert len(warnings) == 0
 
-    def test_merge_output_is_currency_keyed(self, sample_openai_data, tmp_path):
-        """Merged output uses currency-keyed pricing (v3.0 format)."""
+    def test_merge_output_is_v5_format(self, sample_openai_data, tmp_path):
+        """Merged output uses v5.0 format: pricing dict + metadata per model."""
         sources_dir = tmp_path / "sources" / "2024-01-01"
         sources_dir.mkdir(parents=True)
 
@@ -158,12 +158,14 @@ class TestPricingMerger:
             result, _ = merger.merge_all("2024-01-01")
 
         model = result["models"]["gpt-4o"]
-        assert "USD" in model
-        assert model["USD"]["input_price"] == pytest.approx(2.50)
-        assert model["USD"]["output_price"] == pytest.approx(10.00)
-        # No endpoints or metadata in output
+        # v5.0: pricing and metadata are separate top-level keys
+        assert "pricing" in model
+        assert "metadata" in model
         assert "endpoints" not in model
-        assert "metadata" not in model
+        usd = model["pricing"]["USD"]
+        assert "text" in usd
+        assert usd["text"]["input_price"] == pytest.approx(2.50)
+        assert usd["text"]["output_price"] == pytest.approx(10.00)
 
     def test_merge_multiple_sources_priority(
         self,
@@ -192,7 +194,7 @@ class TestPricingMerger:
             result, warnings = merger.merge_all("2024-01-01")
 
         # OpenAI (priority 100) wins — openrouter's 3.00 is ignored
-        assert result["models"]["gpt-4o"]["USD"]["input_price"] == pytest.approx(2.50)
+        assert result["models"]["gpt-4o"]["pricing"]["USD"]["text"]["input_price"] == pytest.approx(2.50)
         # Drift warning fired since openrouter claimed a different USD price
         assert any("gpt-4o" in w for w in warnings)
 
@@ -235,10 +237,10 @@ class TestPricingMerger:
         assert "glm-4" in result["models"]
 
         # Chinese models have CNY pricing
-        assert "CNY" in result["models"]["qwen-max"]
-        assert result["models"]["qwen-max"]["CNY"]["input_price"] == pytest.approx(40.0)
+        assert "CNY" in result["models"]["qwen-max"]["pricing"]
+        assert result["models"]["qwen-max"]["pricing"]["CNY"]["text"]["input_price"] == pytest.approx(40.0)
         # USD-only models have no CNY entry
-        assert "CNY" not in result["models"]["gpt-4o"]
+        assert "CNY" not in result["models"]["gpt-4o"]["pricing"]
 
     def test_merge_no_sources_raises(self, tmp_path):
         """Test that merge raises when no sources exist (including no manual_overrides)."""
@@ -276,7 +278,7 @@ class TestPricingMerger:
         with open(output_path) as f:
             saved_data = json.load(f)
 
-        assert saved_data["version"] == "4.0"
+        assert saved_data["version"] == "5.0"
         assert "updated_at" in saved_data
         assert "models" in saved_data
 
@@ -364,7 +366,8 @@ class TestNormalization:
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
              patch.object(config, "data_dir", tmp_path):
             result, _ = merger.merge_all("2024-01-01")
-        return result["models"]["test-model"]
+        # Return the pricing dict (currency-keyed) for easy per-currency access
+        return result["models"]["test-model"]["pricing"]
 
     def test_unit_field_removed(self, tmp_path):
         """unit field in source pricing does not appear in merged output."""
@@ -375,6 +378,7 @@ class TestNormalization:
         )
         pricing = self._merge_single(model, tmp_path)
         assert "unit" not in pricing["USD"]
+        assert "unit" not in pricing["USD"].get("text", {})
 
     def test_null_output_price_set_to_zero(self, tmp_path):
         """output_price: null in source → 0.0 in merged output."""
@@ -384,7 +388,7 @@ class TestNormalization:
             metadata={"provider": "openai"},
         )
         pricing = self._merge_single(model, tmp_path)
-        assert pricing["USD"]["output_price"] == 0.0
+        assert pricing["USD"]["text"]["output_price"] == 0.0
 
     def test_cache_write_input_price_renamed(self, tmp_path):
         """cache_write_input_price → cache_creation_input_price in merged output."""
@@ -461,7 +465,7 @@ class TestManualOverrides:
             result, _ = merger.merge_all("2024-01-01")
 
         assert "gemini-3-pro" in result["models"]
-        assert "USD" in result["models"]["gemini-3-pro"]
+        assert "USD" in result["models"]["gemini-3-pro"]["pricing"]
 
     def test_manual_overrides_override_openrouter(self, tmp_path):
         """manual_overrides (priority 200) beats openrouter (priority 50) for same model."""
@@ -503,7 +507,7 @@ class TestManualOverrides:
              patch.object(config, "data_dir", tmp_path):
             result, _ = merger.merge_all("2024-01-01")
 
-        assert result["models"]["gpt-4o"]["USD"]["input_price"] == pytest.approx(9.99)
+        assert result["models"]["gpt-4o"]["pricing"]["USD"]["text"]["input_price"] == pytest.approx(9.99)
 
 
 class TestMinModelsGuard:
@@ -549,7 +553,7 @@ class TestMinModelsGuard:
 
         # openrouter was skipped so only 1 model (from openai, not openrouter)
         assert len(result["models"]) == 1
-        assert "USD" in result["models"]["gpt-4o"]
+        assert "USD" in result["models"]["gpt-4o"]["pricing"]
 
     def test_source_accepted_at_min_models(self, tmp_path):
         """Source with exactly min_models models is accepted."""
@@ -618,8 +622,8 @@ class TestFieldLevelEnrichment:
             result, _ = merger.merge_all("2024-01-01")
 
         model = result["models"]["gpt-4o"]
-        usd = model["USD"]
-        assert usd["input_price"] == pytest.approx(2.50)
+        usd = model["pricing"]["USD"]
+        assert usd["text"]["input_price"] == pytest.approx(2.50)
         assert "batch_pricing" in usd
         assert usd["batch_pricing"]["input_price"] == pytest.approx(1.25)
 
@@ -663,7 +667,7 @@ class TestFieldLevelEnrichment:
              patch.object(config, "min_models_guard", {}):
             result, _ = merger.merge_all("2024-01-01")
 
-        usd = result["models"]["gpt-4o"]["USD"]
+        usd = result["models"]["gpt-4o"]["pricing"]["USD"]
         assert "tiered_pricing" in usd
         assert len(usd["tiered_pricing"]) == 2
 
@@ -706,7 +710,7 @@ class TestFieldLevelEnrichment:
             result, _ = merger.merge_all("2024-01-01")
 
         # openai's batch_pricing wins (1.25), litellm's (0.99) is ignored
-        usd = result["models"]["gpt-4o"]["USD"]
+        usd = result["models"]["gpt-4o"]["pricing"]["USD"]
         assert usd["batch_pricing"]["input_price"] == pytest.approx(1.25)
 
 
@@ -738,7 +742,7 @@ class TestDerivedPricing:
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
              patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
-        return result["models"][model_id]["CNY"], warnings
+        return result["models"][model_id]["pricing"]["CNY"], warnings
 
     def test_paid_model_gets_cache_pricing(self, tmp_path):
         """Paid Zhipu model: cache_read_input_price = input * 0.5."""
@@ -792,7 +796,7 @@ class TestDerivedPricing:
         with patch.object(config, "get_today_sources_dir", return_value=sources_dir), \
              patch.object(config, "data_dir", tmp_path):
             result, _ = merger.merge_all("2024-01-01")
-        usd = result["models"]["deepseek-chat"]["USD"]
+        usd = result["models"]["deepseek-chat"]["pricing"]["USD"]
         assert "cache_pricing" not in usd
         assert "batch_pricing" not in usd
 
@@ -837,10 +841,10 @@ class TestDerivedPricing:
 
         model = result["models"]["glm-4-plus"]
         # Both currencies get cache and batch derived
-        assert "cache_pricing" in model["CNY"]
-        assert "cache_pricing" in model["USD"]
-        assert "batch_pricing" in model["CNY"]
-        assert "batch_pricing" in model["USD"]
+        assert "cache_pricing" in model["pricing"]["CNY"]
+        assert "cache_pricing" in model["pricing"]["USD"]
+        assert "batch_pricing" in model["pricing"]["CNY"]
+        assert "batch_pricing" in model["pricing"]["USD"]
         # No completeness warnings
         completeness = [w for w in warnings if "cache_pricing" in w or "batch_pricing" in w]
         assert completeness == [], f"Unexpected completeness warnings: {completeness}"

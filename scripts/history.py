@@ -210,10 +210,12 @@ class HistoryManager:
                     # Get USD pricing if available
                     usd_pricing = pricing.get("USD", {})
                     if usd_pricing:
+                        # v5.0: prices under "text"; fall back to flat for old snapshots
+                        usd_text = usd_pricing.get("text", usd_pricing)
                         history.append({
                             "date": date_str,
-                            "input_price": usd_pricing.get("input_price"),
-                            "output_price": usd_pricing.get("output_price"),
+                            "input_price": usd_text.get("input_price"),
+                            "output_price": usd_text.get("output_price"),
                         })
 
         return history

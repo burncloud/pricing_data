@@ -2,14 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://pricing.burn.cloud/schema.json",
   "title": "LLM Pricing Data Schema",
-  "description": "Schema for LLM API pricing data (currency-keyed format v4.0)",
+  "description": "Schema for LLM API pricing data (v5.0 — nested modality pricing)",
   "type": "object",
   "required": ["version", "updated_at", "source", "models"],
   "properties": {
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+$",
-      "description": "Schema version (e.g., '3.0')"
+      "description": "Schema version (e.g., '5.0')"
     },
     "updated_at": {
       "type": "string",
@@ -30,25 +30,35 @@
   "definitions": {
     "Model": {
       "type": "object",
-      "description": "Pricing keyed by currency code (e.g. USD, CNY). Each key holds the canonical price from the highest-priority official source for that currency.",
-      "additionalProperties": {
-        "$ref": "#/definitions/CurrencyPricing"
+      "description": "A single LLM model with pricing per currency and provider metadata.",
+      "properties": {
+        "pricing": {
+          "type": "object",
+          "description": "Pricing keyed by currency code (e.g. USD, CNY).",
+          "additionalProperties": {
+            "$ref": "#/definitions/CurrencyPricing"
+          }
+        },
+        "metadata": {
+          "$ref": "#/definitions/ModelMetadata"
+        }
       }
     },
     "CurrencyPricing": {
       "type": "object",
-      "required": ["input_price", "output_price"],
-      "description": "Pricing for a model in a specific currency, from the highest-priority official source.",
+      "description": "Pricing for a model in a specific currency. Each modality has its own namespace — fields are never reused across modalities.",
       "properties": {
-        "input_price": {
-          "type": "number",
-          "minimum": 0,
-          "description": "Price per 1M input tokens"
+        "text": {
+          "$ref": "#/definitions/ModalityPricing",
+          "description": "Text token pricing ($/1M tokens). Present for all standard language models."
         },
-        "output_price": {
-          "type": "number",
-          "minimum": 0,
-          "description": "Price per 1M output tokens"
+        "audio": {
+          "$ref": "#/definitions/ModalityPricing",
+          "description": "Audio token pricing ($/1M tokens). Present for TTS and voice I/O models."
+        },
+        "image": {
+          "$ref": "#/definitions/ImageModalityPricing",
+          "description": "Image pricing. input_price is $/1M tokens (image input tokens). output_price is $/image (flat per-image fee for generation models)."
         },
         "cache_pricing": {
           "$ref": "#/definitions/CachePricing"
@@ -62,11 +72,38 @@
             "$ref": "#/definitions/PricingTier"
           },
           "description": "Tiered pricing (e.g. price differs by context length)"
-        },
-        "image_output_price": {
+        }
+      }
+    },
+    "ModalityPricing": {
+      "type": "object",
+      "description": "Pricing for a single modality (text or audio). Both fields are $/1M tokens.",
+      "properties": {
+        "input_price": {
           "type": "number",
           "minimum": 0,
-          "description": "Flat fee per generated output image, in USD (for image generation models). E.g. $0.039/image for Gemini Flash Image."
+          "description": "Price per 1M input tokens"
+        },
+        "output_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per 1M output tokens"
+        }
+      }
+    },
+    "ImageModalityPricing": {
+      "type": "object",
+      "description": "Pricing for image modality. Units differ: input_price is $/1M tokens (image input); output_price is $/image (flat fee per generated image).",
+      "properties": {
+        "input_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per 1M image input tokens"
+        },
+        "output_price": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Flat fee per generated output image (NOT per-token)"
         }
       }
     },
@@ -124,6 +161,34 @@
           "type": "number",
           "minimum": 0,
           "description": "Output price per 1M tokens for this tier"
+        }
+      }
+    },
+    "ModelMetadata": {
+      "type": "object",
+      "description": "Non-pricing metadata about the model.",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "description": "Provider identifier (e.g. openai, anthropic, google)"
+        },
+        "family": {
+          "type": "string",
+          "description": "Model family (e.g. gpt-4o, claude-3.5, gemini-2.5)"
+        },
+        "context_window": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Context window size in tokens"
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Maximum output tokens"
+        },
+        "_merged_from": {
+          "type": "string",
+          "description": "Source that contributed the winning price for this model"
         }
       }
     }

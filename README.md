@@ -7,8 +7,7 @@ LLM API 定价数据，机器可读，每日自动更新。
 | 文件 | 说明 |
 |------|------|
 | `pricing.json` | 主定价数据，347+ 模型，每日自动更新 |
-| `batch_pricing.json` | Batch API 批量定价（手动维护） |
-| `equivalence.json` | 模型等价表，用于成本优化路由 |
+| `manual_overrides.json` | 人工核验的定价覆盖（优先级最高） |
 | `schema.json` | JSON Schema 定义 |
 
 ## 价格类型
@@ -21,12 +20,6 @@ LLM API 定价数据，机器可读，每日自动更新。
 | 缓存价格 | `cache_pricing.USD.cache_read_input_price` | 142 个模型支持 |
 | 多模态价格 | `multimodal_pricing.USD.image_input_price`, `audio_input_price` | 部分模型 |
 | 推理价格 | `reasoning_pricing.USD.reasoning_output_price` | DeepSeek R1 等推理模型 |
-
-### ✅ 支持（手动维护）
-
-| 类型 | 文件 | 说明 |
-|------|------|------|
-| Batch 价格 | `batch_pricing.json` | OpenAI/Anthropic/Google 提供 50% 折扣 |
 
 ### ❌ 不支持
 
@@ -79,17 +72,19 @@ https://raw.githubusercontent.com/burncloud/pricing_data/main/pricing.json
 
 ## 数据源
 
-- **OpenRouter API** - 主要数据源，每日 UTC 00:00 自动抓取
-- **手动维护** - Batch 价格基于官方文档
+- **官方 API / 文档**（Anthropic、Google、DeepSeek 等）- 优先级最高，直接抓取
+- **OpenRouter API** - 覆盖最广的聚合源，每日 UTC 00:00 自动抓取
+- **LiteLLM** - 补充 batch/tiered 定价字段
+- **manual_overrides.json** - 人工核验，优先级最高，覆盖所有自动化来源
 
 ## 更新频率
 
 - 自动更新：每日 UTC 00:00
-- 手动更新：Batch 价格按需更新（PR 欢迎）
+- 手动更新：按需提交 PR，需附官方文档链接
 
 ## 贡献
 
-Batch 价格更新：提交 PR，包含官方文档链接验证。
+手动覆盖价格：编辑 `manual_overrides.json`，提交 PR，包含官方定价页面链接验证。
 
 ## License
 

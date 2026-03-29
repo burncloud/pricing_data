@@ -228,10 +228,13 @@ class RSSGenerator:
         direction = "increased" if pct > 0 else "decreased"
         abs_pct = abs(pct)
 
+        # v5.0: prices live under "text"; fall back to flat for old data
+        old_text = old.get("text", old)
+        new_text = new.get("text", new)
         desc = (
             f"{model_id} pricing {direction} by {abs_pct:.1f}%. "
-            f"Old: ${old.get('input_price', 'N/A')}/${old.get('output_price', 'N/A')} "
-            f"New: ${new.get('input_price', 'N/A')}/${new.get('output_price', 'N/A')} "
+            f"Old: ${old_text.get('input_price', 'N/A')}/${old_text.get('output_price', 'N/A')} "
+            f"New: ${new_text.get('input_price', 'N/A')}/${new_text.get('output_price', 'N/A')} "
             f"({currency}/M tokens)"
         )
 
@@ -308,8 +311,9 @@ def main() -> int:
                 curr_pricing = model_data.get("pricing", {}).get("USD", {})
                 prev_pricing = prev_model.get("pricing", {}).get("USD", {})
 
-                curr_input = curr_pricing.get("input_price")
-                prev_input = prev_pricing.get("input_price")
+                # v5.0: prices live under "text"; fall back to flat for old snapshots
+                curr_input = curr_pricing.get("text", curr_pricing).get("input_price")
+                prev_input = prev_pricing.get("text", prev_pricing).get("input_price")
 
                 if curr_input and prev_input and curr_input != prev_input:
                     pct = ((curr_input - prev_input) / prev_input) * 100

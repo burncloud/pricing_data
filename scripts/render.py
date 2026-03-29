@@ -12,9 +12,6 @@ from typing import Dict, Optional, Tuple
 
 from scripts.config import config
 
-# Endpoints that are aggregators, not direct provider APIs
-AGGREGATORS = {"litellm", "openrouter.ai"}
-
 # Display names for known providers
 PROVIDER_DISPLAY: Dict[str, str] = {
     "anthropic": "Anthropic",
@@ -70,33 +67,20 @@ FEATURED_PROVIDERS = [
 CURRENCY_SYMBOL = {"USD": "$", "CNY": "¥"}
 
 
-def pick_canonical_endpoint(model: Dict) -> Tuple[str, Dict]:
+def pick_display_currency(model: Dict) -> Tuple[str, Dict]:
     """
-    Return (endpoint_key, endpoint_data) for the best endpoint to display.
+    Return (currency_code, currency_entry) for the best currency to display.
 
-    Priority:
-    1. The endpoint the model was merged from (if it's not an aggregator)
-    2. Any non-aggregator endpoint (official direct API)
-    3. litellm (has pricing for almost everything)
-    4. First available endpoint
+    Priority: USD > CNY > first available
     """
-    endpoints = model.get("endpoints", {})
-    if not endpoints:
+    pricing = model.get("pricing", {})
+    if not pricing:
         return "", {}
-
-    merged_from = model.get("metadata", {}).get("_merged_from", "")
-    if merged_from and merged_from not in AGGREGATORS and merged_from in endpoints:
-        return merged_from, endpoints[merged_from]
-
-    for key, ep in endpoints.items():
-        if key not in AGGREGATORS:
-            return key, ep
-
-    if "litellm" in endpoints:
-        return "litellm", endpoints["litellm"]
-
-    key = next(iter(endpoints))
-    return key, endpoints[key]
+    for code in ("USD", "CNY"):
+        if code in pricing:
+            return code, pricing[code]
+    code = next(iter(pricing))
+    return code, pricing[code]
 
 
 def fmt_price(price: Optional[float], symbol: str = "$") -> str:
@@ -132,9 +116,8 @@ def _provider_sort_key(prov: str) -> tuple:
 
 def _model_sort_key(item: Tuple[str, Dict]) -> float:
     _, m = item
-    _, ep = pick_canonical_endpoint(m)
-    p = ep.get("pricing", {})
-    return -(p.get("input_price") or 0.0)
+    _, entry = pick_display_currency(m)
+    return -(entry.get("text", {}).get("input_price") or 0.0)
 
 
 def render(data: Dict) -> str:
@@ -190,18 +173,19 @@ def render(data: Dict) -> str:
         m = models.get(mid)
         if not m:
             continue
-        ep_key, ep = pick_canonical_endpoint(m)
-        p = ep.get("pricing", {})
-        if not p.get("input_price"):
+        currency, entry = pick_display_currency(m)
+        if not entry:
             continue
-        currency = ep.get("currency", "USD")
+        text_p = entry.get("text", {})
+        if not text_p.get("input_price"):
+            continue
         sym = CURRENCY_SYMBOL.get(currency, currency)
         provider = m.get("metadata", {}).get("provider", "")
         display_prov = PROVIDER_DISPLAY.get(provider, provider.title())
-        inp = fmt_price(p.get("input_price"), sym)
-        out = fmt_price(p.get("output_price"), sym)
-        cp = ep.get("cache_pricing", {})
-        bp = ep.get("batch_pricing", {})
+        inp = fmt_price(text_p.get("input_price"), sym)
+        out = fmt_price(text_p.get("output_price"), sym)
+        cp = entry.get("cache_pricing", {})
+        bp = entry.get("batch_pricing", {})
         cache = fmt_price(cp.get("cache_read_input_price"), sym) if cp else "—"
         batch = fmt_price(bp.get("input_price"), sym) if bp else "—"
         qr_rows.append(f"| `{mid}` | {display_prov} | {inp} | {out} | {cache} | {batch} | {currency} |")
@@ -249,11 +233,11 @@ def render(data: Dict) -> str:
 
         # Detect which optional columns exist in this provider's models
         has_cache = any(
-            pick_canonical_endpoint(m)[1].get("cache_pricing")
+            pick_display_currency(m)[1].get("cache_pricing")
             for _, m in models_list
         )
         has_batch = any(
-            pick_canonical_endpoint(m)[1].get("batch_pricing")
+            pick_display_currency(m)[1].get("batch_pricing")
             for _, m in models_list
         )
         has_context = any(
@@ -282,23 +266,22 @@ def render(data: Dict) -> str:
         lines.append("|".join(sep_cols))
 
         for mid, model in models_list:
-            ep_key, ep = pick_canonical_endpoint(model)
-            p = ep.get("pricing", {})
-            currency = ep.get("currency", "USD")
+            currency, entry = pick_display_currency(model)
+            text_p = entry.get("text", {})
             sym = CURRENCY_SYMBOL.get(currency, currency)
             meta = model.get("metadata", {})
 
-            inp = fmt_price(p.get("input_price"), sym)
-            out = fmt_price(p.get("output_price"), sym)
+            inp = fmt_price(text_p.get("input_price"), sym)
+            out = fmt_price(text_p.get("output_price"), sym)
 
             row_cols = [f"| `{mid}`", inp, out]
 
             if has_cache:
-                cp = ep.get("cache_pricing", {})
+                cp = entry.get("cache_pricing", {})
                 row_cols.append(fmt_price(cp.get("cache_read_input_price"), sym))
 
             if has_batch:
-                bp = ep.get("batch_pricing", {})
+                bp = entry.get("batch_pricing", {})
                 row_cols.append(fmt_price(bp.get("input_price"), sym))
                 row_cols.append(fmt_price(bp.get("output_price"), sym))
 

@@ -199,10 +199,13 @@ class PriceComparator:
             curr = curr_pricing.get(currency, {})
             prev = prev_pricing.get(currency, {})
 
-            curr_input = curr.get("input_price")
-            curr_output = curr.get("output_price")
-            prev_input = prev.get("input_price")
-            prev_output = prev.get("output_price")
+            # v5.0 nested modality format: prices live under "text"
+            curr_text = curr.get("text", curr)  # fall back to flat for old snapshots
+            prev_text = prev.get("text", prev)
+            curr_input = curr_text.get("input_price")
+            curr_output = curr_text.get("output_price")
+            prev_input = prev_text.get("input_price")
+            prev_output = prev_text.get("output_price")
 
             # Check if anything changed
             if curr_input != prev_input or curr_output != prev_output:

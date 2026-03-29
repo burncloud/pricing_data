@@ -1,14 +1,33 @@
 """
 Merge pricing data from multiple sources into pricing.json.
 
-Output format: v3.0 — currency-keyed pricing per model.
-  pricing.json → model → pricing → { "USD": {...}, "CNY": {...} }
+Output format: v5.0 — nested modality pricing per model.
+  pricing.json → model → {
+    "pricing": {
+      "USD": {
+        "text": { "input_price": ..., "output_price": ... },
+        "audio": { "input_price": ..., "output_price": ... },   # optional
+        "image": { "input_price": ..., "output_price": ... },   # optional
+        "cache_pricing": { ... },   # optional, at currency level
+        "batch_pricing":  { ... },  # optional, at currency level
+        "tiered_pricing": [ ... ],  # optional, at currency level
+      },
+      "CNY": { ... }
+    },
+    "metadata": { "provider": ..., "family": ..., ... }
+  }
+
+Modality field rules:
+- text.*  : any source may contribute
+- audio.* : MODALITY_AUTHORITATIVE_SOURCES only (blocks litellm, openrouter)
+- image.* : MODALITY_AUTHORITATIVE_SOURCES only (blocks litellm, openrouter)
 
 Priority order (higher = more authoritative):
-1. Original providers (OpenAI, Anthropic, etc.) - priority 100
-2. Chinese providers (Zhipu, Aliyun, etc.) - priority 100
-3. Aggregators (OpenRouter) - priority 50
-4. Manual entries - priority 10
+1. manual_overrides (priority 200)
+2. Original providers (OpenAI, Anthropic, etc.) - priority 100
+3. Chinese providers (Zhipu, Aliyun, etc.) - priority 100
+4. LiteLLM community aggregator - priority 70
+5. OpenRouter aggregator - priority 50
 
 Quality checks:
 - Price drift: warn when same currency has >1% price difference across sources
@@ -21,9 +40,55 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from scripts.config import config
+from scripts.config import config, MODALITY_AUTHORITATIVE_SOURCES
 
 logger = logging.getLogger(__name__)
+
+
+def _is_nested_pricing(pricing: Dict[str, Any]) -> bool:
+    """Return True if pricing already uses v5.0 nested modality format."""
+    return any(k in pricing for k in ("text", "audio", "image"))
+
+
+def _flat_to_nested(pricing: Dict[str, Any], source_name: str) -> Dict[str, Any]:
+    """
+    Convert flat pricing dict (from fetchers) to v5.0 nested modality.
+
+    Flat: { "input_price": x, "output_price": y, "image_output_price": z? }
+    Nested: { "text": {"input_price": x, "output_price": y}, "image": {"output_price": z} }
+
+    image.* and audio.* fields are only populated when source is authoritative.
+    """
+    result: Dict[str, Any] = {}
+
+    input_price = pricing.get("input_price")
+    # Treat null output_price as 0.0 (matches old merge.py behaviour: `or 0.0`)
+    output_price = pricing.get("output_price") or 0.0
+
+    text: Dict[str, Any] = {}
+    if input_price is not None:
+        text["input_price"] = input_price
+    text["output_price"] = output_price
+    if text:
+        result["text"] = text
+
+    # image_output_price is per-image fee (e.g. Google image gen models)
+    image_output_price = pricing.get("image_output_price")
+    if image_output_price is not None and source_name in MODALITY_AUTHORITATIVE_SOURCES:
+        result["image"] = {"output_price": image_output_price}
+
+    return result
+
+
+def _to_v5_pricing(pricing: Dict[str, Any], source_name: str) -> Dict[str, Any]:
+    """Return v5.0 pricing dict regardless of input format."""
+    if _is_nested_pricing(pricing):
+        # Already nested — enforce source blocking for audio/image
+        if source_name not in MODALITY_AUTHORITATIVE_SOURCES:
+            result = {k: v for k, v in pricing.items() if k not in ("audio", "image")}
+            return result
+        return dict(pricing)
+    return _flat_to_nested(pricing, source_name)
 
 
 class PricingMerger:
@@ -64,11 +129,11 @@ class PricingMerger:
         if not all_sources:
             raise ValueError("No source data found")
 
-        # Merge with priority resolution → currency-keyed output
+        # Merge with priority resolution → v5.0 output
         merged_models = self._merge_with_priority(all_sources, warnings)
 
         output = {
-            "version": "4.0",
+            "version": "5.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "source": "burncloud-official",
             "models": merged_models,
@@ -130,21 +195,21 @@ class PricingMerger:
         warnings: List[str]
     ) -> Dict[str, Any]:
         """
-        Merge models from all sources into currency-keyed pricing (v3.0).
+        Merge models from all sources into v5.0 nested modality pricing.
 
         For each model:
         - Group all endpoint entries by currency
         - Highest-priority source wins base pricing per currency
         - Lower-priority sources contribute missing batch_pricing / cache_pricing
+        - audio.* and image.* only from MODALITY_AUTHORITATIVE_SOURCES
         - Warn on price drift within the same currency
-        - Warn on completeness gaps across currencies (batch/cache present in one
-          currency but absent in another)
+        - Warn on completeness gaps across currencies
         """
         merged = {}
 
         # model_id → { currency → [(source_name, ep_data, priority), ...] }
         model_currency_sources: Dict[str, Dict[str, List[Tuple[str, Dict, int]]]] = {}
-        # model_id → [(source_name, metadata, priority), ...] (internal only, for provider resolution)
+        # model_id → [(source_name, metadata, priority), ...]
         model_metadata: Dict[str, List[Tuple[str, Dict, int]]] = {}
 
         for source in sources:
@@ -174,10 +239,10 @@ class PricingMerger:
         for model_id, currency_map in model_currency_sources.items():
             pricing: Dict[str, Any] = {}
 
-            # Resolve provider early so we can apply derived pricing per currency.
-            # Sort in place — the metadata section below reuses the same list.
+            # Resolve provider early for derived pricing.
             _meta_list = model_metadata.get(model_id, [])
             _provider: Optional[str] = None
+            _winner_source: Optional[str] = None
             if _meta_list:
                 _meta_list.sort(key=lambda x: x[2], reverse=True)
                 _provider = _meta_list[0][1].get("provider")
@@ -186,15 +251,13 @@ class PricingMerger:
                 source_list.sort(key=lambda x: x[2], reverse=True)
 
                 winner_name, winner_ep, _ = source_list[0]
-                entry: Dict[str, Any] = {
-                    "input_price": winner_ep["pricing"]["input_price"],
-                    "output_price": winner_ep["pricing"].get("output_price") or 0.0,
-                }
-                # Pass through modality-specific pricing fields from winner
-                for pricing_field in ("image_output_price",):
-                    if pricing_field in winner_ep["pricing"]:
-                        entry[pricing_field] = winner_ep["pricing"][pricing_field]
+                if _winner_source is None:
+                    _winner_source = winner_name
 
+                # Build v5.0 modality entry from winner's pricing
+                entry = _to_v5_pricing(winner_ep.get("pricing", {}), winner_name)
+
+                # Pass through cache/batch/tiered from winner
                 for field in ("cache_pricing", "batch_pricing", "tiered_pricing"):
                     if field in winner_ep:
                         entry[field] = copy.deepcopy(winner_ep[field])
@@ -207,17 +270,24 @@ class PricingMerger:
                             logger.debug(
                                 f"Field-merged {model_id}[{currency}].{field} from {src_name}"
                             )
-                    # Also fill missing modality pricing from lower-priority sources
-                    for pricing_field in ("image_output_price",):
-                        if pricing_field not in entry and pricing_field in ep_data.get("pricing", {}):
-                            entry[pricing_field] = ep_data["pricing"][pricing_field]
-                            logger.debug(
-                                f"Field-merged {model_id}[{currency}].{pricing_field} from {src_name}"
-                            )
 
-                    # Price drift check within same currency
-                    base_input = entry["input_price"]
-                    other_input = ep_data["pricing"].get("input_price")
+                    # Modality fields from lower-priority AUTHORITATIVE sources only
+                    if src_name in MODALITY_AUTHORITATIVE_SOURCES:
+                        src_v5 = _to_v5_pricing(ep_data.get("pricing", {}), src_name)
+                        for modality in ("audio", "image"):
+                            if modality not in entry and modality in src_v5:
+                                entry[modality] = src_v5[modality]
+                                logger.debug(
+                                    f"Field-merged {model_id}[{currency}].{modality} from {src_name}"
+                                )
+
+                    # Price drift check within same currency (text.input_price)
+                    base_input = entry.get("text", {}).get("input_price")
+                    other_p = ep_data.get("pricing", {})
+                    if _is_nested_pricing(other_p):
+                        other_input = other_p.get("text", {}).get("input_price")
+                    else:
+                        other_input = other_p.get("input_price")
                     if base_input and other_input:
                         drift = abs(base_input - other_input) / base_input
                         if drift > config.price_drift_warning_threshold:
@@ -236,11 +306,13 @@ class PricingMerger:
                     if "cache_write_input_price" in cache:
                         cache["cache_creation_input_price"] = cache.pop("cache_write_input_price")
 
-                # Apply provider-level derived pricing for any missing optional fields.
-                # This runs for every currency so USD and CNY are treated symmetrically.
+                # Apply provider-level derived pricing for missing optional fields.
                 if _provider:
+                    text_p = entry.get("text", {})
+                    text_input = text_p.get("input_price", 0) or 0
+                    text_output = text_p.get("output_price", 0) or 0
                     cache_d, batch_d = config.get_derived_pricing(
-                        _provider, model_id, entry["input_price"], entry["output_price"]
+                        _provider, model_id, text_input, text_output
                     )
                     if "cache_pricing" not in entry and cache_d:
                         entry["cache_pricing"] = cache_d
@@ -260,9 +332,41 @@ class PricingMerger:
             # Quality check: completeness across currencies
             self._check_pricing_completeness(model_id, pricing, warnings)
 
-            merged[model_id] = pricing
+            # Build best metadata from highest-priority sources
+            best_metadata = self._build_metadata(_meta_list, _winner_source)
+
+            merged[model_id] = {
+                "pricing": pricing,
+                "metadata": best_metadata,
+            }
 
         return merged
+
+    def _build_metadata(
+        self,
+        meta_list: List[Tuple[str, Dict, int]],
+        winner_source: Optional[str],
+    ) -> Dict[str, Any]:
+        """
+        Build best metadata from all sources.
+
+        Highest-priority source wins base fields (provider, family).
+        Lower-priority sources fill in supplemental fields (context_window, etc.).
+        """
+        if not meta_list:
+            return {}
+
+        # meta_list is already sorted descending by priority
+        best: Dict[str, Any] = {}
+        for _, meta, _ in meta_list:
+            for key, value in meta.items():
+                if key not in best and value is not None:
+                    best[key] = value
+
+        if winner_source:
+            best["_merged_from"] = winner_source
+
+        return best
 
     def _check_pricing_completeness(
         self,
@@ -273,9 +377,6 @@ class PricingMerger:
         """
         Quality check: if one currency has batch_pricing or cache_pricing but
         another currency for the same model doesn't, emit a warning.
-
-        This flags gaps in data collection — e.g. USD has batch_pricing from
-        LiteLLM but CNY batch pricing was never fetched.
         """
         currencies = list(pricing.keys())
         if len(currencies) < 2:

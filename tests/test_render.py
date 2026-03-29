@@ -3,10 +3,9 @@ Tests for scripts/render.py — human-readable Markdown table generator.
 """
 import pytest
 from scripts.render import (
-    AGGREGATORS,
     fmt_context,
     fmt_price,
-    pick_canonical_endpoint,
+    pick_display_currency,
     render,
 )
 
@@ -22,19 +21,19 @@ class TestFmtPrice:
     def test_zero_returns_free(self):
         assert fmt_price(0.0) == "free"
 
-    def test_large_price(self):
+    def test_standard_price(self):
         assert fmt_price(15.0) == "$15.00"
 
-    def test_small_price(self):
+    def test_sub_dollar(self):
         assert fmt_price(0.28) == "$0.28"
 
-    def test_tiny_price(self):
+    def test_cent_range(self):
         assert fmt_price(0.028) == "$0.028"
 
-    def test_very_tiny_price(self):
+    def test_very_small_price(self):
         assert fmt_price(0.0002) == "$0.000200"
 
-    def test_cny_symbol(self):
+    def test_custom_symbol(self):
         assert fmt_price(5.0, "¥") == "¥5.00"
 
 
@@ -62,66 +61,55 @@ class TestFmtContext:
 
 
 # ---------------------------------------------------------------------------
-# pick_canonical_endpoint
+# pick_display_currency
 # ---------------------------------------------------------------------------
 
-class TestPickCanonicalEndpoint:
-    def _model(self, endpoints, merged_from="source_a"):
-        return {
-            "endpoints": endpoints,
-            "metadata": {"_merged_from": merged_from},
-        }
+class TestPickDisplayCurrency:
+    def _model(self, pricing_dict):
+        return {"pricing": pricing_dict, "metadata": {}}
 
-    def test_prefers_merged_from_if_official(self):
-        m = self._model({
-            "api.anthropic.com": {"pricing": {"input_price": 5.0}},
-            "litellm": {"pricing": {"input_price": 5.0}},
-        }, merged_from="anthropic")
-        # anthropic → endpoint key "api.anthropic.com" won't be found directly,
-        # but "api.anthropic.com" is not an aggregator, so it's picked first
-        key, ep = pick_canonical_endpoint(m)
-        assert key not in AGGREGATORS
+    def test_prefers_usd(self):
+        m = self._model({"USD": {"text": {"input_price": 2.5}}, "CNY": {"text": {"input_price": 18.0}}})
+        code, entry = pick_display_currency(m)
+        assert code == "USD"
 
-    def test_skips_aggregators_for_official(self):
-        m = self._model({
-            "litellm": {"pricing": {"input_price": 5.0}},
-            "api.anthropic.com": {"pricing": {"input_price": 5.0}},
-        }, merged_from="litellm")  # merged_from is aggregator → should skip
-        key, ep = pick_canonical_endpoint(m)
-        assert key == "api.anthropic.com"
+    def test_falls_back_to_cny(self):
+        m = self._model({"CNY": {"text": {"input_price": 18.0}}})
+        code, entry = pick_display_currency(m)
+        assert code == "CNY"
+        assert entry["text"]["input_price"] == pytest.approx(18.0)
 
-    def test_falls_back_to_litellm_when_no_official(self):
-        m = self._model({
-            "litellm": {"pricing": {"input_price": 2.5}},
-            "openrouter.ai": {"pricing": {"input_price": 2.5}},
-        }, merged_from="litellm")
-        key, _ = pick_canonical_endpoint(m)
-        assert key == "litellm"
-
-    def test_empty_endpoints_returns_empty(self):
-        m = {"endpoints": {}, "metadata": {}}
-        key, ep = pick_canonical_endpoint(m)
-        assert key == ""
-        assert ep == {}
-
-    def test_merged_from_official_ep_key_wins(self):
-        """When merged_from matches an endpoint key directly, use it."""
-        m = self._model({
-            "api.deepseek.com": {"currency": "USD", "pricing": {"input_price": 0.28}},
-            "litellm": {"currency": "USD", "pricing": {"input_price": 0.28}},
-        }, merged_from="api.deepseek.com")
-        key, ep = pick_canonical_endpoint(m)
-        assert key == "api.deepseek.com"
-        assert ep["pricing"]["input_price"] == pytest.approx(0.28)
+    def test_empty_pricing_returns_empty(self):
+        m = {"pricing": {}, "metadata": {}}
+        code, entry = pick_display_currency(m)
+        assert code == ""
+        assert entry == {}
 
 
 # ---------------------------------------------------------------------------
 # render
 # ---------------------------------------------------------------------------
 
+def _v5_model(provider, currency, input_price, output_price, *,
+              cache_read=None, batch_in=None, batch_out=None,
+              context_window=None):
+    """Helper: build a v5.0 model entry for test data."""
+    text = {"input_price": input_price, "output_price": output_price}
+    entry = {"text": text}
+    if cache_read is not None:
+        entry["cache_pricing"] = {"cache_read_input_price": cache_read}
+    if batch_in is not None:
+        entry["batch_pricing"] = {"input_price": batch_in, "output_price": batch_out or 0.0}
+    pricing = {currency: entry}
+    meta = {"provider": provider}
+    if context_window:
+        meta["context_window"] = context_window
+    return {"pricing": pricing, "metadata": meta}
+
+
 def _make_data(models: dict) -> dict:
     return {
-        "version": "2.0",
+        "version": "5.0",
         "updated_at": "2026-03-28T00:00:00+00:00",
         "source": "test",
         "models": models,
@@ -131,10 +119,7 @@ def _make_data(models: dict) -> dict:
 class TestRender:
     def test_header_contains_version_and_model_count(self):
         data = _make_data({
-            "gpt-4o": {
-                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            }
+            "gpt-4o": _v5_model("openai", "USD", 2.5, 10.0),
         })
         md = render(data)
         assert "2026-03-28" in md
@@ -142,10 +127,7 @@ class TestRender:
 
     def test_provider_section_present(self):
         data = _make_data({
-            "claude-opus-4-6": {
-                "endpoints": {"api.anthropic.com": {"currency": "USD", "pricing": {"input_price": 5.0, "output_price": 25.0}}},
-                "metadata": {"provider": "anthropic", "_merged_from": "anthropic"},
-            }
+            "claude-opus-4-6": _v5_model("anthropic", "USD", 5.0, 25.0),
         })
         md = render(data)
         assert "## Anthropic" in md
@@ -155,10 +137,7 @@ class TestRender:
 
     def test_cny_currency(self):
         data = _make_data({
-            "glm-4-plus": {
-                "endpoints": {"open.bigmodel.cn": {"currency": "CNY", "pricing": {"input_price": 5.0, "output_price": 5.0}}},
-                "metadata": {"provider": "zhipu", "_merged_from": "zhipu"},
-            }
+            "glm-4-plus": _v5_model("zhipu", "CNY", 5.0, 5.0),
         })
         md = render(data)
         assert "¥5.00" in md
@@ -166,35 +145,17 @@ class TestRender:
 
     def test_cache_column_appears_only_when_present(self):
         data = _make_data({
-            "gemini-2.0-flash": {
-                "endpoints": {"generativelanguage.googleapis.com": {
-                    "currency": "USD",
-                    "pricing": {"input_price": 0.1, "output_price": 0.4},
-                    "cache_pricing": {"cache_read_input_price": 0.025},
-                }},
-                "metadata": {"provider": "google", "_merged_from": "google"},
-            },
-            "gemini-flash-lite": {
-                "endpoints": {"generativelanguage.googleapis.com": {
-                    "currency": "USD",
-                    "pricing": {"input_price": 0.075, "output_price": 0.3},
-                }},
-                "metadata": {"provider": "google", "_merged_from": "google"},
-            },
+            "gemini-2.0-flash": _v5_model("google", "USD", 0.1, 0.4, cache_read=0.025),
+            "gemini-flash-lite": _v5_model("google", "USD", 0.075, 0.3),
         })
         md = render(data)
         assert "Cache Read" in md
 
     def test_cache_column_absent_without_cache_data(self):
-        # Use a model NOT in QUICK_REF_MODELS so the Quick Reference table isn't rendered
         data = _make_data({
-            "some-obscure-model": {
-                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            }
+            "some-obscure-model": _v5_model("openai", "USD", 2.5, 10.0),
         })
         md = render(data)
-        # The provider section (## OpenAI) should not have a Cache Read column
         openai_section = md[md.index("## OpenAI"):]
         next_section = openai_section.find("\n## ", 1)
         provider_table = openai_section[:next_section] if next_section != -1 else openai_section
@@ -202,14 +163,7 @@ class TestRender:
 
     def test_batch_columns_appear_when_present(self):
         data = _make_data({
-            "gpt-4o": {
-                "endpoints": {"litellm": {
-                    "currency": "USD",
-                    "pricing": {"input_price": 2.5, "output_price": 10.0},
-                    "batch_pricing": {"input_price": 1.25, "output_price": 5.0},
-                }},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            }
+            "gpt-4o": _v5_model("openai", "USD", 2.5, 10.0, batch_in=1.25, batch_out=5.0),
         })
         md = render(data)
         assert "Batch In" in md
@@ -218,24 +172,15 @@ class TestRender:
 
     def test_free_model_shows_free(self):
         data = _make_data({
-            "glm-4.7-flash": {
-                "endpoints": {"open.bigmodel.cn": {"currency": "CNY", "pricing": {"input_price": 0.0, "output_price": 0.0}}},
-                "metadata": {"provider": "zhipu", "_merged_from": "zhipu"},
-            }
+            "glm-4.7-flash": _v5_model("zhipu", "CNY", 0.0, 0.0),
         })
         md = render(data)
         assert "free" in md
 
     def test_models_sorted_by_input_price_descending(self):
         data = _make_data({
-            "cheap-model": {
-                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 0.1, "output_price": 0.5}}},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            },
-            "expensive-model": {
-                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 15.0, "output_price": 75.0}}},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            },
+            "cheap-model": _v5_model("openai", "USD", 0.1, 0.5),
+            "expensive-model": _v5_model("openai", "USD", 15.0, 75.0),
         })
         md = render(data)
         openai_section = md[md.index("## OpenAI"):]
@@ -245,10 +190,7 @@ class TestRender:
 
     def test_providers_toc_present(self):
         data = _make_data({
-            "gpt-4o": {
-                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            }
+            "gpt-4o": _v5_model("openai", "USD", 2.5, 10.0),
         })
         md = render(data)
         assert "## Providers" in md
@@ -256,10 +198,7 @@ class TestRender:
     def test_quick_reference_rendered_for_known_models(self):
         """Known quick-ref models appear in a ## Quick Reference section."""
         data = _make_data({
-            "gpt-4o": {
-                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            }
+            "gpt-4o": _v5_model("openai", "USD", 2.5, 10.0),
         })
         md = render(data)
         assert "## Quick Reference" in md
@@ -268,10 +207,7 @@ class TestRender:
     def test_quick_reference_absent_when_no_known_models(self):
         """No quick-ref section when no QUICK_REF_MODELS are present in data."""
         data = _make_data({
-            "some-obscure-model-xyz": {
-                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 1.0, "output_price": 2.0}}},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            }
+            "some-obscure-model-xyz": _v5_model("openai", "USD", 1.0, 2.0),
         })
         md = render(data)
         assert "## Quick Reference" not in md
@@ -279,11 +215,32 @@ class TestRender:
     def test_quick_reference_jump_link_in_header(self):
         """Header contains jump link to Quick Reference."""
         data = _make_data({
-            "gpt-4o": {
-                "endpoints": {"litellm": {"currency": "USD", "pricing": {"input_price": 2.5, "output_price": 10.0}}},
-                "metadata": {"provider": "openai", "_merged_from": "litellm"},
-            }
+            "gpt-4o": _v5_model("openai", "USD", 2.5, 10.0),
         })
         md = render(data)
         assert "Quick Reference" in md[:500]
         assert "OpenAI" in md
+
+    def test_context_column_when_present(self):
+        """Context column appears when at least one model has context_window."""
+        data = _make_data({
+            "gpt-4o": _v5_model("openai", "USD", 2.5, 10.0, context_window=128_000),
+        })
+        md = render(data)
+        assert "Context" in md
+        assert "128K" in md
+
+    def test_multimodal_audio_not_in_text_columns(self):
+        """TTS model with audio.output_price shows no text output price."""
+        model = {
+            "pricing": {"USD": {
+                "text": {"input_price": 0.5},
+                "audio": {"output_price": 10.0},
+            }},
+            "metadata": {"provider": "google"},
+        }
+        data = _make_data({"gemini-tts": model})
+        md = render(data)
+        # text output is absent → shows "—"
+        google_section = md[md.index("## Google"):]
+        assert "gemini-tts" in google_section

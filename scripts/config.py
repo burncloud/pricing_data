@@ -8,6 +8,17 @@ from pathlib import Path
 from typing import Any, Dict, FrozenSet, List, Optional, Tuple
 
 
+# Sources authorised to write modality-specific pricing (audio.*, image.*).
+# LiteLLM and OpenRouter routinely omit or misattribute these fields, so they
+# are blocked from writing them.  Only direct-provider fetchers and human-
+# verified manual_overrides are trusted for modality pricing.
+MODALITY_AUTHORITATIVE_SOURCES: frozenset = frozenset({
+    "openai", "anthropic", "google", "deepseek",
+    "zhipu", "aliyun", "baidu", "xunfei", "moonshot", "minimax",
+    "manual_overrides",
+})
+
+
 @dataclass
 class ProviderPricingRules:
     """
@@ -60,7 +71,6 @@ class Config:
     repo_root: Path = field(default_factory=lambda: Path(__file__).parent.parent)
     pricing_file: Path = field(init=False)
     schema_file: Path = field(init=False)
-    equivalence_file: Path = field(init=False)
     sources_dir: Path = field(init=False)
     history_dir: Path = field(init=False)
     feed_file: Path = field(init=False)
@@ -134,7 +144,6 @@ class Config:
         self.data_dir = self.repo_root
         self.pricing_file = self.repo_root / "pricing.json"
         self.schema_file = self.repo_root / "schema.json"
-        self.equivalence_file = self.repo_root / "equivalence.json"
         self.sources_dir = self.repo_root / "sources"
         self.history_dir = self.repo_root / "history"
         self.feed_file = self.repo_root / "feed.xml"
