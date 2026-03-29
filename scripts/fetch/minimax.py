@@ -19,9 +19,12 @@ from scripts.fetch.base import BaseFetcher
 
 logger = logging.getLogger(__name__)
 
-# Matches MiniMax model IDs: MiniMax-Text-01, abab6.5-chat, M2.7, etc.
+# Matches MiniMax model IDs: MiniMax-Text-01, MiniMax-M2.7, abab6.5-chat, etc.
+# Requires the "MiniMax-" prefix to avoid matching CDN hashes, SVG path commands,
+# or React serialization markers like $1, $undefined, M18.
+# Negative lookahead rejects pure hex hashes like minimax-cac98058.
 _MODEL_RE = re.compile(
-    r"((?:MiniMax-[\w.-]+|abab[\w.-]+-(?:chat|pro)|M\d+(?:\.\d+)?(?:-highspeed)?))",
+    r"((?:MiniMax-(?![0-9a-f]{6,})[\w.-]+|abab[\w.]+-(?:chat|pro)))",
     re.IGNORECASE,
 )
 
@@ -63,6 +66,10 @@ class MiniMaxFetcher(BaseFetcher):
         text = response.text.lower()
         if "minimax" not in text and "abab" not in text:
             logger.error("MiniMax: no model names found on pricing page")
+            return False
+        # Require actual price signals (dollar or yuan amounts)
+        if "$" not in response.text and "¥" not in response.text and "￥" not in response.text:
+            logger.info("MiniMax: no price signals found — page may use subscription pricing")
             return False
         return True
 
@@ -179,9 +186,7 @@ class MiniMaxFetcher(BaseFetcher):
         yuan_prices = [float(m.group(1)) for m in _YUAN_RE.finditer(text)]
         if yuan_prices:
             return yuan_prices, True
-        # Fallback: bare numbers
-        nums = [float(m.group(1)) for m in re.finditer(r"([0-9]+(?:\.[0-9]+)?)", text)]
-        return nums, False
+        return [], False
 
     def _make_entry(
         self,
