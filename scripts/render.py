@@ -116,7 +116,7 @@ def _provider_sort_key(prov: str) -> tuple:
 def _model_sort_key(item: Tuple[str, Dict]) -> float:
     _, m = item
     _, entry = pick_display_currency(m)
-    return -(entry.get("text", {}).get("input") or 0.0)
+    return -(entry.get("text", {}).get("in") or 0.0)
 
 
 def render(data: Dict) -> str:
@@ -176,17 +176,17 @@ def render(data: Dict) -> str:
         if not entry:
             continue
         text_p = entry.get("text", {})
-        if not text_p.get("input"):
+        if not text_p.get("in"):
             continue
         sym = CURRENCY_SYMBOL.get(currency, currency)
         provider = infer_provider(mid)
         display_prov = PROVIDER_DISPLAY.get(provider, provider.replace("_", " ").title())
-        inp = fmt_price(text_p.get("input"), sym)
-        out = fmt_price(text_p.get("output"), sym)
+        inp = fmt_price(text_p.get("in"), sym)
+        out = fmt_price(text_p.get("out"), sym)
         cp = entry.get("cache", {})
         bp = entry.get("batch", {})
-        cache = fmt_price(cp.get("read_input"), sym) if cp else "—"
-        batch = fmt_price(bp.get("input"), sym) if bp else "—"
+        cache = fmt_price(cp.get("in"), sym) if cp else "—"
+        batch = fmt_price(bp.get("in"), sym) if bp else "—"
         qr_rows.append(f"| `{mid}` | {display_prov} | {inp} | {out} | {cache} | {batch} | {currency} |")
 
     if qr_rows:
@@ -261,19 +261,19 @@ def render(data: Dict) -> str:
             text_p = entry.get("text", {})
             sym = CURRENCY_SYMBOL.get(currency, currency)
 
-            inp = fmt_price(text_p.get("input"), sym)
-            out = fmt_price(text_p.get("output"), sym)
+            inp = fmt_price(text_p.get("in"), sym)
+            out = fmt_price(text_p.get("out"), sym)
 
             row_cols = [f"| `{mid}`", inp, out]
 
             if has_cache:
                 cp = entry.get("cache", {})
-                row_cols.append(fmt_price(cp.get("read_input"), sym))
+                row_cols.append(fmt_price(cp.get("in"), sym))
 
             if has_batch:
                 bp = entry.get("batch", {})
-                row_cols.append(fmt_price(bp.get("input"), sym))
-                row_cols.append(fmt_price(bp.get("output"), sym))
+                row_cols.append(fmt_price(bp.get("in"), sym))
+                row_cols.append(fmt_price(bp.get("out"), sym))
 
             row_cols.append(f"{currency} |")
             lines.append(" | ".join(row_cols))

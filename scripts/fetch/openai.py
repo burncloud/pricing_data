@@ -170,11 +170,11 @@ class OpenAIFetcher(BaseFetcher):
 
         cached_price = prices.get("cached input")
         cache_pricing = (
-            {"read_input": cached_price} if cached_price is not None else None
+            {"in": cached_price} if cached_price is not None else None
         )
 
         endpoint_entry = self._build_endpoint_entry(
-            {"input": input_price, "output": output_price},
+            {"in": input_price, "out": output_price},
             cache_pricing=cache_pricing,
         )
         return self._build_model_entry(endpoint_entry, metadata)

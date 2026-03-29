@@ -66,15 +66,15 @@ class TestFmtContext:
 
 class TestPickDisplayCurrency:
     def test_prefers_usd(self):
-        m = {"USD": {"text": {"input": 2.5}}, "CNY": {"text": {"input": 18.0}}}
+        m = {"USD": {"text": {"in": 2.5}}, "CNY": {"text": {"in": 18.0}}}
         code, entry = pick_display_currency(m)
         assert code == "USD"
 
     def test_falls_back_to_cny(self):
-        m = {"CNY": {"text": {"input": 18.0}}}
+        m = {"CNY": {"text": {"in": 18.0}}}
         code, entry = pick_display_currency(m)
         assert code == "CNY"
-        assert entry["text"]["input"] == pytest.approx(18.0)
+        assert entry["text"]["in"] == pytest.approx(18.0)
 
     def test_empty_pricing_returns_empty(self):
         m = {}
@@ -96,12 +96,12 @@ def _v5_model(provider, currency, input_price, output_price, *,
     the model entry itself stores no provider. Pass a model_id starting with the
     right prefix when calling render() so infer_provider() groups correctly.
     """
-    text = {"input": input_price, "output": output_price}
+    text = {"in": input_price, "out": output_price}
     entry = {"text": text}
     if cache_read is not None:
-        entry["cache"] = {"read_input": cache_read}
+        entry["cache"] = {"in": cache_read}
     if batch_in is not None:
-        entry["batch"] = {"input": batch_in, "output": batch_out or 0.0}
+        entry["batch"] = {"in": batch_in, "out": batch_out or 0.0}
     return {currency: entry}
 
 
@@ -231,8 +231,8 @@ class TestRender:
         """TTS model with audio.output shows no text output price."""
         model = {
             "USD": {
-                "text": {"input": 0.5},
-                "audio": {"output": 10.0},
+                "text": {"in": 0.5},
+                "audio": {"out": 10.0},
             },
         }
         data = _make_data({"gemini-tts": model})

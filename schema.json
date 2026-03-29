@@ -4,7 +4,12 @@
   "title": "LLM Pricing Data Schema",
   "description": "Schema for LLM API pricing data (v7.0 — pricing-only, simplified field names)",
   "type": "object",
-  "required": ["version", "updated_at", "source", "models"],
+  "required": [
+    "version",
+    "updated_at",
+    "source",
+    "models"
+  ],
   "properties": {
     "version": {
       "type": "string",
@@ -74,12 +79,12 @@
       "type": "object",
       "description": "Pricing for a single modality (text, audio, or video). Both fields are $/1M tokens.",
       "properties": {
-        "input": {
+        "in": {
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M input tokens"
         },
-        "output": {
+        "out": {
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M output tokens"
@@ -90,12 +95,12 @@
       "type": "object",
       "description": "Pricing for image modality. All prices are per 1M tokens.",
       "properties": {
-        "input": {
+        "in": {
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M image input tokens"
         },
-        "output": {
+        "out": {
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M image output tokens"
@@ -105,33 +110,39 @@
     "CachePricing": {
       "type": "object",
       "properties": {
-        "read_input": {
-          "type": "number",
-          "minimum": 0,
-          "description": "Price for reading from cache per 1M tokens"
-        },
         "creation_input": {
-          "type": ["number", "null"],
+          "type": [
+            "number",
+            "null"
+          ],
           "minimum": 0,
           "description": "Price for creating cache entry per 1M tokens"
+        },
+        "in": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Cache read (hit) price per 1M tokens"
         }
       }
     },
     "BatchPricing": {
       "type": "object",
-      "required": ["input", "output"],
+      "required": [
+        "in",
+        "out"
+      ],
       "properties": {
-        "input": {
+        "in": {
           "type": "number",
           "minimum": 0,
           "description": "Batch API input price per 1M tokens"
         },
-        "output": {
+        "out": {
           "type": "number",
           "minimum": 0,
           "description": "Batch API output price per 1M tokens"
         },
-        "image_output": {
+        "image_out": {
           "type": "number",
           "minimum": 0,
           "description": "Batch API price per 1M image output tokens"
@@ -140,7 +151,11 @@
     },
     "PricingTier": {
       "type": "object",
-      "required": ["tier_start", "input", "output"],
+      "required": [
+        "tier_start",
+        "in",
+        "out"
+      ],
       "properties": {
         "tier_start": {
           "type": "integer",
@@ -152,12 +167,12 @@
           "minimum": 1,
           "description": "Exclusive end of token range (omitted for the last/open-ended tier)"
         },
-        "input": {
+        "in": {
           "type": "number",
           "minimum": 0,
           "description": "Input price per 1M tokens for this tier"
         },
-        "output": {
+        "out": {
           "type": "number",
           "minimum": 0,
           "description": "Output price per 1M tokens for this tier"

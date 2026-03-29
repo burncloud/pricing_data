@@ -293,24 +293,24 @@ class GoogleFetcher(BaseFetcher):
                     {
                         "tier_start": 0,
                         "tier_end": input_boundary,
-                        "input": tier1_in,
-                        "output": tier1_out,
+                        "in": tier1_in,
+                        "out": tier1_out,
                     },
                     {
                         "tier_start": input_boundary,
-                        "input": tier2_in,
-                        "output": tier2_out,
+                        "in": tier2_in,
+                        "out": tier2_out,
                     },
                 ]
                 # Top-level pricing uses tier-1 prices (cheapest / most common)
-                flat_pricing = {"input": tier1_in, "output": tier1_out}
+                flat_pricing = {"in": tier1_in, "out": tier1_out}
             else:
-                flat_pricing = {"input": input_price, "output": effective_output_price}
+                flat_pricing = {"in": input_price, "out": effective_output_price}
         else:
-            flat_pricing = {"input": input_price, "output": effective_output_price}
+            flat_pricing = {"in": input_price, "out": effective_output_price}
 
         if image_output_price is not None:
-            flat_pricing["image_output"] = image_output_price
+            flat_pricing["image_out"] = image_output_price
             logger.debug(
                 f"Google image model: {display_name!r} "
                 f"image_output_price={image_output_price}"
@@ -321,7 +321,7 @@ class GoogleFetcher(BaseFetcher):
         if cache_cell:
             cache_price = _first_dollar(cache_cell)
             if cache_price is not None and "Not available" not in cache_cell:
-                cache_pricing = {"read_input": cache_price}
+                cache_pricing = {"in": cache_price}
 
         endpoint_entry = self._build_endpoint_entry(
             flat_pricing,

@@ -176,8 +176,8 @@ class LiteLLMFetcher(BaseFetcher):
             return None
 
         flat_pricing = {
-            "input": round(float(input_per_token) * _PER_TOKEN_TO_PER_MILLION, 6),
-            "output": round(float(output_per_token) * _PER_TOKEN_TO_PER_MILLION, 6),
+            "in": round(float(input_per_token) * _PER_TOKEN_TO_PER_MILLION, 6),
+            "out": round(float(output_per_token) * _PER_TOKEN_TO_PER_MILLION, 6),
         }
 
         # Batch pricing (flat — no currency wrapper)
@@ -186,8 +186,8 @@ class LiteLLMFetcher(BaseFetcher):
         batch_out = entry.get("output_cost_per_token_batches")
         if batch_in is not None and batch_out is not None:
             batch_pricing = {
-                "input": round(float(batch_in) * _PER_TOKEN_TO_PER_MILLION, 6),
-                "output": round(float(batch_out) * _PER_TOKEN_TO_PER_MILLION, 6),
+                "in": round(float(batch_in) * _PER_TOKEN_TO_PER_MILLION, 6),
+                "out": round(float(batch_out) * _PER_TOKEN_TO_PER_MILLION, 6),
             }
 
         # Tiered pricing (flat list — no currency wrapper)
@@ -233,7 +233,7 @@ class LiteLLMFetcher(BaseFetcher):
         Convert LiteLLM explicit tiered_pricing to burncloud format.
 
         LiteLLM format: [{"range": [start, end], "input_cost_per_token": X, ...}]
-        burncloud format: [{"tier_start": S, "tier_end": E, "input": X*1M, "output": Y*1M}]
+        burncloud format: [{"tier_start": S, "tier_end": E, "in": X*1M, "out": Y*1M}]
         Last tier has no tier_end (open-ended).
         """
         if not isinstance(tiered_pricing, list):
@@ -258,8 +258,8 @@ class LiteLLMFetcher(BaseFetcher):
 
             tier: Dict[str, Any] = {
                 "tier_start": int(tier_range[0]),
-                "input": round(float(inp) * _PER_TOKEN_TO_PER_MILLION, 6),
-                "output": round(output_per_token * _PER_TOKEN_TO_PER_MILLION, 6),
+                "in": round(float(inp) * _PER_TOKEN_TO_PER_MILLION, 6),
+                "out": round(output_per_token * _PER_TOKEN_TO_PER_MILLION, 6),
             }
 
             is_last = (i == len(tiered_pricing) - 1)
@@ -298,8 +298,8 @@ class LiteLLMFetcher(BaseFetcher):
             {
                 "tier_start": 0,
                 "tier_end": 128000,
-                "input": round(float(base_input) * _PER_TOKEN_TO_PER_MILLION, 6),
-                "output": out_price,
+                "in": round(float(base_input) * _PER_TOKEN_TO_PER_MILLION, 6),
+                "out": out_price,
             }
         ]
 
@@ -307,19 +307,19 @@ class LiteLLMFetcher(BaseFetcher):
             tiers.append({
                 "tier_start": 128000,
                 "tier_end": 200000,
-                "input": round(float(above_128k) * _PER_TOKEN_TO_PER_MILLION, 6),
-                "output": out_price,
+                "in": round(float(above_128k) * _PER_TOKEN_TO_PER_MILLION, 6),
+                "out": out_price,
             })
             tiers.append({
                 "tier_start": 200000,
-                "input": round(float(above_200k) * _PER_TOKEN_TO_PER_MILLION, 6),
-                "output": out_price,
+                "in": round(float(above_200k) * _PER_TOKEN_TO_PER_MILLION, 6),
+                "out": out_price,
             })
         else:
             tiers.append({
                 "tier_start": 128000,
-                "input": round(float(above_128k) * _PER_TOKEN_TO_PER_MILLION, 6),
-                "output": out_price,
+                "in": round(float(above_128k) * _PER_TOKEN_TO_PER_MILLION, 6),
+                "out": out_price,
             })
 
         return tiers

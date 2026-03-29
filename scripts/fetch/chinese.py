@@ -311,8 +311,8 @@ class ZhipuFetcher(BaseFetcher):
         metadata = {"provider": "zhipu", "family": "glm"}
         endpoint_entry = self._build_endpoint_entry(
             {
-                "input": round(input_price, 6),
-                "output": round(output_price, 6),
+                "in": round(input_price, 6),
+                "out": round(output_price, 6),
             },
         )
         return self._build_model_entry(endpoint_entry, metadata)

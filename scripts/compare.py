@@ -198,10 +198,10 @@ class PriceComparator:
 
             curr_text = curr.get("text", {})
             prev_text = prev.get("text", {})
-            curr_input = curr_text.get("input")
-            curr_output = curr_text.get("output")
-            prev_input = prev_text.get("input")
-            prev_output = prev_text.get("output")
+            curr_input = curr_text.get("in")
+            curr_output = curr_text.get("out")
+            prev_input = prev_text.get("in")
+            prev_output = prev_text.get("out")
 
             # Check if anything changed
             if curr_input != prev_input or curr_output != prev_output:
@@ -242,8 +242,8 @@ class PriceComparator:
             for model_id, model_data in data.get("models", {}).items():
                 pricing = model_data.get("USD", {})
 
-                input_price = pricing.get("text", {}).get("input")
-                output_price = pricing.get("text", {}).get("output")
+                input_price = pricing.get("text", {}).get("in")
+                output_price = pricing.get("text", {}).get("out")
 
                 if input_price is not None:
                     if model_id not in model_prices:

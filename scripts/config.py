@@ -66,10 +66,10 @@ MODALITY_AUTHORITATIVE_SOURCES: frozenset = frozenset({
 # Most expensive legitimate model today: claude-opus-4 at $75/MTok output.
 # $200 gives ~2.7x safety margin for text. Image output can be higher.
 PRICE_ANOMALY_THRESHOLDS: Dict[str, Dict[str, float]] = {
-    "text":  {"input": 200.0, "output": 200.0},
-    "audio": {"input": 200.0, "output": 200.0},
-    "image": {"input": 200.0, "output": 500.0},
-    "video": {"input": 200.0, "output": 200.0},
+    "text":  {"in": 200.0, "out": 200.0},
+    "audio": {"in": 200.0, "out": 200.0},
+    "image": {"in": 200.0, "out": 500.0},
+    "video": {"in": 200.0, "out": 200.0},
 }
 
 # Minimum source priority for a model to be included in pricing.json.
@@ -365,7 +365,7 @@ class Config:
             supported = rules.cache_supported_models
             if supported is None or model_id in supported:
                 cache_pricing = {
-                    "read_input": round(input_price * rules.cache_read_ratio, 6)
+                    "in": round(input_price * rules.cache_read_ratio, 6)
                 }
 
         batch_pricing = None
@@ -373,8 +373,8 @@ class Config:
             supported = rules.batch_supported_models
             if supported is None or model_id in supported:
                 batch_pricing = {
-                    "input": round(input_price * rules.batch_discount, 6),
-                    "output": round(output_price * rules.batch_discount, 6),
+                    "in": round(input_price * rules.batch_discount, 6),
+                    "out": round(output_price * rules.batch_discount, 6),
                 }
 
         return cache_pricing, batch_pricing

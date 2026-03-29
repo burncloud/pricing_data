@@ -54,20 +54,20 @@ class TestParseModels:
         resp = _make_response(_PRICING_TABLE)
         models = fetcher._parse_models(resp)
         ep = models["deepseek-chat"]["endpoints"]["api.deepseek.com"]
-        assert ep["pricing"]["input"] == pytest.approx(0.28)
+        assert ep["pricing"]["in"] == pytest.approx(0.28)
 
     def test_output_price(self, fetcher):
         resp = _make_response(_PRICING_TABLE)
         models = fetcher._parse_models(resp)
         ep = models["deepseek-chat"]["endpoints"]["api.deepseek.com"]
-        assert ep["pricing"]["output"] == pytest.approx(0.42)
+        assert ep["pricing"]["out"] == pytest.approx(0.42)
 
     def test_cache_read_price(self, fetcher):
         resp = _make_response(_PRICING_TABLE)
         models = fetcher._parse_models(resp)
         ep = models["deepseek-chat"]["endpoints"]["api.deepseek.com"]
         assert "cache" in ep
-        assert ep["cache"]["read_input"] == pytest.approx(0.028)
+        assert ep["cache"]["in"] == pytest.approx(0.028)
 
     def test_reasoner_same_pricing(self, fetcher):
         """Both models share the same pricing (colspan=2 in source table)."""

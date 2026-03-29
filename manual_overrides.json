@@ -9,11 +9,11 @@
       "_notes": "deepseek-chat = DeepSeek-V3.2 (non-thinking). Official: $0.028 cache-hit input, $0.28 cache-miss input, $0.42 output.",
       "USD": {
         "text": {
-          "input": 0.28,
-          "output": 0.42
+          "in": 0.28,
+          "out": 0.42
         },
         "cache": {
-          "read_input": 0.028
+          "in": 0.028
         }
       }
     },
@@ -23,11 +23,11 @@
       "_notes": "deepseek-reasoner = DeepSeek-V3.2 (thinking mode). Same pricing as deepseek-chat.",
       "USD": {
         "text": {
-          "input": 0.28,
-          "output": 0.42
+          "in": 0.28,
+          "out": 0.42
         },
         "cache": {
-          "read_input": 0.028
+          "in": 0.028
         }
       }
     },
@@ -37,16 +37,16 @@
       "_notes": "Image generation model. Text+image input: $2.00/MTok. Text output: $12.00/MTok. Image output: $120.00/MTok. Batch: 50% off.",
       "USD": {
         "text": {
-          "input": 2.0,
-          "output": 12.0
+          "in": 2.0,
+          "out": 12.0
         },
         "image": {
-          "output": 120.0
+          "out": 120.0
         },
         "batch": {
-          "input": 1.0,
-          "output": 6.0,
-          "image_output": 60.0
+          "in": 1.0,
+          "out": 6.0,
+          "image_out": 60.0
         }
       }
     },
@@ -56,16 +56,16 @@
       "_notes": "Image generation model. Text+image input: $0.30/MTok. Text output: $2.50/MTok. Image output: $30.00/MTok. Batch: 50% off.",
       "USD": {
         "text": {
-          "input": 0.3,
-          "output": 2.5
+          "in": 0.3,
+          "out": 2.5
         },
         "image": {
-          "output": 30.0
+          "out": 30.0
         },
         "batch": {
-          "input": 0.15,
-          "output": 1.25,
-          "image_output": 15.0
+          "in": 0.15,
+          "out": 1.25,
+          "image_out": 15.0
         }
       }
     },
@@ -75,16 +75,16 @@
       "_notes": "Image generation model. Text+image input: $0.50/MTok. Text output: $3.00/MTok. Image output: $60.00/MTok. Batch: 50% off.",
       "USD": {
         "text": {
-          "input": 0.5,
-          "output": 3.0
+          "in": 0.5,
+          "out": 3.0
         },
         "image": {
-          "output": 60.0
+          "out": 60.0
         },
         "batch": {
-          "input": 0.25,
-          "output": 1.5,
-          "image_output": 30.0
+          "in": 0.25,
+          "out": 1.5,
+          "image_out": 30.0
         }
       }
     },
@@ -94,10 +94,10 @@
       "_notes": "TTS model. $0.50 text input / $10.00 audio output per MTok.",
       "USD": {
         "text": {
-          "input": 0.5
+          "in": 0.5
         },
         "audio": {
-          "output": 10.0
+          "out": 10.0
         }
       }
     },
@@ -107,10 +107,10 @@
       "_notes": "TTS model. $1.00 text input / $20.00 audio output per MTok.",
       "USD": {
         "text": {
-          "input": 1.0
+          "in": 1.0
         },
         "audio": {
-          "output": 20.0
+          "out": 20.0
         }
       }
     }

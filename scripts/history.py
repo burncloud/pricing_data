@@ -211,8 +211,8 @@ class HistoryManager:
                         usd_text = usd_pricing.get("text", {})
                         history.append({
                             "date": date_str,
-                            "input": usd_text.get("input"),
-                            "output": usd_text.get("output"),
+                            "in": usd_text.get("in"),
+                            "out": usd_text.get("out"),
                         })
 
         return history

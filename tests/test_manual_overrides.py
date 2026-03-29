@@ -30,11 +30,11 @@ def valid_overrides():
                 "_notes": "Official pricing.",
                 "USD": {
                     "text": {
-                        "input": 0.28,
-                        "output": 0.42,
+                        "in": 0.28,
+                        "out": 0.42,
                     },
                     "cache": {
-                        "read_input": 0.028,
+                        "in": 0.028,
                     },
                 },
             },
@@ -44,10 +44,10 @@ def valid_overrides():
                 "_notes": "TTS model.",
                 "USD": {
                     "text": {
-                        "input": 0.50,
+                        "in": 0.50,
                     },
                     "audio": {
-                        "output": 10.00,
+                        "out": 10.00,
                     },
                 },
             },
@@ -95,9 +95,9 @@ class TestManualOverridesFetcher:
         model = result.models["deepseek-chat"]
         ep = model["endpoints"]["manual_USD"]
         assert ep["currency"] == "USD"
-        assert ep["pricing"]["text"]["input"] == 0.28
-        assert ep["pricing"]["text"]["output"] == 0.42
-        assert ep["cache"]["read_input"] == 0.028
+        assert ep["pricing"]["text"]["in"] == 0.28
+        assert ep["pricing"]["text"]["out"] == 0.42
+        assert ep["cache"]["in"] == 0.028
 
     def test_tts_model_pricing(self, mock_config, tmp_path, valid_overrides):
         """TTS model with audio modality is correctly converted."""
@@ -109,8 +109,8 @@ class TestManualOverridesFetcher:
 
         model = result.models["gemini-2.5-flash-preview-tts"]
         ep = model["endpoints"]["manual_USD"]
-        assert ep["pricing"]["text"]["input"] == 0.50
-        assert ep["pricing"]["audio"]["output"] == 10.00
+        assert ep["pricing"]["text"]["in"] == 0.50
+        assert ep["pricing"]["audio"]["out"] == 10.00
 
     def test_file_not_found_returns_empty_success(self, mock_config, tmp_path):
         """Missing file is not an error — returns success with 0 models."""
@@ -229,8 +229,8 @@ class TestManualOverridesFetcher:
             "models": {
                 "test-model": {
                     "USD": {
-                        "text": {"input": 1.0, "output": 2.0},
-                        "batch": {"input": 0.5, "output": 1.0},
+                        "text": {"in": 1.0, "out": 2.0},
+                        "batch": {"in": 0.5, "out": 1.0},
                     }
                 }
             }
@@ -241,5 +241,5 @@ class TestManualOverridesFetcher:
         result = fetcher.fetch()
 
         ep = result.models["test-model"]["endpoints"]["manual_USD"]
-        assert ep["pricing"]["text"]["input"] == 1.0
-        assert ep["batch"]["input"] == 0.5
+        assert ep["pricing"]["text"]["in"] == 1.0
+        assert ep["batch"]["in"] == 0.5

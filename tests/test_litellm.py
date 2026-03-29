@@ -42,8 +42,8 @@ class TestBasicPricing:
 
         ep = models["gpt-4o"]["endpoints"]["api.openai.com"]
         assert "gpt-4o" in models
-        assert ep["pricing"]["input"] == pytest.approx(2.5)
-        assert ep["pricing"]["output"] == pytest.approx(10.0)
+        assert ep["pricing"]["in"] == pytest.approx(2.5)
+        assert ep["pricing"]["out"] == pytest.approx(10.0)
 
     def test_model_missing_input_cost_skipped(self, fetcher):
         data = {
@@ -89,8 +89,8 @@ class TestBatchPricing:
         ep = models["gpt-4o"]["endpoints"]["api.openai.com"]
         assert "batch" in ep
         bp = ep["batch"]
-        assert bp["input"] == pytest.approx(1.25)
-        assert bp["output"] == pytest.approx(5.0)
+        assert bp["in"] == pytest.approx(1.25)
+        assert bp["out"] == pytest.approx(5.0)
 
     def test_no_batch_pricing_when_fields_absent(self, fetcher):
         data = {
@@ -144,10 +144,10 @@ class TestExplicitTieredPricing:
         assert len(tiers) == 2
         assert tiers[0]["tier_start"] == 0
         assert tiers[0]["tier_end"] == 128000
-        assert tiers[0]["input"] == pytest.approx(2.0)
+        assert tiers[0]["in"] == pytest.approx(2.0)
         assert tiers[1]["tier_start"] == 128000
         assert "tier_end" not in tiers[1]  # last tier: open-ended
-        assert tiers[1]["input"] == pytest.approx(4.0)
+        assert tiers[1]["in"] == pytest.approx(4.0)
 
     def test_explicit_tiered_output_price_preserved(self, fetcher):
         """output_cost_per_token in tier entry is used when present."""
@@ -166,8 +166,8 @@ class TestExplicitTieredPricing:
         models = fetcher._parse_models(resp)
 
         tiers = models["qwen-max"]["endpoints"]["litellm"]["tiered"]
-        assert tiers[0]["output"] == pytest.approx(6.0)
-        assert tiers[1]["output"] == pytest.approx(12.0)
+        assert tiers[0]["out"] == pytest.approx(6.0)
+        assert tiers[1]["out"] == pytest.approx(12.0)
 
     def test_explicit_tiered_missing_output_uses_base(self, fetcher):
         """When tier has no output_cost_per_token, use base output price."""
@@ -187,8 +187,8 @@ class TestExplicitTieredPricing:
 
         tiers = models["qwen-max"]["endpoints"]["litellm"]["tiered"]
         # Both tiers get base output_cost_per_token (6e-6 * 1M = 6.0)
-        assert tiers[0]["output"] == pytest.approx(6.0)
-        assert tiers[1]["output"] == pytest.approx(6.0)
+        assert tiers[0]["out"] == pytest.approx(6.0)
+        assert tiers[1]["out"] == pytest.approx(6.0)
 
 
 # ---------------------------------------------------------------------------
@@ -211,8 +211,8 @@ class TestInlineTieredPricing:
 
         tiers = models["claude-3-5-sonnet"]["endpoints"]["api.anthropic.com"]["tiered"]
         assert len(tiers) == 2
-        assert tiers[0] == {"tier_start": 0, "tier_end": 128000, "input": pytest.approx(3.0), "output": pytest.approx(15.0)}
-        assert tiers[1] == {"tier_start": 128000, "input": pytest.approx(6.0), "output": pytest.approx(15.0)}
+        assert tiers[0] == {"tier_start": 0, "tier_end": 128000, "in": pytest.approx(3.0), "out": pytest.approx(15.0)}
+        assert tiers[1] == {"tier_start": 128000, "in": pytest.approx(6.0), "out": pytest.approx(15.0)}
 
     def test_three_tier_inline(self, fetcher):
         """above_128k + above_200k → three tiers."""
@@ -252,7 +252,7 @@ class TestInlineTieredPricing:
 
         tiers = models["gemini-1.5-pro"]["endpoints"]["generativelanguage.googleapis.com"]["tiered"]
         for tier in tiers:
-            assert tier["output"] == pytest.approx(5.0)
+            assert tier["out"] == pytest.approx(5.0)
 
 
 # ---------------------------------------------------------------------------

@@ -29,8 +29,8 @@ class TestExtractPricing:
             {"prompt": "0.0000025", "completion": "0.00001"},
             "openai/gpt-4o",
         )
-        assert pricing["input"] == pytest.approx(2.5)
-        assert pricing["output"] == pytest.approx(10.0)
+        assert pricing["in"] == pytest.approx(2.5)
+        assert pricing["out"] == pytest.approx(10.0)
 
     def test_negative_price_skipped(self, fetcher):
         """OpenRouter sentinel value -1 per-token must be rejected (not -1M per MTok)."""
@@ -63,7 +63,7 @@ class TestExtractPricing:
             "some/free-model",
         )
         assert pricing != {}
-        assert pricing["input"] == 0.0
+        assert pricing["in"] == 0.0
 
     def test_missing_prompt_skipped(self, fetcher):
         pricing = fetcher._extract_pricing({}, "some/model")

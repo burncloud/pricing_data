@@ -12,8 +12,8 @@ from scripts.validate import generate_validation_report
 def sample_data():
     """Sample data for report generation."""
     included = {
-        "gemini-2.5-pro": {"USD": {"text": {"input": 1.25, "output": 10.0}}},
-        "deepseek-chat": {"USD": {"text": {"input": 0.28, "output": 0.42}}},
+        "gemini-2.5-pro": {"USD": {"text": {"in": 1.25, "out": 10.0}}},
+        "deepseek-chat": {"USD": {"text": {"in": 0.28, "out": 0.42}}},
     }
     anomalous = [
         {"model": "bad-model", "reason": "text.output $540000/MTok > $200 threshold", "value": 540000.0},
@@ -104,7 +104,7 @@ class TestValidationReport:
 
     def test_empty_report(self, tmp_path):
         """All models pass: 0 anomalous, 0 unverified → valid report."""
-        included = {"gpt-4o": {"USD": {"text": {"input": 2.5, "output": 10.0}}}}
+        included = {"gpt-4o": {"USD": {"text": {"in": 2.5, "out": 10.0}}}}
         source_map = {"gpt-4o": {"USD": [("openai", {}, 100)]}}
 
         generate_validation_report(

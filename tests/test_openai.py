@@ -79,8 +79,8 @@ class TestBuildModelEntryFromPrices:
         )
         assert entry is not None
         ep = entry["endpoints"]["api.openai.com"]
-        assert ep["pricing"]["input"] == pytest.approx(2.50)
-        assert ep["pricing"]["output"] == pytest.approx(10.00)
+        assert ep["pricing"]["in"] == pytest.approx(2.50)
+        assert ep["pricing"]["out"] == pytest.approx(10.00)
 
     def test_with_cached_input(self, fetcher):
         entry = fetcher._build_model_entry_from_prices(
@@ -89,7 +89,7 @@ class TestBuildModelEntryFromPrices:
         assert entry is not None
         ep = entry["endpoints"]["api.openai.com"]
         assert "cache" in ep
-        assert ep["cache"]["read_input"] == pytest.approx(0.25)
+        assert ep["cache"]["in"] == pytest.approx(0.25)
 
     def test_no_cache_when_absent(self, fetcher):
         entry = fetcher._build_model_entry_from_prices(
@@ -124,8 +124,8 @@ class TestBuildModelEntryFromPrices:
         )
         assert entry is not None
         ep = entry["endpoints"]["api.openai.com"]
-        assert ep["pricing"]["input"] == pytest.approx(1000.0)
-        assert ep["pricing"]["output"] == pytest.approx(2000.0)
+        assert ep["pricing"]["in"] == pytest.approx(1000.0)
+        assert ep["pricing"]["out"] == pytest.approx(2000.0)
 
 
 # ---------------------------------------------------------------------------
@@ -151,9 +151,9 @@ class TestParseHtml:
         models = fetcher._parse_html(html)
         assert "gpt-5.4" in models
         ep = models["gpt-5.4"]["endpoints"]["api.openai.com"]
-        assert ep["pricing"]["input"] == pytest.approx(2.50)
-        assert ep["pricing"]["output"] == pytest.approx(15.00)
-        assert ep["cache"]["read_input"] == pytest.approx(0.25)
+        assert ep["pricing"]["in"] == pytest.approx(2.50)
+        assert ep["pricing"]["out"] == pytest.approx(15.00)
+        assert ep["cache"]["in"] == pytest.approx(0.25)
 
     def test_parses_multiple_models(self, fetcher):
         html = self._make_html([
@@ -200,7 +200,7 @@ class TestFetchWithMockedHtml:
                 "endpoints": {"api.openai.com": {
                     "base_url": "https://api.openai.com/v1",
                     "currency": "USD",
-                    "pricing": {"input": 2.5, "output": 15.0},
+                    "pricing": {"in": 2.5, "out": 15.0},
                 }},
                 "metadata": {"provider": "openai", "family": "gpt-5.4"},
             },

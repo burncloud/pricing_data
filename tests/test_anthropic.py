@@ -59,22 +59,22 @@ class TestParseModels:
         models = fetcher._parse_models(resp)
         assert "claude-opus-4-6" in models
         ep = models["claude-opus-4-6"]["endpoints"]["api.anthropic.com"]
-        assert ep["pricing"]["input"] == pytest.approx(5.0)
-        assert ep["pricing"]["output"] == pytest.approx(25.0)
+        assert ep["pricing"]["in"] == pytest.approx(5.0)
+        assert ep["pricing"]["out"] == pytest.approx(25.0)
 
     def test_sonnet_pricing(self, fetcher):
         resp = _make_response(_FULL_TABLE_HTML)
         models = fetcher._parse_models(resp)
         ep = models["claude-sonnet-4-6"]["endpoints"]["api.anthropic.com"]
-        assert ep["pricing"]["input"] == pytest.approx(3.0)
-        assert ep["pricing"]["output"] == pytest.approx(15.0)
+        assert ep["pricing"]["in"] == pytest.approx(3.0)
+        assert ep["pricing"]["out"] == pytest.approx(15.0)
 
     def test_haiku_pricing(self, fetcher):
         resp = _make_response(_FULL_TABLE_HTML)
         models = fetcher._parse_models(resp)
         ep = models["claude-haiku-4-5-20251001"]["endpoints"]["api.anthropic.com"]
-        assert ep["pricing"]["input"] == pytest.approx(1.0)
-        assert ep["pricing"]["output"] == pytest.approx(5.0)
+        assert ep["pricing"]["in"] == pytest.approx(1.0)
+        assert ep["pricing"]["out"] == pytest.approx(5.0)
 
     def test_metadata_provider(self, fetcher):
         resp = _make_response(_FULL_TABLE_HTML)

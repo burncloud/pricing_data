@@ -23,24 +23,24 @@ def current_pricing():
             "gpt-4o": {
                 "USD": {
                     "text": {
-                        "input": 2.50,  # Increased from 2.00
-                        "output": 10.00,
+                        "in": 2.50,  # Increased from 2.00
+                        "out": 10.00,
                     }
                 }
             },
             "claude-3.5-sonnet": {
                 "USD": {
                     "text": {
-                        "input": 3.00,
-                        "output": 15.00,  # Decreased from 20.00
+                        "in": 3.00,
+                        "out": 15.00,  # Decreased from 20.00
                     }
                 }
             },
             "new-model": {
                 "USD": {
                     "text": {
-                        "input": 1.00,
-                        "output": 2.00,
+                        "in": 1.00,
+                        "out": 2.00,
                     }
                 }
             },
@@ -59,24 +59,24 @@ def previous_pricing():
             "gpt-4o": {
                 "USD": {
                     "text": {
-                        "input": 2.00,
-                        "output": 10.00,
+                        "in": 2.00,
+                        "out": 10.00,
                     }
                 }
             },
             "claude-3.5-sonnet": {
                 "USD": {
                     "text": {
-                        "input": 3.00,
-                        "output": 20.00,
+                        "in": 3.00,
+                        "out": 20.00,
                     }
                 }
             },
             "removed-model": {
                 "USD": {
                     "text": {
-                        "input": 5.00,
-                        "output": 10.00,
+                        "in": 5.00,
+                        "out": 10.00,
                     }
                 }
             },
@@ -240,8 +240,8 @@ class TestPriceComparator:
                 "test-model": {
                     "USD": {
                         "text": {
-                            "input": 10.00,  # 0.5% increase from 9.95
-                            "output": 20.00,
+                            "in": 10.00,  # 0.5% increase from 9.95
+                            "out": 20.00,
                         }
                     }
                 }
@@ -253,8 +253,8 @@ class TestPriceComparator:
                 "test-model": {
                     "USD": {
                         "text": {
-                            "input": 9.95,
-                            "output": 20.00,
+                            "in": 9.95,
+                            "out": 20.00,
                         }
                     }
                 }
@@ -276,8 +276,8 @@ class TestPriceComparator:
                     "gpt-4o": {
                         "USD": {
                             "text": {
-                                "input": 2.50,
-                                "output": 10.00,
+                                "in": 2.50,
+                                "out": 10.00,
                             }
                         }
                     }
@@ -288,8 +288,8 @@ class TestPriceComparator:
                     "gpt-4o": {
                         "USD": {
                             "text": {
-                                "input": 4.00,  # 60% higher
-                                "output": 10.00,
+                                "in": 4.00,  # 60% higher
+                                "out": 10.00,
                             }
                         }
                     }
@@ -347,14 +347,14 @@ class TestMultiCurrencyComparison:
                 "qwen-max": {
                     "CNY": {
                         "text": {
-                            "input": 0.05,  # Increased
-                            "output": 0.12,
+                            "in": 0.05,  # Increased
+                            "out": 0.12,
                         }
                     },
                     "USD": {
                         "text": {
-                            "input": 0.007,
-                            "output": 0.017,
+                            "in": 0.007,
+                            "out": 0.017,
                         }
                     }
                 }
@@ -366,14 +366,14 @@ class TestMultiCurrencyComparison:
                 "qwen-max": {
                     "CNY": {
                         "text": {
-                            "input": 0.04,
-                            "output": 0.12,
+                            "in": 0.04,
+                            "out": 0.12,
                         }
                     },
                     "USD": {
                         "text": {
-                            "input": 0.007,
-                            "output": 0.017,
+                            "in": 0.007,
+                            "out": 0.017,
                         }
                     }
                 }
