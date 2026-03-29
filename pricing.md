@@ -1,6 +1,6 @@
 # AI Model Pricing
 
-*Updated: 2026-03-29 &nbsp;·&nbsp; 1720 models &nbsp;·&nbsp; [Raw JSON](pricing.json)*
+*Updated: 2026-03-29 &nbsp;·&nbsp; 1563 models &nbsp;·&nbsp; [Raw JSON](pricing.json)*
 
 > Prices are **per million tokens (MTok)** unless noted.  
 > USD prices in **$**, CNY prices in **¥**.  
@@ -37,16 +37,16 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 
 | Provider | Models |
 |----------|-------:|
-| [Anthropic](#anthropic) | 25 |
+| [Anthropic](#anthropic) | 31 |
 | [OpenAI](#openai) | 144 |
 | [Google](#google) | 29 |
 | [Google (Gemini)](#google--gemini) | 28 |
 | [DeepSeek](#deepseek) | 12 |
 | [Zhipu AI (智谱)](#zhipu-ai--智谱) | 17 |
-| [Mistral](#mistral) | 43 |
+| [Mistral](#mistral) | 44 |
 | [Mistral AI](#mistral-ai) | 18 |
 | [xAI (Grok)](#xai--grok) | 35 |
-| [Qwen (通义千问)](#qwen--通义千问) | 40 |
+| [Qwen (通义千问)](#qwen--通义千问) | 39 |
 | [DashScope (阿里云)](#dashscope--阿里云) | 17 |
 | [Perplexity](#perplexity) | 23 |
 | [Cohere](#cohere) | 16 |
@@ -66,7 +66,6 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | [Arcee-Ai](#arcee-ai) | 7 |
 | [Azure Text](#azure-text) | 2 |
 | [Baidu](#baidu) | 5 |
-| [AWS Bedrock](#aws-bedrock) | 109 |
 | [Bedrock Mantle](#bedrock-mantle) | 4 |
 | [Bytedance](#bytedance) | 1 |
 | [Bytedance-Seed](#bytedance-seed) | 4 |
@@ -137,13 +136,10 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | [V0](#v0) | 3 |
 | [Vercel AI Gateway](#vercel-ai-gateway) | 100 |
 | [Vertex Ai-Ai21 Models](#vertex-ai-ai21-models) | 5 |
-| [Google Vertex (Anthropic)](#google-vertex--anthropic) | 24 |
 | [Vertex Ai-Deepseek Models](#vertex-ai-deepseek-models) | 3 |
 | [Vertex Ai-Embedding-Models](#vertex-ai-embedding-models) | 7 |
 | [Vertex Ai-Language-Models](#vertex-ai-language-models) | 2 |
-| [Google Vertex (Llama)](#google-vertex--llama) | 11 |
 | [Vertex Ai-Minimax Models](#vertex-ai-minimax-models) | 1 |
-| [Google Vertex (Mistral)](#google-vertex--mistral) | 19 |
 | [Vertex Ai-Moonshot Models](#vertex-ai-moonshot-models) | 1 |
 | [Vertex Ai-Openai Models](#vertex-ai-openai-models) | 2 |
 | [Vertex Ai-Qwen Models](#vertex-ai-qwen-models) | 4 |
@@ -162,30 +158,36 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 
 | Model | Input | Output | Context | Currency |
 |-------|------:|-------:|--------:|---------|
+| `claude-opus-4.1` | $15.00 | $75.00 | 200K | USD |
+| `claude-opus-4` | $15.00 | $75.00 | 200K | USD |
 | `claude-3-opus-20240229` | $15.00 | $75.00 | 4K | USD |
 | `claude-4-opus-20250514` | $15.00 | $75.00 | 32K | USD |
+| `claude-opus-4-1` | $15.00 | $75.00 | 32K | USD |
 | `claude-opus-4-1-20250805` | $15.00 | $75.00 | 32K | USD |
 | `claude-opus-4-20250514` | $15.00 | $75.00 | 32K | USD |
-| `claude-opus-4.1` | $15.00 | $75.00 | 200K | USD |
 | `claude-3.5-sonnet` | $6.00 | $30.00 | 200K | USD |
-| `claude-opus-4-5-20251101` | $5.00 | $25.00 | 64K | USD |
-| `claude-opus-4-6` | $5.00 | $25.00 | 128K | USD |
-| `claude-opus-4-6-20260205` | $5.00 | $25.00 | 128K | USD |
 | `claude-opus-4.6` | $5.00 | $25.00 | 1M | USD |
 | `claude-opus-4.5` | $5.00 | $25.00 | 200K | USD |
-| `claude-3-7-sonnet-20250219` | $3.00 | $15.00 | 64K | USD |
-| `claude-4-sonnet-20250514` | $3.00 | $15.00 | 64K | USD |
-| `claude-sonnet-4-5-20250929` | $3.00 | $15.00 | 64K | USD |
-| `claude-sonnet-4-6` | $3.00 | $15.00 | 64K | USD |
-| `claude-sonnet-4-20250514` | $3.00 | $15.00 | 64K | USD |
+| `claude-opus-4-6` | $5.00 | $25.00 | 128K | USD |
+| `claude-opus-4-5-20251101` | $5.00 | $25.00 | 64K | USD |
+| `claude-opus-4-5` | $5.00 | $25.00 | 64K | USD |
+| `claude-opus-4-6-20260205` | $5.00 | $25.00 | 128K | USD |
 | `claude-sonnet-4.6` | $3.00 | $15.00 | 1M | USD |
 | `claude-sonnet-4.5` | $3.00 | $15.00 | 1M | USD |
+| `claude-sonnet-4` | $3.00 | $15.00 | 200K | USD |
 | `claude-3.7-sonnet` | $3.00 | $15.00 | 200K | USD |
 | `claude-3.7-sonnet:thinking` | $3.00 | $15.00 | 200K | USD |
+| `claude-sonnet-4-6` | $3.00 | $15.00 | 64K | USD |
+| `claude-3-7-sonnet-20250219` | $3.00 | $15.00 | 64K | USD |
+| `claude-4-sonnet-20250514` | $3.00 | $15.00 | 64K | USD |
+| `claude-sonnet-4-5` | $3.00 | $15.00 | 64K | USD |
+| `claude-sonnet-4-5-20250929` | $3.00 | $15.00 | 64K | USD |
+| `claude-sonnet-4-20250514` | $3.00 | $15.00 | 64K | USD |
+| `claude-haiku-4.5` | $1.00 | $5.00 | 200K | USD |
 | `claude-haiku-4-5-20251001` | $1.00 | $5.00 | 64K | USD |
 | `claude-haiku-4-5` | $1.00 | $5.00 | 64K | USD |
-| `claude-haiku-4.5` | $1.00 | $5.00 | 200K | USD |
 | `claude-3.5-haiku` | $0.80 | $4.00 | 200K | USD |
+| `claude-3-haiku` | $0.25 | $1.25 | 200K | USD |
 | `claude-3-haiku-20240307` | $0.25 | $1.25 | 4K | USD |
 
 ## OpenAI
@@ -194,31 +196,31 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 |-------|------:|-------:|----------:|---------:|----------:|--------:|---------|
 | `o1-pro` | $150.00 | $600.00 | — | $75.00 | $300.00 | 100K | USD |
 | `o1-pro-2025-03-19` | $150.00 | $600.00 | — | $75.00 | $300.00 | 100K | USD |
-| `ft:gpt-4-0613` | $30.00 | $60.00 | — | — | — | 4K | USD |
+| `gpt-5.4-pro` | $30.00 | $180.00 | — | $15.00 | $90.00 | 128K | USD |
 | `gpt-4` | $30.00 | $60.00 | — | — | — | 4K | USD |
 | `gpt-4-0314` | $30.00 | $60.00 | — | — | — | 4K | USD |
+| `ft:gpt-4-0613` | $30.00 | $60.00 | — | — | — | 4K | USD |
 | `gpt-4-0613` | $30.00 | $60.00 | — | — | — | 4K | USD |
-| `gpt-5.4-pro` | $30.00 | $180.00 | — | $15.00 | $90.00 | 128K | USD |
 | `gpt-5.4-pro-2026-03-05` | $30.00 | $180.00 | — | $15.00 | $90.00 | 128K | USD |
 | `gpt-5.2-pro` | $21.00 | $168.00 | — | — | — | 128K | USD |
 | `gpt-5.2-pro-2025-12-11` | $21.00 | $168.00 | — | — | — | 128K | USD |
 | `o3-pro` | $20.00 | $80.00 | — | $10.00 | $40.00 | 100K | USD |
 | `o3-pro-2025-06-10` | $20.00 | $80.00 | — | $10.00 | $40.00 | 100K | USD |
 | `gpt-5-pro` | $15.00 | $120.00 | — | $7.50 | $60.00 | 272K | USD |
-| `gpt-5-pro-2025-10-06` | $15.00 | $120.00 | — | $7.50 | $60.00 | 272K | USD |
 | `o1` | $15.00 | $60.00 | — | — | — | 100K | USD |
+| `gpt-5-pro-2025-10-06` | $15.00 | $120.00 | — | $7.50 | $60.00 | 272K | USD |
 | `o1-2024-12-17` | $15.00 | $60.00 | — | — | — | 100K | USD |
-| `gpt-4-0125-preview` | $10.00 | $30.00 | — | — | — | 4K | USD |
-| `gpt-4-1106-preview` | $10.00 | $30.00 | — | — | — | 4K | USD |
-| `gpt-4-turbo` | $10.00 | $30.00 | — | — | — | 4K | USD |
-| `gpt-4-turbo-2024-04-09` | $10.00 | $30.00 | — | — | — | 4K | USD |
-| `gpt-4-turbo-preview` | $10.00 | $30.00 | — | — | — | 4K | USD |
-| `o3-deep-research` | $10.00 | $40.00 | — | $5.00 | $20.00 | 100K | USD |
-| `o3-deep-research-2025-06-26` | $10.00 | $40.00 | — | $5.00 | $20.00 | 100K | USD |
 | `gpt-5-image` | $10.00 | $10.00 | — | — | — | 400K | USD |
+| `o3-deep-research` | $10.00 | $40.00 | — | $5.00 | $20.00 | 100K | USD |
+| `gpt-4-turbo` | $10.00 | $30.00 | — | — | — | 4K | USD |
+| `gpt-4-turbo-preview` | $10.00 | $30.00 | — | — | — | 4K | USD |
+| `gpt-4-1106-preview` | $10.00 | $30.00 | — | — | — | 4K | USD |
+| `gpt-4-0125-preview` | $10.00 | $30.00 | — | — | — | 4K | USD |
+| `gpt-4-turbo-2024-04-09` | $10.00 | $30.00 | — | — | — | 4K | USD |
+| `o3-deep-research-2025-06-26` | $10.00 | $40.00 | — | $5.00 | $20.00 | 100K | USD |
 | `gpt-4o:extended` | $6.00 | $18.00 | — | — | — | 128K | USD |
-| `chatgpt-4o-latest` | $5.00 | $15.00 | — | — | — | 4K | USD |
 | `gpt-4o-2024-05-13` | $5.00 | $15.00 | — | $2.50 | $7.50 | 4K | USD |
+| `chatgpt-4o-latest` | $5.00 | $15.00 | — | — | — | 4K | USD |
 | `gpt-4o-realtime-preview` | $5.00 | $20.00 | — | — | — | 4K | USD |
 | `gpt-4o-realtime-preview-2024-12-17` | $5.00 | $20.00 | — | — | — | 4K | USD |
 | `gpt-4o-realtime-preview-2025-06-03` | $5.00 | $20.00 | — | — | — | 4K | USD |
@@ -230,70 +232,70 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `gpt-realtime-2025-08-28` | $4.00 | $16.00 | — | — | — | 4K | USD |
 | `ft:gpt-4o-2024-08-06` | $3.75 | $15.00 | — | $1.88 | $7.50 | 16K | USD |
 | `ft:gpt-4o-2024-11-20` | $3.75 | $15.00 | — | — | — | 16K | USD |
+| `gpt-3.5-turbo-16k` | $3.00 | $4.00 | — | — | — | 4K | USD |
 | `ft:gpt-3.5-turbo` | $3.00 | $6.00 | — | $1.50 | $3.00 | 4K | USD |
 | `ft:gpt-3.5-turbo-0125` | $3.00 | $6.00 | — | — | — | 4K | USD |
 | `ft:gpt-3.5-turbo-0613` | $3.00 | $6.00 | — | — | — | 4K | USD |
 | `ft:gpt-3.5-turbo-1106` | $3.00 | $6.00 | — | — | — | 4K | USD |
 | `ft:gpt-4.1-2025-04-14` | $3.00 | $12.00 | — | $1.50 | $6.00 | 32K | USD |
-| `gpt-3.5-turbo-16k` | $3.00 | $4.00 | — | — | — | 4K | USD |
 | `gpt-5.4` | $2.50 | $15.00 | $0.25 | $1.25 | $7.50 | 128K | USD |
-| `gpt-4o-transcribe-diarize` | $2.50 | $10.00 | — | — | — | — | USD |
-| `gpt-4o` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
-| `gpt-4o-2024-08-06` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
-| `gpt-4o-2024-11-20` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
+| `gpt-audio` | $2.50 | $10.00 | — | — | — | 16K | USD |
+| `gpt-5-image-mini` | $2.50 | $2.00 | — | — | — | 400K | USD |
 | `gpt-4o-audio-preview` | $2.50 | $10.00 | — | — | — | 16K | USD |
+| `gpt-4o-search-preview` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
+| `gpt-4o-2024-11-20` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
+| `gpt-4o-2024-08-06` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
+| `gpt-4o` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
+| `gpt-4o-transcribe-diarize` | $2.50 | $10.00 | — | — | — | — | USD |
 | `gpt-4o-audio-preview-2024-12-17` | $2.50 | $10.00 | — | — | — | 16K | USD |
 | `gpt-4o-audio-preview-2025-06-03` | $2.50 | $10.00 | — | — | — | 16K | USD |
-| `gpt-audio` | $2.50 | $10.00 | — | — | — | 16K | USD |
 | `gpt-audio-1.5` | $2.50 | $10.00 | — | — | — | 16K | USD |
 | `gpt-audio-2025-08-28` | $2.50 | $10.00 | — | — | — | 16K | USD |
 | `gpt-4o-mini-tts` | $2.50 | $10.00 | — | — | — | — | USD |
-| `gpt-4o-search-preview` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
 | `gpt-4o-search-preview-2025-03-11` | $2.50 | $10.00 | — | $1.25 | $5.00 | 16K | USD |
 | `gpt-4o-transcribe` | $2.50 | $10.00 | — | — | — | — | USD |
 | `gpt-5.4-2026-03-05` | $2.50 | $15.00 | — | $1.25 | $7.50 | 128K | USD |
 | `gpt-4o-mini-tts-2025-03-20` | $2.50 | $10.00 | — | — | — | — | USD |
 | `gpt-4o-mini-tts-2025-12-15` | $2.50 | $10.00 | — | — | — | — | USD |
-| `gpt-5-image-mini` | $2.50 | $2.00 | — | — | — | 400K | USD |
+| `o4-mini-deep-research` | $2.00 | $8.00 | — | $1.00 | $4.00 | 100K | USD |
+| `o3` | $2.00 | $8.00 | — | — | — | 100K | USD |
 | `gpt-4.1` | $2.00 | $8.00 | — | $1.00 | $4.00 | 32K | USD |
 | `gpt-4.1-2025-04-14` | $2.00 | $8.00 | — | $1.00 | $4.00 | 32K | USD |
-| `o3` | $2.00 | $8.00 | — | — | — | 100K | USD |
 | `o3-2025-04-16` | $2.00 | $8.00 | — | — | — | 100K | USD |
-| `o4-mini-deep-research` | $2.00 | $8.00 | — | $1.00 | $4.00 | 100K | USD |
 | `o4-mini-deep-research-2025-06-26` | $2.00 | $8.00 | — | $1.00 | $4.00 | 100K | USD |
+| `gpt-5.3-chat` | $1.75 | $14.00 | — | — | — | 128K | USD |
+| `gpt-5.3-codex` | $1.75 | $14.00 | — | — | — | 128K | USD |
+| `gpt-5.2-codex` | $1.75 | $14.00 | — | — | — | 128K | USD |
+| `gpt-5.2-chat` | $1.75 | $14.00 | — | — | — | 128K | USD |
 | `gpt-5.2` | $1.75 | $14.00 | — | — | — | 128K | USD |
 | `gpt-5.2-2025-12-11` | $1.75 | $14.00 | — | — | — | 128K | USD |
 | `gpt-5.2-chat-latest` | $1.75 | $14.00 | — | — | — | 16K | USD |
 | `gpt-5.3-chat-latest` | $1.75 | $14.00 | — | — | — | 16K | USD |
-| `gpt-5.2-codex` | $1.75 | $14.00 | — | — | — | 128K | USD |
-| `gpt-5.3-codex` | $1.75 | $14.00 | — | — | — | 128K | USD |
-| `gpt-5.3-chat` | $1.75 | $14.00 | — | — | — | 128K | USD |
-| `gpt-5.2-chat` | $1.75 | $14.00 | — | — | — | 128K | USD |
 | `codex-mini-latest` | $1.50 | $6.00 | — | — | — | 100K | USD |
-| `gpt-4o-mini-transcribe` | $1.25 | $5.00 | — | — | — | — | USD |
-| `gpt-5` | $1.25 | $10.00 | — | — | — | 128K | USD |
+| `gpt-5.1-codex-max` | $1.25 | $10.00 | — | — | — | 128K | USD |
 | `gpt-5.1` | $1.25 | $10.00 | — | — | — | 128K | USD |
+| `gpt-5.1-chat` | $1.25 | $10.00 | — | — | — | 128K | USD |
+| `gpt-5.1-codex` | $1.25 | $10.00 | — | — | — | 128K | USD |
+| `gpt-5-codex` | $1.25 | $10.00 | — | — | — | 128K | USD |
+| `gpt-5-chat` | $1.25 | $10.00 | — | — | — | 16K | USD |
+| `gpt-5` | $1.25 | $10.00 | — | — | — | 128K | USD |
+| `gpt-4o-mini-transcribe` | $1.25 | $5.00 | — | — | — | — | USD |
 | `gpt-5.1-2025-11-13` | $1.25 | $10.00 | — | — | — | 128K | USD |
 | `gpt-5.1-chat-latest` | $1.25 | $10.00 | — | — | — | 16K | USD |
 | `gpt-5-2025-08-07` | $1.25 | $10.00 | — | — | — | 128K | USD |
-| `gpt-5-chat` | $1.25 | $10.00 | — | — | — | 16K | USD |
 | `gpt-5-chat-latest` | $1.25 | $10.00 | — | — | — | 16K | USD |
-| `gpt-5-codex` | $1.25 | $10.00 | — | — | — | 128K | USD |
-| `gpt-5.1-codex` | $1.25 | $10.00 | — | — | — | 128K | USD |
-| `gpt-5.1-codex-max` | $1.25 | $10.00 | — | — | — | 128K | USD |
 | `gpt-4o-mini-transcribe-2025-03-20` | $1.25 | $5.00 | — | — | — | — | USD |
 | `gpt-4o-mini-transcribe-2025-12-15` | $1.25 | $5.00 | — | — | — | — | USD |
 | `gpt-5-search-api` | $1.25 | $10.00 | — | — | — | 128K | USD |
 | `gpt-5-search-api-2025-10-14` | $1.25 | $10.00 | — | — | — | 128K | USD |
-| `gpt-5.1-chat` | $1.25 | $10.00 | — | — | — | 128K | USD |
+| `o4-mini-high` | $1.10 | $4.40 | — | — | — | 200K | USD |
+| `o4-mini` | $1.10 | $4.40 | — | — | — | 100K | USD |
+| `o3-mini-high` | $1.10 | $4.40 | — | — | — | 200K | USD |
 | `o3-mini` | $1.10 | $4.40 | — | — | — | 100K | USD |
 | `o3-mini-2025-01-31` | $1.10 | $4.40 | — | — | — | 100K | USD |
-| `o4-mini` | $1.10 | $4.40 | — | — | — | 100K | USD |
 | `o4-mini-2025-04-16` | $1.10 | $4.40 | — | — | — | 100K | USD |
-| `o4-mini-high` | $1.10 | $4.40 | — | — | — | 200K | USD |
-| `o3-mini-high` | $1.10 | $4.40 | — | — | — | 200K | USD |
-| `gpt-3.5-turbo-1106` | $1.00 | $2.00 | — | — | — | 4K | USD |
 | `gpt-3.5-turbo-0613` | $1.00 | $2.00 | — | — | — | 4K | USD |
+| `gpt-3.5-turbo-1106` | $1.00 | $2.00 | — | — | — | 4K | USD |
 | `ft:gpt-4.1-mini-2025-04-14` | $0.80 | $3.20 | — | $0.40 | $1.60 | 32K | USD |
 | `gpt-5.4-mini` | $0.75 | $4.50 | $0.075 | $0.38 | $2.25 | 128K | USD |
 | `gpt-audio-mini` | $0.60 | $2.40 | — | — | — | 16K | USD |
@@ -314,11 +316,11 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `gpt-5-mini-2025-08-07` | $0.25 | $2.00 | — | — | — | 128K | USD |
 | `gpt-5.4-nano` | $0.20 | $1.25 | $0.020 | $0.10 | $0.62 | 128K | USD |
 | `ft:gpt-4.1-nano-2025-04-14` | $0.20 | $0.80 | — | $0.10 | $0.40 | 32K | USD |
+| `gpt-4o-mini-search-preview` | $0.15 | $0.60 | — | $0.075 | $0.30 | 16K | USD |
 | `gpt-4o-mini` | $0.15 | $0.60 | — | $0.075 | $0.30 | 16K | USD |
 | `gpt-4o-mini-2024-07-18` | $0.15 | $0.60 | — | $0.075 | $0.30 | 16K | USD |
 | `gpt-4o-mini-audio-preview` | $0.15 | $0.60 | — | — | — | 16K | USD |
 | `gpt-4o-mini-audio-preview-2024-12-17` | $0.15 | $0.60 | — | — | — | 16K | USD |
-| `gpt-4o-mini-search-preview` | $0.15 | $0.60 | — | $0.075 | $0.30 | 16K | USD |
 | `gpt-4o-mini-search-preview-2025-03-11` | $0.15 | $0.60 | — | $0.075 | $0.30 | 16K | USD |
 | `text-embedding-3-large` | $0.13 | free | — | $0.065 | free | 8K | USD |
 | `gpt-4.1-nano` | $0.10 | $0.40 | — | $0.050 | $0.20 | 32K | USD |
@@ -329,13 +331,13 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `gpt-5-nano` | $0.050 | $0.40 | — | — | — | 128K | USD |
 | `gpt-5-nano-2025-08-07` | $0.050 | $0.40 | — | — | — | 128K | USD |
 | `text-embedding-3-small` | $0.020 | free | — | $0.010 | free | 8K | USD |
+| `gpt-oss-120b:free` | free | free | — | — | — | 131K | USD |
+| `gpt-oss-20b:free` | free | free | — | — | — | 131K | USD |
 | `omni-moderation-2024-09-26` | free | free | — | — | — | — | USD |
 | `omni-moderation-latest` | free | free | — | — | — | — | USD |
 | `text-moderation-007` | free | free | — | — | — | — | USD |
 | `text-moderation-latest` | free | free | — | — | — | — | USD |
 | `text-moderation-stable` | free | free | — | — | — | — | USD |
-| `gpt-oss-120b:free` | free | free | — | — | — | 131K | USD |
-| `gpt-oss-20b:free` | free | free | — | — | — | 131K | USD |
 
 ## Google
 
@@ -344,9 +346,9 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `gemini-3-pro-image-preview` | $2.00 | $12.00 | — | $1.00 | $6.00 | 32K | USD |
 | `gemini-3.1-pro-preview` | $2.00 | $12.00 | $0.20 | $1.00 | $6.00 | 65K | USD |
 | `gemini-2.5-pro` | $1.25 | $10.00 | $0.12 | — | — | 65K | USD |
-| `gemini-2.5-computer-use-preview` | $1.25 | $10.00 | — | — | — | — | USD |
 | `gemini-2.5-pro-preview` | $1.25 | $10.00 | — | — | — | 1M | USD |
 | `gemini-2.5-pro-preview-05-06` | $1.25 | $10.00 | — | — | — | 1M | USD |
+| `gemini-2.5-computer-use-preview` | $1.25 | $10.00 | — | — | — | — | USD |
 | `gemini-2.5-pro-preview-tts` | $1.00 | — | — | — | — | 65K | USD |
 | `gemini-3.1-flash-live-preview` | $0.75 | $4.50 | — | — | — | 65K | USD |
 | `gemma-2-27b-it` | $0.65 | $0.65 | — | — | — | 8K | USD |
@@ -375,8 +377,8 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 
 | Model | Input | Output | Batch In | Batch Out | Context | Currency |
 |-------|------:|-------:|---------:|----------:|--------:|---------|
-| `gemini-3-pro-preview` | $2.00 | $12.00 | $1.00 | $6.00 | 65K | USD |
 | `gemini-3.1-pro-preview-customtools` | $2.00 | $12.00 | $1.00 | $6.00 | 65K | USD |
+| `gemini-3-pro-preview` | $2.00 | $12.00 | $1.00 | $6.00 | 65K | USD |
 | `gemini-2.5-computer-use-preview-10-2025` | $1.25 | $10.00 | — | — | 64K | USD |
 | `gemini-pro-latest` | $1.25 | $10.00 | — | — | 65K | USD |
 | `gemini-gemma-2-27b-it` | $0.35 | $1.05 | — | — | 8K | USD |
@@ -391,14 +393,14 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `gemini-2.5-flash-native-audio-preview-12-2025` | $0.30 | $2.50 | — | — | 8K | USD |
 | `gemini-embedding-2-preview` | $0.20 | free | — | — | 8K | USD |
 | `gemini-embedding-001` | $0.15 | free | — | — | 2K | USD |
-| `gemini-2.0-flash-001` | $0.10 | $0.40 | — | — | 8K | USD |
 | `gemini-2.5-flash-lite-preview-09-2025` | $0.10 | $0.40 | — | — | 65K | USD |
+| `gemini-2.0-flash-001` | $0.10 | $0.40 | — | — | 8K | USD |
 | `gemini-2.5-flash-lite-preview-06-17` | $0.10 | $0.40 | — | — | 65K | USD |
 | `gemini-flash-lite-latest` | $0.10 | $0.40 | — | — | 65K | USD |
 | `gemini-2.0-flash-lite-001` | $0.075 | $0.30 | — | — | 1M | USD |
 | `gemini-1.5-flash` | $0.075 | free | — | — | 8K | USD |
-| `gemini-exp-1114` | free | free | — | — | 8K | USD |
 | `gemma-3-27b-it` | free | free | — | — | 8K | USD |
+| `gemini-exp-1114` | free | free | — | — | 8K | USD |
 | `learnlm-1.5-pro-experimental` | free | free | — | — | 8K | USD |
 | `lyria-3-clip-preview` | free | free | — | — | 8K | USD |
 | `lyria-3-pro-preview` | free | free | — | — | 8K | USD |
@@ -414,8 +416,8 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `deepseek-chat` | $0.28 | $0.42 | $0.028 | 8K | USD |
 | `deepseek-reasoner` | $0.28 | $0.42 | $0.028 | 65K | USD |
 | `deepseek-v3.2` | $0.28 | $0.40 | — | 163K | USD |
-| `deepseek-v3` | $0.27 | $1.10 | — | 8K | USD |
 | `deepseek-v3.2-exp` | $0.27 | $0.41 | — | 163K | USD |
+| `deepseek-v3` | $0.27 | $1.10 | — | 8K | USD |
 | `deepseek-v3.1-terminus` | $0.21 | $0.79 | — | 163K | USD |
 | `deepseek-chat-v3-0324` | $0.20 | $0.77 | — | 163K | USD |
 | `deepseek-chat-v3.1` | $0.15 | $0.75 | — | 32K | USD |
@@ -451,24 +453,25 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `mistral-large-2407` | $3.00 | $9.00 | 128K | USD |
 | `mistral-medium` | $2.70 | $8.10 | 8K | USD |
 | `mistral-medium-2312` | $2.70 | $8.10 | 8K | USD |
+| `mistral-large-2411` | $2.00 | $6.00 | 128K | USD |
+| `pixtral-large-2411` | $2.00 | $6.00 | 128K | USD |
 | `magistral-medium-2506` | $2.00 | $5.00 | 40K | USD |
 | `magistral-medium-2509` | $2.00 | $5.00 | 40K | USD |
 | `magistral-medium-1-2-2509` | $2.00 | $5.00 | 40K | USD |
 | `magistral-medium-latest` | $2.00 | $5.00 | 40K | USD |
 | `open-mixtral-8x22b` | $2.00 | $6.00 | 8K | USD |
-| `pixtral-large-2411` | $2.00 | $6.00 | 128K | USD |
 | `pixtral-large-latest` | $2.00 | $6.00 | 128K | USD |
 | `open-mixtral-8x7b` | $0.70 | $0.70 | 8K | USD |
+| `mistral-large-2512` | $0.50 | $1.50 | 262K | USD |
 | `magistral-small-2506` | $0.50 | $1.50 | 40K | USD |
 | `magistral-small-latest` | $0.50 | $1.50 | 40K | USD |
 | `magistral-small-1-2-2509` | $0.50 | $1.50 | 40K | USD |
 | `mistral-large-latest` | $0.50 | $1.50 | 262K | USD |
 | `mistral-large-3` | $0.50 | $1.50 | 262K | USD |
-| `mistral-large-2512` | $0.50 | $1.50 | 262K | USD |
+| `devstral-2512` | $0.40 | $2.00 | 256K | USD |
 | `devstral-medium-2507` | $0.40 | $2.00 | 128K | USD |
 | `devstral-latest` | $0.40 | $2.00 | 256K | USD |
 | `devstral-medium-latest` | $0.40 | $2.00 | 256K | USD |
-| `devstral-2512` | $0.40 | $2.00 | 256K | USD |
 | `mistral-medium-2505` | $0.40 | $2.00 | 8K | USD |
 | `mistral-medium-latest` | $0.40 | $2.00 | 131K | USD |
 | `mistral-medium-3-1-2508` | $0.40 | $2.00 | 131K | USD |
@@ -499,6 +502,7 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `mistral-large` | $2.00 | $6.00 | 128K | USD |
 | `mistral-medium-3.1` | $0.40 | $2.00 | 131K | USD |
 | `devstral-medium` | $0.40 | $2.00 | 131K | USD |
+| `mistral-medium-3` | $0.40 | $2.00 | 131K | USD |
 | `ministral-14b-2512` | $0.20 | $0.20 | 262K | USD |
 | `mistral-saba` | $0.20 | $0.60 | 32K | USD |
 | `mistral-small-2603` | $0.15 | $0.60 | 262K | USD |
@@ -512,7 +516,6 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `mistral-small-24b-instruct-2501` | $0.050 | $0.080 | 32K | USD |
 | `mistral-small-3.1-24b-instruct` | $0.030 | $0.11 | 131K | USD |
 | `mistral-nemo` | $0.020 | $0.040 | 131K | USD |
-| `mistral-small-3.1-24b-instruct:free` | free | free | 128K | USD |
 
 ## xAI (Grok)
 
@@ -522,10 +525,10 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `grok-3-fast-latest` | $5.00 | $25.00 | 131K | USD |
 | `grok-beta` | $5.00 | $15.00 | 131K | USD |
 | `grok-vision-beta` | $5.00 | $15.00 | 8K | USD |
+| `grok-4` | $3.00 | $15.00 | 256K | USD |
 | `grok-3` | $3.00 | $15.00 | 131K | USD |
 | `grok-3-beta` | $3.00 | $15.00 | 131K | USD |
 | `grok-3-latest` | $3.00 | $15.00 | 131K | USD |
-| `grok-4` | $3.00 | $15.00 | 256K | USD |
 | `grok-4-0709` | $3.00 | $15.00 | 256K | USD |
 | `grok-4-latest` | $3.00 | $15.00 | 256K | USD |
 | `grok-2` | $2.00 | $10.00 | 131K | USD |
@@ -543,6 +546,7 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `grok-3-mini` | $0.30 | $0.50 | 131K | USD |
 | `grok-3-mini-beta` | $0.30 | $0.50 | 131K | USD |
 | `grok-3-mini-latest` | $0.30 | $0.50 | 131K | USD |
+| `grok-code-fast-1` | $0.20 | $1.50 | 256K | USD |
 | `grok-4-fast-reasoning` | $0.20 | $0.50 | — | USD |
 | `grok-4-fast-non-reasoning` | $0.20 | $0.50 | — | USD |
 | `grok-4-1-fast` | $0.20 | $0.50 | — | USD |
@@ -551,7 +555,6 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `grok-4-1-fast-non-reasoning` | $0.20 | $0.50 | — | USD |
 | `grok-4-1-fast-non-reasoning-latest` | $0.20 | $0.50 | — | USD |
 | `grok-code-fast` | $0.20 | $1.50 | 256K | USD |
-| `grok-code-fast-1` | $0.20 | $1.50 | 256K | USD |
 | `grok-code-fast-1-0825` | $0.20 | $1.50 | 256K | USD |
 
 ## Qwen (通义千问)
@@ -597,7 +600,6 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `qwen2.5-coder-7b-instruct` | $0.030 | $0.090 | 32K | USD |
 | `qwen3-next-80b-a3b-instruct:free` | free | free | 262K | USD |
 | `qwen3-coder:free` | free | free | 262K | USD |
-| `qwen3-4b:free` | free | free | 40K | USD |
 
 ## DashScope (阿里云)
 
@@ -605,17 +607,17 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 |-------|------:|-------:|--------:|---------|
 | `qwen-max` | $1.60 | $6.40 | 8K | USD |
 | `qwq-plus` | $0.80 | $2.40 | 8K | USD |
+| `qwen3-vl-235b-a22b-thinking` | $0.40 | $4.00 | 32K | USD |
+| `qwen3-vl-235b-a22b-instruct` | $0.40 | $1.60 | 32K | USD |
 | `qwen-plus` | $0.40 | $1.20 | 16K | USD |
 | `qwen-plus-2025-01-25` | $0.40 | $1.20 | 8K | USD |
 | `qwen-plus-2025-04-28` | $0.40 | $1.20 | 16K | USD |
 | `qwen-plus-2025-07-14` | $0.40 | $1.20 | 16K | USD |
-| `qwen3-vl-235b-a22b-instruct` | $0.40 | $1.60 | 32K | USD |
-| `qwen3-vl-235b-a22b-thinking` | $0.40 | $4.00 | 32K | USD |
 | `qwen-coder` | $0.30 | $1.50 | 16K | USD |
 | `qwen3-vl-32b-instruct` | $0.16 | $0.64 | 32K | USD |
 | `qwen3-vl-32b-thinking` | $0.16 | $2.87 | 32K | USD |
-| `qwen3-next-80b-a3b-instruct` | $0.15 | $1.20 | 65K | USD |
 | `qwen3-next-80b-a3b-thinking` | $0.15 | $1.20 | 65K | USD |
+| `qwen3-next-80b-a3b-instruct` | $0.15 | $1.20 | 65K | USD |
 | `qwen-turbo` | $0.050 | $0.20 | 16K | USD |
 | `qwen-turbo-2024-11-01` | $0.050 | $0.20 | 8K | USD |
 | `qwen-turbo-2025-04-28` | $0.050 | $0.20 | 16K | USD |
@@ -625,12 +627,12 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 
 | Model | Input | Output | Context | Currency |
 |-------|------:|-------:|--------:|---------|
-| `sonar-pro` | $3.00 | $15.00 | 8K | USD |
 | `sonar-pro-search` | $3.00 | $15.00 | 200K | USD |
-| `sonar-deep-research` | $2.00 | $8.00 | 128K | USD |
+| `sonar-pro` | $3.00 | $15.00 | 8K | USD |
 | `sonar-reasoning-pro` | $2.00 | $8.00 | 128K | USD |
-| `llama-3.1-70b-instruct` | $1.00 | $1.00 | 131K | USD |
+| `sonar-deep-research` | $2.00 | $8.00 | 128K | USD |
 | `sonar` | $1.00 | $1.00 | 128K | USD |
+| `llama-3.1-70b-instruct` | $1.00 | $1.00 | 131K | USD |
 | `sonar-reasoning` | $1.00 | $5.00 | 128K | USD |
 | `codellama-70b-instruct` | $0.70 | $2.80 | 16K | USD |
 | `llama-2-70b-chat` | $0.70 | $2.80 | 4K | USD |
@@ -638,8 +640,8 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `sonar-medium-chat` | $0.60 | $1.80 | 16K | USD |
 | `codellama-34b-instruct` | $0.35 | $1.40 | 16K | USD |
 | `llama-3.1-8b-instruct` | $0.20 | $0.20 | 131K | USD |
-| `mistral-7b-instruct` | $0.070 | $0.28 | 4K | USD |
 | `mixtral-8x7b-instruct` | $0.070 | $0.28 | 4K | USD |
+| `mistral-7b-instruct` | $0.070 | $0.28 | 4K | USD |
 | `pplx-7b-chat` | $0.070 | $0.28 | 8K | USD |
 | `sonar-small-chat` | $0.070 | $0.28 | 16K | USD |
 | `pplx-embed-v1-4b` | $0.030 | free | 32K | USD |
@@ -686,11 +688,11 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `moonshot-v1-32k` | $1.00 | $3.00 | 32K | USD |
 | `moonshot-v1-32k-0430` | $1.00 | $3.00 | 32K | USD |
 | `moonshot-v1-32k-vision-preview` | $1.00 | $3.00 | 32K | USD |
+| `kimi-k2.5` | $0.60 | $3.00 | 262K | USD |
+| `kimi-k2-thinking` | $0.60 | $2.50 | 262K | USD |
 | `kimi-k2-0711-preview` | $0.60 | $2.50 | 131K | USD |
 | `kimi-k2-0905-preview` | $0.60 | $2.50 | 262K | USD |
-| `kimi-k2.5` | $0.60 | $3.00 | 262K | USD |
 | `kimi-thinking-preview` | $0.60 | $2.50 | 131K | USD |
-| `kimi-k2-thinking` | $0.60 | $2.50 | 262K | USD |
 | `kimi-latest-8k` | $0.20 | $2.00 | 8K | USD |
 | `moonshot-v1-8k` | $0.20 | $2.00 | 8K | USD |
 | `moonshot-v1-8k-0430` | $0.20 | $2.00 | 8K | USD |
@@ -701,13 +703,13 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | Model | Input | Output | Context | Currency |
 |-------|------:|-------:|--------:|---------|
 | `minimax-m1` | $0.40 | $2.20 | 1M | USD |
+| `minimax-m2.7` | $0.30 | $1.20 | 204K | USD |
+| `minimax-m2-her` | $0.30 | $1.20 | 65K | USD |
 | `MiniMax-M2.1` | $0.30 | $1.20 | — | USD |
 | `MiniMax-M2.1-lightning` | $0.30 | $2.40 | — | USD |
 | `MiniMax-M2.5` | $0.30 | $1.20 | — | USD |
 | `MiniMax-M2.5-lightning` | $0.30 | $2.40 | — | USD |
 | `MiniMax-M2` | $0.30 | $1.20 | — | USD |
-| `minimax-m2.7` | $0.30 | $1.20 | 204K | USD |
-| `minimax-m2-her` | $0.30 | $1.20 | 65K | USD |
 | `minimax-m2.1` | $0.27 | $0.95 | 196K | USD |
 | `minimax-m2` | $0.26 | $1.00 | 196K | USD |
 | `minimax-01` | $0.20 | $1.10 | 1M | USD |
@@ -721,8 +723,8 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `j2-ultra` | $15.00 | $15.00 | 8K | USD |
 | `j2-mid` | $10.00 | $10.00 | 8K | USD |
 | `j2-light` | $3.00 | $3.00 | 8K | USD |
-| `jamba-large-1.6` | $2.00 | $8.00 | 256K | USD |
 | `jamba-large-1.7` | $2.00 | $8.00 | 256K | USD |
+| `jamba-large-1.6` | $2.00 | $8.00 | 256K | USD |
 | `jamba-mini-1.6` | $0.20 | $0.40 | 256K | USD |
 | `jamba-mini-1.7` | $0.20 | $0.40 | 256K | USD |
 
@@ -837,128 +839,14 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `ernie-4.5-21b-a3b-thinking` | $0.070 | $0.28 | 131K | USD |
 | `ernie-4.5-21b-a3b` | $0.070 | $0.28 | 120K | USD |
 
-## AWS Bedrock
-
-| Model | Input | Output | Batch In | Batch Out | Context | Currency |
-|-------|------:|-------:|---------:|----------:|--------:|---------|
-| `anthropic.claude-opus-4-1-20250805-v1:0` | $15.00 | $75.00 | — | — | 32K | USD |
-| `anthropic.claude-opus-4-20250514-v1:0` | $15.00 | $75.00 | — | — | 32K | USD |
-| `eu.anthropic.claude-opus-4-1-20250805-v1:0` | $15.00 | $75.00 | — | — | 32K | USD |
-| `eu.anthropic.claude-opus-4-20250514-v1:0` | $15.00 | $75.00 | — | — | 32K | USD |
-| `us.anthropic.claude-opus-4-1-20250805-v1:0` | $15.00 | $75.00 | — | — | 32K | USD |
-| `us.anthropic.claude-opus-4-20250514-v1:0` | $15.00 | $75.00 | — | — | 32K | USD |
-| `us.anthropic.claude-opus-4-6-v1` | $5.50 | $27.50 | — | — | 128K | USD |
-| `eu.anthropic.claude-opus-4-6-v1` | $5.50 | $27.50 | — | — | 128K | USD |
-| `au.anthropic.claude-opus-4-6-v1` | $5.50 | $27.50 | — | — | 128K | USD |
-| `us.anthropic.claude-opus-4-5-20251101-v1:0` | $5.50 | $27.50 | — | — | 64K | USD |
-| `anthropic.claude-opus-4-5-20251101-v1:0` | $5.00 | $25.00 | — | — | 64K | USD |
-| `anthropic.claude-opus-4-6-v1` | $5.00 | $25.00 | — | — | 128K | USD |
-| `global.anthropic.claude-opus-4-6-v1` | $5.00 | $25.00 | — | — | 128K | USD |
-| `global.anthropic.claude-opus-4-5-20251101-v1:0` | $5.00 | $25.00 | — | — | 64K | USD |
-| `eu.anthropic.claude-opus-4-5-20251101-v1:0` | $5.00 | $25.00 | — | — | 64K | USD |
-| `us.anthropic.claude-sonnet-4-6` | $3.30 | $16.50 | — | — | 64K | USD |
-| `eu.anthropic.claude-sonnet-4-6` | $3.30 | $16.50 | — | — | 64K | USD |
-| `au.anthropic.claude-sonnet-4-6` | $3.30 | $16.50 | — | — | 64K | USD |
-| `au.anthropic.claude-sonnet-4-5-20250929-v1:0` | $3.30 | $16.50 | — | — | 64K | USD |
-| `eu.anthropic.claude-sonnet-4-5-20250929-v1:0` | $3.30 | $16.50 | — | — | 64K | USD |
-| `jp.anthropic.claude-sonnet-4-5-20250929-v1:0` | $3.30 | $16.50 | — | — | 64K | USD |
-| `us.anthropic.claude-sonnet-4-5-20250929-v1:0` | $3.30 | $16.50 | — | — | 64K | USD |
-| `anthropic.claude-3-7-sonnet-20250219-v1:0` | $3.00 | $15.00 | — | — | 8K | USD |
-| `anthropic.claude-sonnet-4-6` | $3.00 | $15.00 | — | — | 64K | USD |
-| `global.anthropic.claude-sonnet-4-6` | $3.00 | $15.00 | — | — | 64K | USD |
-| `anthropic.claude-sonnet-4-20250514-v1:0` | $3.00 | $15.00 | — | — | 64K | USD |
-| `anthropic.claude-sonnet-4-5-20250929-v1:0` | $3.00 | $15.00 | — | — | 64K | USD |
-| `apac.anthropic.claude-sonnet-4-20250514-v1:0` | $3.00 | $15.00 | — | — | 64K | USD |
-| `eu.anthropic.claude-sonnet-4-20250514-v1:0` | $3.00 | $15.00 | — | — | 64K | USD |
-| `global.anthropic.claude-sonnet-4-5-20250929-v1:0` | $3.00 | $15.00 | — | — | 64K | USD |
-| `global.anthropic.claude-sonnet-4-20250514-v1:0` | $3.00 | $15.00 | — | — | 64K | USD |
-| `us.anthropic.claude-3-7-sonnet-20250219-v1:0` | $3.00 | $15.00 | — | — | 8K | USD |
-| `us.anthropic.claude-sonnet-4-20250514-v1:0` | $3.00 | $15.00 | — | — | 64K | USD |
-| `us.writer.palmyra-x4-v1:0` | $2.50 | $10.00 | — | — | 8K | USD |
-| `writer.palmyra-x4-v1:0` | $2.50 | $10.00 | — | — | 8K | USD |
-| `us.amazon.nova-premier-v1:0` | $2.50 | $12.50 | — | — | 10K | USD |
-| `amazon.nova-2-pro-preview-20251202-v1:0` | $2.19 | $17.50 | — | — | 64K | USD |
-| `apac.amazon.nova-2-pro-preview-20251202-v1:0` | $2.19 | $17.50 | — | — | 64K | USD |
-| `eu.amazon.nova-2-pro-preview-20251202-v1:0` | $2.19 | $17.50 | — | — | 64K | USD |
-| `us.amazon.nova-2-pro-preview-20251202-v1:0` | $2.19 | $17.50 | — | — | 64K | USD |
-| `eu.mistral.pixtral-large-2502-v1:0` | $2.00 | $6.00 | — | — | 4K | USD |
-| `us.mistral.pixtral-large-2502-v1:0` | $2.00 | $6.00 | — | — | 4K | USD |
-| `us.deepseek.r1-v1:0` | $1.35 | $5.40 | — | — | 4K | USD |
-| `apac.anthropic.claude-haiku-4-5-20251001-v1:0` | $1.10 | $5.50 | — | — | 64K | USD |
-| `eu.anthropic.claude-haiku-4-5-20251001-v1:0` | $1.10 | $5.50 | — | — | 64K | USD |
-| `jp.anthropic.claude-haiku-4-5-20251001-v1:0` | $1.10 | $5.50 | — | — | 64K | USD |
-| `us.anthropic.claude-haiku-4-5-20251001-v1:0` | $1.10 | $5.50 | — | — | 64K | USD |
-| `au.anthropic.claude-haiku-4-5-20251001-v1:0` | $1.10 | $5.50 | — | — | 64K | USD |
-| `eu.amazon.nova-pro-v1:0` | $1.05 | $4.20 | — | — | 10K | USD |
-| `anthropic.claude-haiku-4-5-20251001-v1:0` | $1.00 | $5.00 | — | — | 64K | USD |
-| `anthropic.claude-haiku-4-5@20251001` | $1.00 | $5.00 | — | — | 64K | USD |
-| `global.anthropic.claude-haiku-4-5-20251001-v1:0` | $1.00 | $5.00 | — | — | 64K | USD |
-| `apac.amazon.nova-pro-v1:0` | $0.84 | $3.36 | — | — | 10K | USD |
-| `amazon.nova-pro-v1:0` | $0.80 | $3.20 | — | — | 10K | USD |
-| `us.amazon.nova-pro-v1:0` | $0.80 | $3.20 | — | — | 10K | USD |
-| `eu.deepseek.v3.2` | $0.74 | $2.22 | — | — | 163K | USD |
-| `meta.llama3-3-70b-instruct-v1:0` | $0.72 | $0.72 | — | — | 4K | USD |
-| `us.meta.llama3-3-70b-instruct-v1:0` | $0.72 | $0.72 | — | — | 4K | USD |
-| `deepseek.v3.2` | $0.62 | $1.85 | — | — | 163K | USD |
-| `us.deepseek.v3.2` | $0.62 | $1.85 | — | — | 163K | USD |
-| `us.writer.palmyra-x5-v1:0` | $0.60 | $6.00 | — | — | 8K | USD |
-| `writer.palmyra-x5-v1:0` | $0.60 | $6.00 | — | — | 8K | USD |
-| `moonshot.kimi-k2-thinking` | $0.60 | $2.50 | — | — | 8K | USD |
-| `moonshotai.kimi-k2.5` | $0.60 | $3.00 | — | — | 262K | USD |
-| `zai.glm-4.7` | $0.60 | $2.20 | — | — | 128K | USD |
-| `deepseek.v3-v1:0` | $0.58 | $1.68 | — | — | 81K | USD |
-| `qwen.qwen3-vl-235b-a22b` | $0.53 | $2.66 | — | — | 8K | USD |
-| `mistral.magistral-small-2509` | $0.50 | $1.50 | — | — | 8K | USD |
-| `mistral.mistral-large-3-675b-instruct` | $0.50 | $1.50 | — | — | 8K | USD |
-| `qwen.qwen3-coder-next` | $0.50 | $1.20 | — | — | 8K | USD |
-| `mistral.devstral-2-123b` | $0.40 | $2.00 | — | — | 8K | USD |
-| `apac.amazon.nova-2-lite-v1:0` | $0.33 | $2.75 | — | — | 64K | USD |
-| `eu.amazon.nova-2-lite-v1:0` | $0.33 | $2.75 | — | — | 64K | USD |
-| `us.amazon.nova-2-lite-v1:0` | $0.33 | $2.75 | — | — | 64K | USD |
-| `amazon.nova-2-lite-v1:0` | $0.30 | $2.50 | — | — | 64K | USD |
-| `global.amazon.nova-2-lite-v1:0` | $0.30 | $2.50 | — | — | 64K | USD |
-| `minimax.minimax-m2` | $0.30 | $1.20 | — | — | 8K | USD |
-| `minimax.minimax-m2.1` | $0.30 | $1.20 | — | — | 8K | USD |
-| `meta.llama4-maverick-17b-instruct-v1:0` | $0.24 | $0.97 | $0.12 | $0.48 | 4K | USD |
-| `us.meta.llama4-maverick-17b-instruct-v1:0` | $0.24 | $0.97 | $0.12 | $0.48 | 4K | USD |
-| `google.gemma-3-27b-it` | $0.23 | $0.38 | — | — | 8K | USD |
-| `qwen.qwen3-coder-480b-a35b-v1:0` | $0.22 | $1.80 | — | — | 65K | USD |
-| `qwen.qwen3-235b-a22b-2507-v1:0` | $0.22 | $0.88 | — | — | 131K | USD |
-| `mistral.ministral-3-14b-instruct` | $0.20 | $0.20 | — | — | 8K | USD |
-| `nvidia.nemotron-nano-12b-v2` | $0.20 | $0.60 | — | — | 8K | USD |
-| `meta.llama4-scout-17b-instruct-v1:0` | $0.17 | $0.66 | $0.085 | $0.33 | 4K | USD |
-| `us.meta.llama4-scout-17b-instruct-v1:0` | $0.17 | $0.66 | $0.085 | $0.33 | 4K | USD |
-| `mistral.ministral-3-8b-instruct` | $0.15 | $0.15 | — | — | 8K | USD |
-| `openai.gpt-oss-120b-1:0` | $0.15 | $0.60 | — | — | 128K | USD |
-| `qwen.qwen3-coder-30b-a3b-v1:0` | $0.15 | $0.60 | — | — | 131K | USD |
-| `qwen.qwen3-32b-v1:0` | $0.15 | $0.60 | — | — | 16K | USD |
-| `qwen.qwen3-next-80b-a3b` | $0.15 | $1.20 | — | — | 8K | USD |
-| `mistral.ministral-3-3b-instruct` | $0.10 | $0.10 | — | — | 8K | USD |
-| `mistral.voxtral-small-24b-2507` | $0.10 | $0.30 | — | — | 8K | USD |
-| `google.gemma-3-12b-it` | $0.090 | $0.29 | — | — | 8K | USD |
-| `eu.amazon.nova-lite-v1:0` | $0.078 | $0.31 | — | — | 10K | USD |
-| `openai.gpt-oss-20b-1:0` | $0.070 | $0.30 | — | — | 128K | USD |
-| `zai.glm-4.7-flash` | $0.070 | $0.40 | — | — | 128K | USD |
-| `apac.amazon.nova-lite-v1:0` | $0.063 | $0.25 | — | — | 10K | USD |
-| `amazon.nova-lite-v1:0` | $0.060 | $0.24 | — | — | 10K | USD |
-| `nvidia.nemotron-nano-9b-v2` | $0.060 | $0.23 | — | — | 8K | USD |
-| `nvidia.nemotron-nano-3-30b` | $0.060 | $0.24 | — | — | 8K | USD |
-| `us.amazon.nova-lite-v1:0` | $0.060 | $0.24 | — | — | 10K | USD |
-| `eu.amazon.nova-micro-v1:0` | $0.046 | $0.18 | — | — | 10K | USD |
-| `google.gemma-3-4b-it` | $0.040 | $0.080 | — | — | 8K | USD |
-| `mistral.voxtral-mini-3b-2507` | $0.040 | $0.040 | — | — | 8K | USD |
-| `apac.amazon.nova-micro-v1:0` | $0.037 | $0.15 | — | — | 10K | USD |
-| `amazon.nova-micro-v1:0` | $0.035 | $0.14 | — | — | 10K | USD |
-| `us.amazon.nova-micro-v1:0` | $0.035 | $0.14 | — | — | 10K | USD |
-
 ## Bedrock Mantle
 
 | Model | Input | Output | Context | Currency |
 |-------|------:|-------:|--------:|---------|
-| `openai.gpt-oss-safeguard-120b` | $0.15 | $0.60 | 65K | USD |
 | `openai.gpt-oss-120b` | $0.15 | $0.60 | 32K | USD |
-| `openai.gpt-oss-safeguard-20b` | $0.075 | $0.30 | 65K | USD |
+| `openai.gpt-oss-safeguard-120b` | $0.15 | $0.60 | 65K | USD |
 | `openai.gpt-oss-20b` | $0.075 | $0.30 | 32K | USD |
+| `openai.gpt-oss-safeguard-20b` | $0.075 | $0.30 | 65K | USD |
 
 ## Bytedance
 
@@ -1005,13 +893,13 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 
 | Model | Input | Output | Context | Currency |
 |-------|------:|-------:|--------:|---------|
+| `command-r-plus-08-2024` | $2.50 | $10.00 | 4K | USD |
 | `command-a-03-2025` | $2.50 | $10.00 | 8K | USD |
 | `command-r-plus` | $2.50 | $10.00 | 4K | USD |
-| `command-r-plus-08-2024` | $2.50 | $10.00 | 4K | USD |
 | `command-light` | $0.30 | $0.60 | 4K | USD |
-| `command-r` | $0.15 | $0.60 | 4K | USD |
-| `command-r-08-2024` | $0.15 | $0.60 | 4K | USD |
 | `command-r7b-12-2024` | $0.15 | $0.037 | 4K | USD |
+| `command-r-08-2024` | $0.15 | $0.60 | 4K | USD |
+| `command-r` | $0.15 | $0.60 | 4K | USD |
 
 ## Databricks
 
@@ -1490,8 +1378,8 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `deepseek-r1-671b` | $0.80 | $0.80 | 131K | USD |
 | `hermes3-405b` | $0.80 | $0.80 | 131K | USD |
 | `llama3.1-405b-instruct-fp8` | $0.80 | $0.80 | 131K | USD |
-| `deepseek-llama3.3-70b` | $0.20 | $0.60 | 131K | USD |
 | `deepseek-r1-0528` | $0.20 | $0.60 | 131K | USD |
+| `deepseek-llama3.3-70b` | $0.20 | $0.60 | 131K | USD |
 | `deepseek-v3-0324` | $0.20 | $0.60 | 131K | USD |
 | `hermes3-70b` | $0.12 | $0.30 | 131K | USD |
 | `llama3.1-70b-instruct-fp8` | $0.12 | $0.30 | 131K | USD |
@@ -1542,8 +1430,8 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `qwen2.5-coder-7b` | $0.060 | $0.12 | 8K | USD |
 | `deepseek-coder-6.7b` | $0.060 | $0.12 | 4K | USD |
 | `codellama-7b` | $0.060 | $0.12 | 4K | USD |
-| `llama-3.2-3b` | $0.040 | $0.080 | 8K | USD |
 | `qwen3-8b` | $0.040 | $0.14 | 8K | USD |
+| `llama-3.2-3b` | $0.040 | $0.080 | 8K | USD |
 | `llama-3.1-8b` | $0.030 | $0.050 | 8K | USD |
 | `gemma3-4b` | $0.030 | $0.080 | 8K | USD |
 | `nomic-embed-text` | $0.020 | free | 8K | USD |
@@ -1889,10 +1777,10 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `xiaomi/mimo-v2-flash` | $0.090 | $0.29 | — | — | 16K | USD |
 | `qwen/qwen3-235b-a22b-2507` | $0.071 | $0.10 | — | — | 262K | USD |
 | `z-ai/glm-4.7-flash` | $0.070 | $0.40 | — | — | 32K | USD |
+| `free` | free | free | — | — | 200K | USD |
 | `openrouter/auto` | free | free | — | — | 2M | USD |
 | `openrouter/free` | free | free | — | — | 200K | USD |
 | `openrouter/bodybuilder` | free | free | — | — | 128K | USD |
-| `free` | free | free | — | — | 200K | USD |
 
 ## OVHcloud
 
@@ -2052,8 +1940,8 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `ft:davinci-002` | $12.00 | $12.00 | $1.00 | $1.00 | 4K | USD |
 | `davinci-002` | $2.00 | $2.00 | — | — | 4K | USD |
 | `ft:babbage-002` | $1.60 | $1.60 | $0.20 | $0.20 | 4K | USD |
-| `gpt-3.5-turbo-instruct-0914` | $1.50 | $2.00 | — | — | 4K | USD |
 | `gpt-3.5-turbo-instruct` | $1.50 | $2.00 | — | — | 4K | USD |
+| `gpt-3.5-turbo-instruct-0914` | $1.50 | $2.00 | — | — | 4K | USD |
 | `babbage-002` | $0.40 | $0.40 | — | — | 4K | USD |
 
 ## Thedrummer
@@ -2242,35 +2130,6 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `jamba-1.5-mini` | $0.20 | $0.40 | 256K | USD |
 | `jamba-1.5-mini@001` | $0.20 | $0.40 | 256K | USD |
 
-## Google Vertex (Anthropic)
-
-| Model | Input | Output | Batch In | Batch Out | Context | Currency |
-|-------|------:|-------:|---------:|----------:|--------:|---------|
-| `claude-opus-4-1` | $15.00 | $75.00 | $7.50 | $37.50 | 32K | USD |
-| `claude-3-opus` | $15.00 | $75.00 | — | — | 4K | USD |
-| `claude-3-opus@20240229` | $15.00 | $75.00 | — | — | 4K | USD |
-| `claude-opus-4` | $15.00 | $75.00 | — | — | 32K | USD |
-| `claude-opus-4-1@20250805` | $15.00 | $75.00 | $7.50 | $37.50 | 32K | USD |
-| `claude-opus-4@20250514` | $15.00 | $75.00 | — | — | 32K | USD |
-| `claude-opus-4-5` | $5.00 | $25.00 | — | — | 64K | USD |
-| `claude-opus-4-5@20251101` | $5.00 | $25.00 | — | — | 64K | USD |
-| `claude-opus-4-6@default` | $5.00 | $25.00 | — | — | 128K | USD |
-| `claude-sonnet-4-5` | $3.00 | $15.00 | $1.50 | $7.50 | 64K | USD |
-| `claude-3-5-sonnet` | $3.00 | $15.00 | — | — | 8K | USD |
-| `claude-3-5-sonnet@20240620` | $3.00 | $15.00 | — | — | 8K | USD |
-| `claude-3-7-sonnet@20250219` | $3.00 | $15.00 | — | — | 8K | USD |
-| `claude-3-sonnet` | $3.00 | $15.00 | — | — | 4K | USD |
-| `claude-3-sonnet@20240229` | $3.00 | $15.00 | — | — | 4K | USD |
-| `claude-sonnet-4-5@20250929` | $3.00 | $15.00 | $1.50 | $7.50 | 64K | USD |
-| `claude-sonnet-4` | $3.00 | $15.00 | — | — | 64K | USD |
-| `claude-sonnet-4@20250514` | $3.00 | $15.00 | — | — | 64K | USD |
-| `claude-sonnet-4-6@default` | $3.00 | $15.00 | — | — | 64K | USD |
-| `claude-3-5-haiku` | $1.00 | $5.00 | — | — | 8K | USD |
-| `claude-3-5-haiku@20241022` | $1.00 | $5.00 | — | — | 8K | USD |
-| `claude-haiku-4-5@20251001` | $1.00 | $5.00 | — | — | 8K | USD |
-| `claude-3-haiku` | $0.25 | $1.25 | — | — | 4K | USD |
-| `claude-3-haiku@20240307` | $0.25 | $1.25 | — | — | 4K | USD |
-
 ## Vertex Ai-Deepseek Models
 
 | Model | Input | Output | Batch In | Batch Out | Context | Currency |
@@ -2298,51 +2157,11 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `deep-research-pro-preview-12-2025` | $2.00 | $12.00 | $1.00 | $6.00 | 32K | USD |
 | `gemini-flash-experimental` | free | free | — | — | 8K | USD |
 
-## Google Vertex (Llama)
-
-| Model | Input | Output | Context | Currency |
-|-------|------:|-------:|--------:|---------|
-| `meta/llama-3.1-405b-instruct-maas` | $5.00 | $16.00 | 2K | USD |
-| `meta/llama-4-maverick-17b-128e-instruct-maas` | $0.35 | $1.15 | 1M | USD |
-| `meta/llama-4-maverick-17b-16e-instruct-maas` | $0.35 | $1.15 | 1M | USD |
-| `meta/llama-4-scout-17b-128e-instruct-maas` | $0.25 | $0.70 | 10M | USD |
-| `meta/llama-4-scout-17b-16e-instruct-maas` | $0.25 | $0.70 | 10M | USD |
-| `meta/llama-3.1-70b-instruct-maas` | free | free | 2K | USD |
-| `meta/llama-3.1-8b-instruct-maas` | free | free | 2K | USD |
-| `meta/llama-3.2-90b-vision-instruct-maas` | free | free | 2K | USD |
-| `meta/llama3-405b-instruct-maas` | free | free | 32K | USD |
-| `meta/llama3-70b-instruct-maas` | free | free | 32K | USD |
-| `meta/llama3-8b-instruct-maas` | free | free | 32K | USD |
-
 ## Vertex Ai-Minimax Models
 
 | Model | Input | Output | Context | Currency |
 |-------|------:|-------:|--------:|---------|
 | `minimaxai/minimax-m2-maas` | $0.30 | $1.20 | 196K | USD |
-
-## Google Vertex (Mistral)
-
-| Model | Input | Output | Context | Currency |
-|-------|------:|-------:|--------:|---------|
-| `mistral-nemo@2407` | $3.00 | $3.00 | 128K | USD |
-| `mistral-large-2411` | $2.00 | $6.00 | 8K | USD |
-| `mistral-large@2407` | $2.00 | $6.00 | 8K | USD |
-| `mistral-large@2411-001` | $2.00 | $6.00 | 8K | USD |
-| `mistral-large@latest` | $2.00 | $6.00 | 8K | USD |
-| `mistral-small-2503` | $1.00 | $3.00 | 128K | USD |
-| `mistral-small-2503@001` | $1.00 | $3.00 | 8K | USD |
-| `mistral-medium-3` | $0.40 | $2.00 | 8K | USD |
-| `mistral-medium-3@001` | $0.40 | $2.00 | 8K | USD |
-| `mistralai/mistral-medium-3` | $0.40 | $2.00 | 8K | USD |
-| `mistralai/mistral-medium-3@001` | $0.40 | $2.00 | 8K | USD |
-| `mistralai/codestral-2@001` | $0.30 | $0.90 | 128K | USD |
-| `codestral-2` | $0.30 | $0.90 | 128K | USD |
-| `codestral-2@001` | $0.30 | $0.90 | 128K | USD |
-| `mistralai/codestral-2` | $0.30 | $0.90 | 128K | USD |
-| `codestral-2501` | $0.20 | $0.60 | 128K | USD |
-| `codestral@2405` | $0.20 | $0.60 | 128K | USD |
-| `codestral@latest` | $0.20 | $0.60 | 128K | USD |
-| `mistral-nemo@latest` | $0.15 | $0.15 | 128K | USD |
 
 ## Vertex Ai-Moonshot Models
 
@@ -2473,7 +2292,7 @@ Most-used models across major providers. Cache Read and Batch In are per MTok.
 | `glm-5-code` | $1.20 | $5.00 | — | USD |
 | `glm-4.5-airx` | $1.10 | $4.50 | — | USD |
 | `glm-4.6` | $0.60 | $2.20 | 204K | USD |
-| `glm-4.5` | $0.60 | $2.20 | 131K | USD |
 | `glm-4.5v` | $0.60 | $1.80 | 65K | USD |
+| `glm-4.5` | $0.60 | $2.20 | 131K | USD |
 | `glm-4-32b-0414-128k` | $0.10 | $0.10 | — | USD |
 | `glm-4.5-flash` | free | free | — | USD |
