@@ -1,15 +1,12 @@
 """
-Google Gemini API pricing fetcher.
+Google AI pricing fetcher.
 
-Scrapes https://ai.google.dev/pricing which lists per-million-token prices
-for all Gemini models in a structured HTML table per model.
+Scrapes https://ai.google.dev/pricing which lists pricing for all Google AI
+models: Gemini (token-based), Imagen (per-image), Veo (per-second video),
+Lyria (per-request music), and embeddings.
 
-Models with tiered pricing (e.g. ≤200k / >200k token context breakpoints)
-are represented as tiered_pricing. Context caching prices are captured as
-cache_pricing.
-
-Only text/image/video token pricing is extracted. Audio, per-image, and
-per-second (video generation) pricing is skipped.
+LLM models use $/1M token pricing. Generation models use per-item or
+per-second pricing with sec/per keys.
 """
 import logging
 import re
@@ -35,13 +32,24 @@ _PER_IMAGE_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Models to skip — image/video/audio/embedding generation, not LLMs
+# Per-second fee: "$0.40 per second", "$0.15/second"
+_PER_SECOND_RE = re.compile(
+    r"\$([0-9]+(?:\.[0-9]+)?)\s*(?:per\s+second|/\s*second|/\s*sec)",
+    re.IGNORECASE,
+)
+
+# Per-request/song fee: "$0.08 per request", "$0.04 per song"
+_PER_REQUEST_RE = re.compile(
+    r"\$([0-9]+(?:\.[0-9]+)?)\s+per\s+(?:request|song)",
+    re.IGNORECASE,
+)
+
+# Resolution label: "720p", "1080p", "4K", "4k"
+_RESOLUTION_RE = re.compile(r"\b(720p|1080p|4[Kk])\b", re.IGNORECASE)
+
+# Models to skip — free models with no paid pricing
 _SKIP_MODEL_PREFIXES = (
-    "imagen",
-    "veo",
-    "lyria",
-    "gemini embedding",
-    "gemini robotics",
+    "gemma",
 )
 
 
@@ -193,7 +201,11 @@ class GoogleFetcher(BaseFetcher):
             if not table_m:
                 continue
 
-            entry = self._parse_model_section(display_name, table_m.group(0))
+            table_html = table_m.group(0)
+            if self._is_generation_model(display_name):
+                entry = self._parse_generation_section(display_name, table_html)
+            else:
+                entry = self._parse_model_section(display_name, table_html)
             if entry is not None:
                 model_id = self._normalize_display_name(display_name)
                 models[model_id] = entry
@@ -340,6 +352,117 @@ class GoogleFetcher(BaseFetcher):
         return None
 
     # ------------------------------------------------------------------
+    # Generation model parsing (Imagen, Veo, Lyria, Embeddings)
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _is_generation_model(display_name: str) -> bool:
+        """Return True if this is a non-LLM generation/embedding model."""
+        name_lower = display_name.lower()
+        return any(name_lower.startswith(p) for p in (
+            "imagen", "veo", "lyria", "gemini embedding", "gemini robotics",
+        ))
+
+    def _parse_generation_section(
+        self, display_name: str, table_html: str
+    ) -> Optional[Dict[str, Any]]:
+        """Parse a generation model's pricing table into a model entry.
+
+        Outputs already-nested pricing:
+        - Imagen: {"image": {"per": X}}
+        - Veo: {"video": {"sec": X}} or {"video": {"tiered": [...]}}
+        - Lyria: {"music": {"per": X}}
+        - Embedding: {"text": {"in": X}}
+        - Robotics: {"text": {"in": X, "out": Y}}
+        """
+        rows = _parse_table(table_html)
+        paid_col = self._find_paid_column(rows)
+        if paid_col is None:
+            logger.debug(f"Google: no Paid Tier column for generation model {display_name!r}")
+            return None
+
+        name_lower = display_name.lower()
+        pricing: Dict[str, Any] = {}
+
+        if name_lower.startswith("imagen"):
+            pricing = self._parse_imagen(rows, paid_col)
+        elif name_lower.startswith("veo"):
+            pricing = self._parse_veo(rows, paid_col)
+        elif name_lower.startswith("lyria"):
+            pricing = self._parse_lyria(rows, paid_col)
+        elif "embedding" in name_lower or "robotics" in name_lower:
+            # Embedding and Robotics use standard token pricing
+            return self._parse_model_section(display_name, table_html)
+
+        if not pricing:
+            logger.debug(f"Google: no pricing parsed for generation model {display_name!r}")
+            return None
+
+        metadata = {
+            "provider": "google",
+            "family": self._extract_family(display_name),
+        }
+
+        endpoint_entry = self._build_endpoint_entry(pricing)
+        return self._build_model_entry(endpoint_entry, metadata)
+
+    def _parse_imagen(self, rows: List[List[str]], paid_col: int) -> Dict[str, Any]:
+        """Parse Imagen pricing table. Returns nested pricing dict."""
+        for row in rows:
+            if len(row) <= paid_col:
+                continue
+            cell = row[paid_col]
+            m = _PER_IMAGE_RE.search(cell)
+            if m:
+                return {"image": {"per": float(m.group(1))}}
+        return {}
+
+    def _parse_veo(self, rows: List[List[str]], paid_col: int) -> Dict[str, Any]:
+        """Parse Veo pricing table. Returns nested pricing dict.
+
+        Veo tables may have resolution-based tiers or a single flat rate.
+        """
+        tiers: List[Dict[str, Any]] = []
+        flat_sec: Optional[float] = None
+
+        for row in rows:
+            if len(row) <= paid_col:
+                continue
+            cell = row[paid_col]
+            label = row[0] if row else ""
+            full_text = label + " " + cell
+
+            sec_m = _PER_SECOND_RE.search(cell)
+            if not sec_m:
+                # Try matching just dollar amount with "second" context
+                sec_m = _PER_SECOND_RE.search(full_text)
+            if sec_m:
+                price = float(sec_m.group(1))
+                res_m = _RESOLUTION_RE.search(full_text)
+                if res_m:
+                    resolution = res_m.group(1).lower()
+                    tiers.append({"resolution": resolution, "sec": price})
+                else:
+                    flat_sec = price
+
+        if tiers:
+            return {"video": {"tiered": tiers}}
+        elif flat_sec is not None:
+            return {"video": {"sec": flat_sec}}
+        return {}
+
+    def _parse_lyria(self, rows: List[List[str]], paid_col: int) -> Dict[str, Any]:
+        """Parse Lyria pricing table. Returns nested pricing dict."""
+        for row in rows:
+            if len(row) <= paid_col:
+                continue
+            cell = row[paid_col]
+            m = _PER_REQUEST_RE.search(cell)
+            if m:
+                return {"music": {"per": float(m.group(1))}}
+        return {}
+
+    # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
 
@@ -369,8 +492,9 @@ class GoogleFetcher(BaseFetcher):
 
     @staticmethod
     def _extract_family(display_name: str) -> str:
-        """'Gemini 2.5 Flash-Lite Preview' → 'gemini-2.5'"""
-        m = re.match(r"(gemini\s+[0-9]+(?:\.[0-9]+)?)", display_name, re.IGNORECASE)
+        """'Gemini 2.5 Flash-Lite Preview' → 'gemini-2.5', 'Imagen 4 Fast' → 'imagen-4'"""
+        # Match "Name Version" pattern for any model family
+        m = re.match(r"(\w+\s+[0-9]+(?:\.[0-9]+)?)", display_name, re.IGNORECASE)
         if m:
             return m.group(1).lower().replace(" ", "-")
         return display_name.split()[0].lower()

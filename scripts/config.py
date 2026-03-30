@@ -20,6 +20,9 @@ PROVIDER_PREFIXES: List[Tuple[str, str]] = [
     ("claude-", "anthropic"),
     ("gemini-", "google"),
     ("imagen-", "google"),
+    ("veo-", "google"),
+    ("lyria-", "google"),
+    ("gemma-", "google"),
     ("deepseek-", "deepseek"),
     ("glm-", "zhipu"),
     ("chatglm-", "zhipu"),
@@ -74,8 +77,9 @@ MODALITY_AUTHORITATIVE_SOURCES: frozenset = frozenset({
 PRICE_ANOMALY_THRESHOLDS: Dict[str, Dict[str, float]] = {
     "text":  {"in": 200.0, "out": 200.0},
     "audio": {"in": 200.0, "out": 200.0},
-    "image": {"in": 200.0, "out": 500.0},
-    "video": {"in": 200.0, "out": 200.0},
+    "image": {"in": 200.0, "out": 500.0, "per": 10.0},
+    "video": {"in": 200.0, "out": 200.0, "sec": 5.0},
+    "music": {"per": 10.0},
 }
 
 # Minimum source priority for a model to be included in pricing.json.

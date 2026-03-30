@@ -1,13 +1,14 @@
 """
 Merge pricing data from multiple sources into pricing.json.
 
-Output format: v7.0 — pricing-only, no metadata, simplified field names.
+Output format: v8.0 — pricing-only, no metadata, supports token/per-second/per-item pricing.
   pricing.json → model → {
     "USD": {
-      "text": { "in": ..., "out": ... },
+      "text":  { "in": ..., "out": ... },
       "audio": { "in": ..., "out": ... },   # optional
-      "image": { "in": ..., "out": ... },   # optional
-      "video": { "in": ..., "out": ... },   # optional
+      "image": { "in": ..., "out": ..., "per": ... },  # optional
+      "video": { "in": ..., "sec": ... },   # optional, may have tiered
+      "music": { "per": ... },              # optional
       "cache": { ... },   # optional, at currency level
       "batch":  { ... },  # optional, at currency level
       "tiered": [ ... ],  # optional, at currency level
@@ -51,7 +52,7 @@ logger = logging.getLogger(__name__)
 
 def _is_nested_pricing(pricing: Dict[str, Any]) -> bool:
     """Return True if pricing already uses v5.0 nested modality format."""
-    return any(k in pricing for k in ("text", "audio", "image"))
+    return any(k in pricing for k in ("text", "audio", "image", "video", "music"))
 
 
 def _flat_to_nested(pricing: Dict[str, Any], source_name: str) -> Dict[str, Any]:
@@ -121,7 +122,7 @@ def _to_v5_pricing(pricing: Dict[str, Any], source_name: str) -> Dict[str, Any]:
     if _is_nested_pricing(pricing):
         # Already nested — enforce source blocking for audio/image, normalize field names
         if source_name not in MODALITY_AUTHORITATIVE_SOURCES:
-            filtered = {k: v for k, v in pricing.items() if k not in ("audio", "image")}
+            filtered = {k: v for k, v in pricing.items() if k not in ("audio", "image", "video", "music")}
         else:
             filtered = dict(pricing)
         # Normalize legacy field names inside each modality dict
@@ -205,7 +206,7 @@ class PricingMerger:
         merged_models = admitted
 
         output = {
-            "version": "7.0",
+            "version": "8.0",
             "updated_at": datetime.now(timezone.utc).isoformat(),
             "source": "burncloud-official",
             "models": merged_models,
@@ -379,7 +380,7 @@ class PricingMerger:
                     # Modality fields from lower-priority AUTHORITATIVE sources only
                     if src_name in MODALITY_AUTHORITATIVE_SOURCES:
                         src_v5 = _to_v5_pricing(ep_data.get("pricing", {}), src_name)
-                        for modality in ("audio", "image"):
+                        for modality in ("audio", "image", "video", "music"):
                             if modality not in entry and modality in src_v5:
                                 entry[modality] = src_v5[modality]
                                 logger.debug(
@@ -480,7 +481,7 @@ class PricingMerger:
         """
         filtered = {}
         anomalous: List[Dict[str, Any]] = []
-        modalities = ("text", "audio", "image", "video")
+        modalities = ("text", "audio", "image", "video", "music")
 
         for model_id, currency_map in merged.items():
             is_anomalous = False
@@ -490,7 +491,7 @@ class PricingMerger:
                     if not isinstance(mod_data, dict):
                         continue
                     thresholds = PRICE_ANOMALY_THRESHOLDS.get(modality, {})
-                    for direction in ("in", "out"):
+                    for direction in ("in", "out", "sec", "per"):
                         price = mod_data.get(direction)
                         if price is None:
                             continue
@@ -502,10 +503,11 @@ class PricingMerger:
                             })
                             is_anomalous = True
                         elif direction in thresholds and price > thresholds[direction]:
+                            unit = {"in": "/MTok", "out": "/MTok", "sec": "/sec", "per": "/item"}.get(direction, "")
                             anomalous.append({
                                 "model": model_id,
                                 "reason": (
-                                    f"{modality}.{direction} ${price}/MTok "
+                                    f"{modality}.{direction} ${price}{unit} "
                                     f"> ${thresholds[direction]} threshold"
                                 ),
                                 "value": price,

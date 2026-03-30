@@ -151,7 +151,7 @@ class TestPricingMerger:
              patch.object(config, "data_dir", tmp_path):
             result, warnings = merger.merge_all("2024-01-01")
 
-        assert result["version"] == "7.0"
+        assert result["version"] == "8.0"
         assert "models" in result
         assert len(result["models"]) == 2
         assert "gpt-4o" in result["models"]
@@ -303,7 +303,7 @@ class TestPricingMerger:
         with open(output_path) as f:
             saved_data = json.load(f)
 
-        assert saved_data["version"] == "7.0"
+        assert saved_data["version"] == "8.0"
         assert "updated_at" in saved_data
         assert "models" in saved_data
 
@@ -1154,6 +1154,66 @@ class TestAnomalyFilter:
         )
         result, _ = self._merge_with_source("gemini-mixed", model, "google", tmp_path)
         assert "gemini-mixed" not in result["models"]
+
+    def test_per_item_price_passes(self, tmp_path):
+        """Image generation model with per-item price passes anomaly check."""
+        model = _ep(
+            "generativelanguage.googleapis.com",
+            {"image": {"per": 0.04}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("imagen-ok", model, "google", tmp_path)
+        assert "imagen-ok" in result["models"]
+
+    def test_per_item_above_threshold_rejected(self, tmp_path):
+        """Image per-item price above $10 threshold is rejected."""
+        model = _ep(
+            "generativelanguage.googleapis.com",
+            {"image": {"per": 15.0}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("imagen-bad", model, "google", tmp_path)
+        assert "imagen-bad" not in result["models"]
+
+    def test_per_second_price_passes(self, tmp_path):
+        """Video generation model with per-second price passes anomaly check."""
+        model = _ep(
+            "generativelanguage.googleapis.com",
+            {"video": {"sec": 0.40}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("veo-ok", model, "google", tmp_path)
+        assert "veo-ok" in result["models"]
+
+    def test_per_second_above_threshold_rejected(self, tmp_path):
+        """Video per-second price above $5 threshold is rejected."""
+        model = _ep(
+            "generativelanguage.googleapis.com",
+            {"video": {"sec": 8.0}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("veo-bad", model, "google", tmp_path)
+        assert "veo-bad" not in result["models"]
+
+    def test_music_per_request_passes(self, tmp_path):
+        """Music generation model with per-request price passes anomaly check."""
+        model = _ep(
+            "generativelanguage.googleapis.com",
+            {"music": {"per": 0.08}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("lyria-ok", model, "google", tmp_path)
+        assert "lyria-ok" in result["models"]
+
+    def test_negative_per_price_rejected(self, tmp_path):
+        """Negative per-item price is rejected."""
+        model = _ep(
+            "generativelanguage.googleapis.com",
+            {"image": {"per": -0.5}},
+            currency="USD",
+        )
+        result, _ = self._merge_with_source("imagen-neg", model, "google", tmp_path)
+        assert "imagen-neg" not in result["models"]
 
 
 class TestAdmissionGate:

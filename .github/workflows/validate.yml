@@ -25,35 +25,39 @@ jobs:
 
       - name: Check all prices are non-negative
         run: |
-          # v7.0: model IS the currency map — .value | to_entries[] gives currency entries
-          # Check text prices (input + output)
+          # v8.0: check in/out/sec/per across all modalities
+          # Check token prices (in/out) across text, audio, image, video
+          for mod in text audio image video; do
+            if jq -e --arg m "$mod" '
+              [.models | to_entries[] | .value | to_entries[] | .value |
+              (.[$m] // {}) |
+              select((.["in"] != null and .["in"] < 0) or
+                     (.out != null and .out < 0))] | length > 0
+            ' pricing.json | grep -q true; then
+              echo "❌ Negative $mod token prices found"
+              exit 1
+            fi
+          done
+          # Check per-second prices (video.sec)
           if jq -e '
             [.models | to_entries[] | .value | to_entries[] | .value |
-            (.text // {}) |
-            select((.input != null and .input < 0) or
-                   (.output != null and .output < 0))] | length > 0
+            (.video // {}) |
+            select(.sec != null and .sec < 0)] | length > 0
           ' pricing.json | grep -q true; then
-            echo "❌ Negative text prices found"
+            echo "❌ Negative video per-second prices found"
             exit 1
           fi
-          # Check audio output prices
-          if jq -e '
-            [.models | to_entries[] | .value | to_entries[] | .value |
-            (.audio // {}) |
-            select(.output != null and .output < 0)] | length > 0
-          ' pricing.json | grep -q true; then
-            echo "❌ Negative audio prices found"
-            exit 1
-          fi
-          # Check image output prices
-          if jq -e '
-            [.models | to_entries[] | .value | to_entries[] | .value |
-            (.image // {}) |
-            select(.output != null and .output < 0)] | length > 0
-          ' pricing.json | grep -q true; then
-            echo "❌ Negative image prices found"
-            exit 1
-          fi
+          # Check per-item prices (image.per, music.per)
+          for mod in image music; do
+            if jq -e --arg m "$mod" '
+              [.models | to_entries[] | .value | to_entries[] | .value |
+              (.[$m] // {}) |
+              select(.per != null and .per < 0)] | length > 0
+            ' pricing.json | grep -q true; then
+              echo "❌ Negative $mod per-item prices found"
+              exit 1
+            fi
+          done
           echo "✅ All prices are non-negative"
 
       - name: Check model count

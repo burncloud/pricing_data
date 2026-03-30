@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://pricing.burn.cloud/schema.json",
   "title": "LLM Pricing Data Schema",
-  "description": "Schema for LLM API pricing data (v7.0 — pricing-only, simplified field names)",
+  "description": "Schema for LLM API pricing data (v8.0 — pricing-only, supports token/per-second/per-item pricing)",
   "type": "object",
   "required": [
     "version",
@@ -58,7 +58,11 @@
         },
         "video": {
           "$ref": "#/definitions/ModalityPricing",
-          "description": "Video token pricing ($/1M tokens). Present for video generation and understanding models."
+          "description": "Video pricing. in/out are $/1M tokens (understanding). sec is $/second (generation). May contain tiered array with resolution field."
+        },
+        "music": {
+          "$ref": "#/definitions/ModalityPricing",
+          "description": "Music generation pricing. Uses per key ($/request or $/song)."
         },
         "cache": {
           "$ref": "#/definitions/CachePricing"
@@ -77,7 +81,7 @@
     },
     "ModalityPricing": {
       "type": "object",
-      "description": "Pricing for a single modality (text, audio, or video). Both fields are $/1M tokens.",
+      "description": "Pricing for a single modality. in/out are $/1M tokens. sec is $/second. per is $/item.",
       "properties": {
         "in": {
           "type": "number",
@@ -88,12 +92,29 @@
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M output tokens"
+        },
+        "sec": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per second (video generation)"
+        },
+        "per": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per item (image, request, song)"
+        },
+        "tiered": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GenerationTier"
+          },
+          "description": "Resolution-based tiered pricing within a modality"
         }
       }
     },
     "ImageModalityPricing": {
       "type": "object",
-      "description": "Pricing for image modality. All prices are per 1M tokens.",
+      "description": "Pricing for image modality. in/out are $/1M tokens. per is $/image (generation models).",
       "properties": {
         "in": {
           "type": "number",
@@ -104,6 +125,11 @@
           "type": "number",
           "minimum": 0,
           "description": "Price per 1M image output tokens"
+        },
+        "per": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per generated image"
         }
       }
     },
@@ -176,6 +202,26 @@
           "type": "number",
           "minimum": 0,
           "description": "Output price per 1M tokens for this tier"
+        }
+      }
+    },
+    "GenerationTier": {
+      "type": "object",
+      "description": "Resolution-based pricing tier for generation models (e.g., video at different resolutions).",
+      "properties": {
+        "resolution": {
+          "type": "string",
+          "description": "Resolution label (e.g., '720p', '1080p', '4k')"
+        },
+        "sec": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per second at this resolution"
+        },
+        "per": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Price per item at this resolution"
         }
       }
     }
