@@ -403,7 +403,7 @@ class Config:
             supported = rules.cache_supported_models
             if supported is None or model_id in supported:
                 cache_pricing = {
-                    "in": round(input_price * rules.cache_read_ratio, 6)
+                    "read": round(input_price * rules.cache_read_ratio, 6)
                 }
 
         batch_pricing = None

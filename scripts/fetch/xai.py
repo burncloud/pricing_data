@@ -111,7 +111,7 @@ class XAIFetcher(BaseFetcher):
         cache_price = _nanocents_to_mtok(cache_m.group(1)) if cache_m else None
 
         metadata = {"provider": "xai", "family": self._extract_family(model_id)}
-        cache_pricing = {"in": cache_price} if cache_price is not None else None
+        cache_pricing = {"read": cache_price} if cache_price is not None else None
         endpoint_entry = self._build_endpoint_entry(
             {"in": input_price, "out": output_price},
             cache_pricing=cache_pricing,

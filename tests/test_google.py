@@ -280,7 +280,7 @@ class TestParseModelSection:
         entry = fetcher._parse_model_section("Gemini 2.5 Flash", _FLAT_TABLE)
         ep = entry["endpoints"][_GGL_EP]
         assert "cache" in ep
-        assert ep["cache"]["in"] == pytest.approx(0.025)
+        assert ep["cache"]["read"] == pytest.approx(0.025)
 
     def test_tiered_pricing_two_tiers(self, fetcher):
         entry = fetcher._parse_model_section("Gemini 2.5 Pro", _TIERED_TABLE)

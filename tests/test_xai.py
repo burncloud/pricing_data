@@ -98,14 +98,14 @@ class TestParseModels:
         models = fetcher._parse_models(resp)
         ep = models["grok-4.20-0309-reasoning"]["endpoints"]["api.x.ai"]
         assert "cache" in ep
-        assert ep["cache"]["in"] == pytest.approx(0.20)
+        assert ep["cache"]["read"] == pytest.approx(0.20)
 
     def test_zero_cache_included(self, fetcher):
         """Cache price of 0 is still stored."""
         resp = _make_response(_PAGE_ZERO_CACHE)
         models = fetcher._parse_models(resp)
         ep = models["grok-3"]["endpoints"]["api.x.ai"]
-        assert ep["cache"]["in"] == pytest.approx(0.0)
+        assert ep["cache"]["read"] == pytest.approx(0.0)
 
     def test_metadata_provider(self, fetcher):
         resp = _make_response(_PAGE_WITH_CACHE)

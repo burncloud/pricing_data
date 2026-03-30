@@ -99,7 +99,7 @@ def _v5_model(provider, currency, input_price, output_price, *,
     text = {"in": input_price, "out": output_price}
     entry = {"text": text}
     if cache_read is not None:
-        entry["cache"] = {"in": cache_read}
+        entry["cache"] = {"read": cache_read}
     if batch_in is not None:
         entry["batch"] = {"in": batch_in, "out": batch_out or 0.0}
     return {currency: entry}

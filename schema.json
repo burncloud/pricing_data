@@ -136,15 +136,15 @@
     "CachePricing": {
       "type": "object",
       "properties": {
-        "creation_input": {
+        "write": {
           "type": [
             "number",
             "null"
           ],
           "minimum": 0,
-          "description": "Price for creating cache entry per 1M tokens"
+          "description": "Price for creating/writing cache entry per 1M tokens"
         },
-        "in": {
+        "read": {
           "type": "number",
           "minimum": 0,
           "description": "Cache read (hit) price per 1M tokens"

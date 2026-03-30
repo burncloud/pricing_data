@@ -89,7 +89,7 @@ class TestBuildModelEntryFromPrices:
         assert entry is not None
         ep = entry["endpoints"]["api.openai.com"]
         assert "cache" in ep
-        assert ep["cache"]["in"] == pytest.approx(0.25)
+        assert ep["cache"]["read"] == pytest.approx(0.25)
 
     def test_no_cache_when_absent(self, fetcher):
         entry = fetcher._build_model_entry_from_prices(
@@ -153,7 +153,7 @@ class TestParseHtml:
         ep = models["gpt-5.4"]["endpoints"]["api.openai.com"]
         assert ep["pricing"]["in"] == pytest.approx(2.50)
         assert ep["pricing"]["out"] == pytest.approx(15.00)
-        assert ep["cache"]["in"] == pytest.approx(0.25)
+        assert ep["cache"]["read"] == pytest.approx(0.25)
 
     def test_parses_multiple_models(self, fetcher):
         html = self._make_html([

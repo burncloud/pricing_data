@@ -17,7 +17,7 @@ LLM API pricing data platform. Fetches pricing from multiple providers, merges w
         "image": { "in": <$/MTok>, "out": <$/MTok>, "per": <$/image> },
         "video": { "in": <$/MTok>, "sec": <$/second> },
         "music": { "per": <$/request> },
-        "cache": { "in": <$/MTok>, "creation_input": <$/MTok> },
+        "cache": { "read": <$/MTok>, "write": <$/MTok> },
         "batch": { "in": <$/MTok>, "out": <$/MTok> },
         "tiered": [
           { "tier_start": 0, "tier_end": 200000, "in": <$/MTok>, "out": <$/MTok> },

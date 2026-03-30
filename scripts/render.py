@@ -185,7 +185,7 @@ def render(data: Dict) -> str:
         out = fmt_price(text_p.get("out"), sym)
         cp = entry.get("cache", {})
         bp = entry.get("batch", {})
-        cache = fmt_price(cp.get("in"), sym) if cp else "—"
+        cache = fmt_price(cp.get("read"), sym) if cp else "—"
         batch = fmt_price(bp.get("in"), sym) if bp else "—"
         qr_rows.append(f"| `{mid}` | {display_prov} | {inp} | {out} | {cache} | {batch} | {currency} |")
 

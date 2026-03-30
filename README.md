@@ -21,13 +21,13 @@ LLM API 定价数据，机器可读，每日自动更新。
     "gemini-2.5-flash": {
       "USD": {
         "text":  { "in": 0.30, "out": 2.50 },
-        "cache": { "in": 0.025 }
+        "cache": { "read": 0.025 }
       }
     },
     "gemini-2.5-pro": {
       "USD": {
         "text":  { "in": 1.25, "out": 10.00 },
-        "cache": { "in": 0.125 },
+        "cache": { "read": 0.125 },
         "tiered": [
           { "tier_start": 0, "tier_end": 200000, "in": 1.25, "out": 10.00 },
           { "tier_start": 200000, "in": 2.50, "out": 15.00 }

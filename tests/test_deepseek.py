@@ -67,7 +67,7 @@ class TestParseModels:
         models = fetcher._parse_models(resp)
         ep = models["deepseek-chat"]["endpoints"]["api.deepseek.com"]
         assert "cache" in ep
-        assert ep["cache"]["in"] == pytest.approx(0.028)
+        assert ep["cache"]["read"] == pytest.approx(0.028)
 
     def test_reasoner_same_pricing(self, fetcher):
         """Both models share the same pricing (colspan=2 in source table)."""

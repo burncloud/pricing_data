@@ -195,8 +195,8 @@ class OpenRouterFetcher(BaseFetcher):
 
         try:
             return {
-                "in": round(float(cache_read or 0) * self.PRICE_MULTIPLIER, 6),
-                "creation_input": round(float(cache_write or 0) * self.PRICE_MULTIPLIER, 6),
+                "read": round(float(cache_read or 0) * self.PRICE_MULTIPLIER, 6),
+                "write": round(float(cache_write or 0) * self.PRICE_MULTIPLIER, 6),
             }
         except (ValueError, TypeError):
             return {}

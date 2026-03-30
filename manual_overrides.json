@@ -1,6 +1,6 @@
 {
   "_schema": "manual_overrides/5.0",
-  "_note": "Human-verified prices ($/MTok). Priority 200 — beats ALL automated sources. Format matches pricing.json v7.0. Never edit without visiting the official URL and confirming the price yourself.",
+  "_note": "Human-verified prices ($/MTok). Priority 200 — beats ALL automated sources. Format matches pricing.json v8.0. Never edit without visiting the official URL and confirming the price yourself.",
   "_workflow": "Discrepancy found? 1) Visit official_url  2) Confirm price  3) Add entry here  4) Commit",
   "models": {
     "deepseek-chat": {
@@ -13,7 +13,7 @@
           "out": 0.42
         },
         "cache": {
-          "in": 0.028
+          "read": 0.028
         }
       }
     },
@@ -27,7 +27,7 @@
           "out": 0.42
         },
         "cache": {
-          "in": 0.028
+          "read": 0.028
         }
       }
     },
@@ -124,7 +124,7 @@
           "out": 10.00
         },
         "cache": {
-          "in": 1.25
+          "read": 1.25
         }
       }
     },
@@ -138,7 +138,7 @@
           "out": 0.60
         },
         "cache": {
-          "in": 0.075
+          "read": 0.075
         }
       }
     },
@@ -163,7 +163,7 @@
           "out": 60.00
         },
         "cache": {
-          "in": 7.50
+          "read": 7.50
         }
       }
     },
@@ -177,7 +177,7 @@
           "out": 12.00
         },
         "cache": {
-          "in": 1.50
+          "read": 1.50
         }
       }
     },
@@ -191,7 +191,7 @@
           "out": 8.00
         },
         "cache": {
-          "in": 0.50
+          "read": 0.50
         }
       }
     },
@@ -205,57 +205,254 @@
           "out": 4.40
         },
         "cache": {
-          "in": 0.55
+          "read": 0.55
         }
       }
     },
-    "claude-3-5-sonnet-20241022": {
-      "_verified_at": "2026-03-29",
+    "claude-opus-4-6": {
+      "_verified_at": "2026-03-30",
       "_verified_source": "https://www.anthropic.com/pricing",
-      "_notes": "Claude 3.5 Sonnet (Oct 2022). $3.00 input / $15.00 output / $0.30 cache read per MTok.",
+      "_notes": "Claude Opus 4.6 (latest). $5 input / $25 output. Cache read 0.1x, write 1.25x. Batch 50%.",
+      "USD": {
+        "text": {
+          "in": 5.00,
+          "out": 25.00
+        },
+        "cache": {
+          "read": 0.50,
+          "write": 6.25
+        },
+        "batch": {
+          "in": 2.50,
+          "out": 12.50
+        }
+      }
+    },
+    "claude-opus-4-5-20251101": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude Opus 4.5. Same pricing as Opus 4.6.",
+      "USD": {
+        "text": {
+          "in": 5.00,
+          "out": 25.00
+        },
+        "cache": {
+          "read": 0.50,
+          "write": 6.25
+        },
+        "batch": {
+          "in": 2.50,
+          "out": 12.50
+        }
+      }
+    },
+    "claude-opus-4-1-20250805": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude Opus 4.1. $15 input / $75 output.",
+      "USD": {
+        "text": {
+          "in": 15.00,
+          "out": 75.00
+        },
+        "cache": {
+          "read": 1.50,
+          "write": 18.75
+        },
+        "batch": {
+          "in": 7.50,
+          "out": 37.50
+        }
+      }
+    },
+    "claude-opus-4-20250514": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude Opus 4. Same pricing as Opus 4.1.",
+      "USD": {
+        "text": {
+          "in": 15.00,
+          "out": 75.00
+        },
+        "cache": {
+          "read": 1.50,
+          "write": 18.75
+        },
+        "batch": {
+          "in": 7.50,
+          "out": 37.50
+        }
+      }
+    },
+    "claude-sonnet-4-6": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude Sonnet 4.6 (latest). $3 input / $15 output.",
       "USD": {
         "text": {
           "in": 3.00,
           "out": 15.00
         },
         "cache": {
-          "in": 0.30
+          "read": 0.30,
+          "write": 3.75
+        },
+        "batch": {
+          "in": 1.50,
+          "out": 7.50
         }
       }
     },
-    "claude-3-5-haiku-20241022": {
-      "_verified_at": "2026-03-29",
+    "claude-sonnet-4-5-20250929": {
+      "_verified_at": "2026-03-30",
       "_verified_source": "https://www.anthropic.com/pricing",
-      "_notes": "Claude 3.5 Haiku (Oct 2022). $1.00 input / $5.00 output / $0.10 cache read per MTok.",
+      "_notes": "Claude Sonnet 4.5. Same pricing as Sonnet 4.6.",
+      "USD": {
+        "text": {
+          "in": 3.00,
+          "out": 15.00
+        },
+        "cache": {
+          "read": 0.30,
+          "write": 3.75
+        },
+        "batch": {
+          "in": 1.50,
+          "out": 7.50
+        }
+      }
+    },
+    "claude-sonnet-4-20250514": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude Sonnet 4. Same pricing as Sonnet 4.6.",
+      "USD": {
+        "text": {
+          "in": 3.00,
+          "out": 15.00
+        },
+        "cache": {
+          "read": 0.30,
+          "write": 3.75
+        },
+        "batch": {
+          "in": 1.50,
+          "out": 7.50
+        }
+      }
+    },
+    "claude-3-7-sonnet-20250219": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude Sonnet 3.7 (deprecated). Same pricing as Sonnet 4 tier.",
+      "USD": {
+        "text": {
+          "in": 3.00,
+          "out": 15.00
+        },
+        "cache": {
+          "read": 0.30,
+          "write": 3.75
+        },
+        "batch": {
+          "in": 1.50,
+          "out": 7.50
+        }
+      }
+    },
+    "claude-3-5-sonnet-20241022": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude 3.5 Sonnet. $3.00 input / $15.00 output. Same cache/batch as Sonnet 4 tier.",
+      "USD": {
+        "text": {
+          "in": 3.00,
+          "out": 15.00
+        },
+        "cache": {
+          "read": 0.30,
+          "write": 3.75
+        },
+        "batch": {
+          "in": 1.50,
+          "out": 7.50
+        }
+      }
+    },
+    "claude-haiku-4-5-20251001": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude Haiku 4.5. $1 input / $5 output.",
       "USD": {
         "text": {
           "in": 1.00,
           "out": 5.00
         },
         "cache": {
-          "in": 0.10
+          "read": 0.10,
+          "write": 1.25
+        },
+        "batch": {
+          "in": 0.50,
+          "out": 2.50
+        }
+      }
+    },
+    "claude-3-5-haiku-20241022": {
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude 3.5 Haiku. $0.80 input / $4.00 output (NOT $1/$5 — that's Haiku 4.5).",
+      "USD": {
+        "text": {
+          "in": 0.80,
+          "out": 4.00
+        },
+        "cache": {
+          "read": 0.08,
+          "write": 1.00
+        },
+        "batch": {
+          "in": 0.40,
+          "out": 2.00
         }
       }
     },
     "claude-3-opus-20240229": {
-      "_verified_at": "2026-03-29",
+      "_verified_at": "2026-03-30",
       "_verified_source": "https://www.anthropic.com/pricing",
-      "_notes": "Claude 3 Opus. $15.00 input / $75.00 output per MTok. No cache pricing documented.",
+      "_notes": "Claude 3 Opus (deprecated). $15 input / $75 output.",
       "USD": {
         "text": {
           "in": 15.00,
           "out": 75.00
+        },
+        "cache": {
+          "read": 1.50,
+          "write": 18.75
+        },
+        "batch": {
+          "in": 7.50,
+          "out": 37.50
         }
       }
     },
     "claude-3-haiku-20240307": {
-      "_verified_at": "2026-03-29",
-      "_verified_source": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
-      "_notes": "Claude 3 Haiku (deprecated, retiring 2026-04-19). $0.25 input / $1.25 output per MTok.",
+      "_verified_at": "2026-03-30",
+      "_verified_source": "https://www.anthropic.com/pricing",
+      "_notes": "Claude 3 Haiku (deprecated, retiring 2026-04-19). $0.25 input / $1.25 output.",
       "USD": {
         "text": {
           "in": 0.25,
           "out": 1.25
+        },
+        "cache": {
+          "read": 0.03,
+          "write": 0.30
+        },
+        "batch": {
+          "in": 0.125,
+          "out": 0.625
         }
       }
     }

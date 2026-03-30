@@ -333,7 +333,7 @@ class GoogleFetcher(BaseFetcher):
         if cache_cell:
             cache_price = _first_dollar(cache_cell)
             if cache_price is not None and "Not available" not in cache_cell:
-                cache_pricing = {"in": cache_price}
+                cache_pricing = {"read": cache_price}
 
         endpoint_entry = self._build_endpoint_entry(
             flat_pricing,

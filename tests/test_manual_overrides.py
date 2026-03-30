@@ -34,7 +34,7 @@ def valid_overrides():
                         "out": 0.42,
                     },
                     "cache": {
-                        "in": 0.028,
+                        "read": 0.028,
                     },
                 },
             },
@@ -97,7 +97,7 @@ class TestManualOverridesFetcher:
         assert ep["currency"] == "USD"
         assert ep["pricing"]["text"]["in"] == 0.28
         assert ep["pricing"]["text"]["out"] == 0.42
-        assert ep["cache"]["in"] == 0.028
+        assert ep["cache"]["read"] == 0.028
 
     def test_tts_model_pricing(self, mock_config, tmp_path, valid_overrides):
         """TTS model with audio modality is correctly converted."""

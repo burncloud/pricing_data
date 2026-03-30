@@ -415,21 +415,21 @@ class TestNormalization:
         pricing = self._merge_single(model, tmp_path)
         assert pricing["USD"]["text"]["out"] == 0.0
 
-    def test_cache_creation_input_present(self, tmp_path):
-        """creation_input cache pricing is preserved in merged output."""
+    def test_cache_write_present(self, tmp_path):
+        """write cache pricing is preserved in merged output."""
         model = _model(
             "api.anthropic.com",
             {"in": 3.0, "out": 15.0},
             cache_pricing={
-                "creation_input": 3.75,
-                "in": 0.30,
+                "write": 3.75,
+                "read": 0.30,
             },
             metadata={"provider": "anthropic"},
         )
         pricing = self._merge_single(model, tmp_path)
         cp = pricing["USD"]["cache"]
-        assert "creation_input" in cp
-        assert cp["creation_input"] == pytest.approx(3.75)
+        assert "write" in cp
+        assert cp["write"] == pytest.approx(3.75)
 
     def test_cache_unit_field_removed(self, tmp_path):
         """unit field inside cache_pricing is removed from merged output."""
@@ -437,7 +437,7 @@ class TestNormalization:
             "api.anthropic.com",
             {"in": 3.0, "out": 15.0},
             cache_pricing={
-                "in": 0.30,
+                "read": 0.30,
                 "unit": "per_million_tokens",
             },
             metadata={"provider": "anthropic"},
@@ -830,7 +830,7 @@ class TestDerivedPricing:
         """Paid Zhipu model: cache_read_input_price = input * 0.5."""
         cny, _ = self._merge_zhipu("glm-4-plus", 5.0, 5.0, tmp_path)
         assert "cache" in cny
-        assert cny["cache"]["in"] == pytest.approx(2.5)
+        assert cny["cache"]["read"] == pytest.approx(2.5)
 
     def test_free_model_no_cache_pricing(self, tmp_path):
         """Free model (input=0): no cache_pricing derived."""
@@ -851,9 +851,9 @@ class TestDerivedPricing:
 
     def test_existing_cache_not_overwritten(self, tmp_path):
         """Source-provided cache_pricing is not overwritten by derived value."""
-        explicit = {"in": 1.0}
+        explicit = {"read": 1.0}
         cny, _ = self._merge_zhipu("glm-4-plus", 5.0, 5.0, tmp_path, existing_cache=explicit)
-        assert cny["cache"]["in"] == pytest.approx(1.0)
+        assert cny["cache"]["read"] == pytest.approx(1.0)
 
     def test_existing_batch_not_overwritten(self, tmp_path):
         """Source-provided batch_pricing is not overwritten by derived value."""
@@ -955,7 +955,7 @@ class TestDerivedPricing:
         cny = result["models"]["glm-4-plus"]["CNY"]
         # cache derived from infer_provider("glm-4-plus") == "zhipu"
         assert "cache" in cny
-        assert cny["cache"]["in"] == pytest.approx(2.5)
+        assert cny["cache"]["read"] == pytest.approx(2.5)
         assert "batch" in cny
         assert cny["batch"]["in"] == pytest.approx(2.5)
         # v6.0: no metadata key in output
@@ -1009,7 +1009,7 @@ class TestPricingCompletenessCheck:
             "api.anthropic.com",
             {"in": 3.0, "out": 15.0},
             currency="USD",
-            cache_pricing={"in": 0.30, "creation_input": 3.75},
+            cache_pricing={"read": 0.30, "write": 3.75},
             metadata={"provider": "anthropic"},
         )
         model_cny = _model(
