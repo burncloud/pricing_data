@@ -1,6 +1,6 @@
 {
   "version": "8.0",
-  "updated_at": "2026-04-06T03:29:20.188215+00:00",
+  "updated_at": "2026-04-07T03:18:51.342233+00:00",
   "source": "burncloud-official",
   "models": {
     "deepseek-chat": {
@@ -372,6 +372,245 @@
         "batch": {
           "in": 0.125,
           "out": 0.625
+        }
+      }
+    },
+    "glm-5-turbo": {
+      "CNY": {
+        "text": {
+          "in": 5.0,
+          "out": 22.0
+        },
+        "cache": {
+          "read": 2.5
+        }
+      },
+      "USD": {
+        "text": {
+          "in": 1.2,
+          "out": 4.0
+        },
+        "cache": {
+          "read": 0.6
+        }
+      }
+    },
+    "glm-5": {
+      "CNY": {
+        "text": {
+          "in": 4.0,
+          "out": 18.0
+        },
+        "cache": {
+          "read": 2.0
+        }
+      },
+      "USD": {
+        "text": {
+          "in": 0.8,
+          "out": 2.56
+        },
+        "cache": {
+          "read": 0.4
+        }
+      }
+    },
+    "glm-4.7": {
+      "CNY": {
+        "text": {
+          "in": 2.0,
+          "out": 8.0
+        },
+        "cache": {
+          "read": 1.0
+        }
+      },
+      "USD": {
+        "text": {
+          "in": 0.4,
+          "out": 1.5
+        },
+        "cache": {
+          "read": 0.2
+        }
+      }
+    },
+    "glm-4.5-air": {
+      "CNY": {
+        "text": {
+          "in": 0.8,
+          "out": 2.0
+        },
+        "cache": {
+          "read": 0.4
+        }
+      },
+      "USD": {
+        "text": {
+          "in": 0.2,
+          "out": 1.1
+        },
+        "cache": {
+          "read": 0.1
+        }
+      }
+    },
+    "glm-4.7-flashx": {
+      "CNY": {
+        "text": {
+          "in": 0.5,
+          "out": 3.0
+        },
+        "cache": {
+          "read": 0.25
+        }
+      }
+    },
+    "glm-4.7-flash": {
+      "CNY": {
+        "text": {
+          "in": 0.0,
+          "out": 0.0
+        }
+      },
+      "USD": {
+        "text": {
+          "in": 0.07,
+          "out": 0.4
+        },
+        "cache": {
+          "read": 0.035
+        }
+      }
+    },
+    "glm-4-plus": {
+      "CNY": {
+        "text": {
+          "in": 5.0,
+          "out": 5.0
+        },
+        "cache": {
+          "read": 2.5
+        },
+        "batch": {
+          "in": 2.5,
+          "out": 2.5
+        }
+      }
+    },
+    "glm-4-air-250414": {
+      "CNY": {
+        "text": {
+          "in": 0.5,
+          "out": 0.5
+        },
+        "cache": {
+          "read": 0.25
+        },
+        "batch": {
+          "in": 0.25,
+          "out": 0.25
+        }
+      }
+    },
+    "glm-4-airx": {
+      "CNY": {
+        "text": {
+          "in": 10.0,
+          "out": 10.0
+        },
+        "cache": {
+          "read": 5.0
+        }
+      }
+    },
+    "glm-4-long": {
+      "CNY": {
+        "text": {
+          "in": 1.0,
+          "out": 1.0
+        },
+        "cache": {
+          "read": 0.5
+        },
+        "batch": {
+          "in": 0.5,
+          "out": 0.5
+        }
+      }
+    },
+    "glm-4-assistant": {
+      "CNY": {
+        "text": {
+          "in": 5.0,
+          "out": 5.0
+        },
+        "cache": {
+          "read": 2.5
+        }
+      }
+    },
+    "glm-z1-air": {
+      "CNY": {
+        "text": {
+          "in": 0.5,
+          "out": 0.5
+        },
+        "cache": {
+          "read": 0.25
+        }
+      }
+    },
+    "glm-z1-airx": {
+      "CNY": {
+        "text": {
+          "in": 5.0,
+          "out": 5.0
+        },
+        "cache": {
+          "read": 2.5
+        }
+      }
+    },
+    "glm-z1-flashx": {
+      "CNY": {
+        "text": {
+          "in": 0.1,
+          "out": 0.1
+        },
+        "cache": {
+          "read": 0.05
+        }
+      }
+    },
+    "glm-4-flashx-250414": {
+      "CNY": {
+        "text": {
+          "in": 0.1,
+          "out": 0.1
+        },
+        "cache": {
+          "read": 0.05
+        },
+        "batch": {
+          "in": 0.05,
+          "out": 0.05
+        }
+      }
+    },
+    "glm-4-flash-250414": {
+      "CNY": {
+        "text": {
+          "in": 0.0,
+          "out": 0.0
+        }
+      }
+    },
+    "glm-z1-flash": {
+      "CNY": {
+        "text": {
+          "in": 0.0,
+          "out": 0.0
         }
       }
     },
@@ -2198,28 +2437,6 @@
         }
       }
     },
-    "grok-4.20-0309-non-reasoning": {
-      "USD": {
-        "text": {
-          "in": 20.0,
-          "out": 60.0
-        },
-        "cache": {
-          "read": 2.0
-        }
-      }
-    },
-    "grok-4.20-0309-reasoning": {
-      "USD": {
-        "text": {
-          "in": 20.0,
-          "out": 60.0
-        },
-        "cache": {
-          "read": 2.0
-        }
-      }
-    },
     "grok-4-0709": {
       "USD": {
         "text": {
@@ -2231,7 +2448,7 @@
         }
       }
     },
-    "grok-4.20-multi-agent-0309": {
+    "grok-4.20-0309-non-reasoning": {
       "USD": {
         "text": {
           "in": 20.0,
@@ -2239,6 +2456,17 @@
         },
         "cache": {
           "read": 2.0
+        }
+      }
+    },
+    "grok-4-fast-non-reasoning": {
+      "USD": {
+        "text": {
+          "in": 2.0,
+          "out": 5.0
+        },
+        "cache": {
+          "read": 0.5
         }
       }
     },
@@ -2253,14 +2481,25 @@
         }
       }
     },
-    "grok-4-fast-non-reasoning": {
+    "grok-4.20-0309-reasoning": {
       "USD": {
         "text": {
-          "in": 2.0,
-          "out": 5.0
+          "in": 20.0,
+          "out": 60.0
         },
         "cache": {
-          "read": 0.5
+          "read": 2.0
+        }
+      }
+    },
+    "grok-4.20-multi-agent-0309": {
+      "USD": {
+        "text": {
+          "in": 20.0,
+          "out": 60.0
+        },
+        "cache": {
+          "read": 2.0
         }
       }
     },
