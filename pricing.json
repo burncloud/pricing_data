@@ -1,6 +1,6 @@
 {
   "version": "8.0",
-  "updated_at": "2026-04-07T03:18:51.342233+00:00",
+  "updated_at": "2026-04-08T03:21:16.994953+00:00",
   "source": "burncloud-official",
   "models": {
     "deepseek-chat": {
@@ -372,6 +372,26 @@
         "batch": {
           "in": 0.125,
           "out": 0.625
+        }
+      }
+    },
+    "glm-5.1": {
+      "CNY": {
+        "text": {
+          "in": 6.0,
+          "out": 24.0
+        },
+        "cache": {
+          "read": 3.0
+        }
+      },
+      "USD": {
+        "text": {
+          "in": 1.26,
+          "out": 3.96
+        },
+        "cache": {
+          "read": 0.63
         }
       }
     },
@@ -2426,7 +2446,29 @@
         }
       }
     },
-    "grok-4-1-fast-non-reasoning": {
+    "grok-4.20-0309-reasoning": {
+      "USD": {
+        "text": {
+          "in": 20.0,
+          "out": 60.0
+        },
+        "cache": {
+          "read": 2.0
+        }
+      }
+    },
+    "grok-4-fast-reasoning": {
+      "USD": {
+        "text": {
+          "in": 2.0,
+          "out": 5.0
+        },
+        "cache": {
+          "read": 0.5
+        }
+      }
+    },
+    "grok-4-1-fast-reasoning": {
       "USD": {
         "text": {
           "in": 2.0,
@@ -2459,39 +2501,6 @@
         }
       }
     },
-    "grok-4-fast-non-reasoning": {
-      "USD": {
-        "text": {
-          "in": 2.0,
-          "out": 5.0
-        },
-        "cache": {
-          "read": 0.5
-        }
-      }
-    },
-    "grok-4-fast-reasoning": {
-      "USD": {
-        "text": {
-          "in": 2.0,
-          "out": 5.0
-        },
-        "cache": {
-          "read": 0.5
-        }
-      }
-    },
-    "grok-4.20-0309-reasoning": {
-      "USD": {
-        "text": {
-          "in": 20.0,
-          "out": 60.0
-        },
-        "cache": {
-          "read": 2.0
-        }
-      }
-    },
     "grok-4.20-multi-agent-0309": {
       "USD": {
         "text": {
@@ -2503,7 +2512,18 @@
         }
       }
     },
-    "grok-4-1-fast-reasoning": {
+    "grok-4-1-fast-non-reasoning": {
+      "USD": {
+        "text": {
+          "in": 2.0,
+          "out": 5.0
+        },
+        "cache": {
+          "read": 0.5
+        }
+      }
+    },
+    "grok-4-fast-non-reasoning": {
       "USD": {
         "text": {
           "in": 2.0,
