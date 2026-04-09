@@ -1,6 +1,6 @@
 {
   "version": "8.0",
-  "updated_at": "2026-04-08T03:21:16.994953+00:00",
+  "updated_at": "2026-04-09T02:56:46.060859+00:00",
   "source": "burncloud-official",
   "models": {
     "deepseek-chat": {
@@ -387,11 +387,11 @@
       },
       "USD": {
         "text": {
-          "in": 1.26,
-          "out": 3.96
+          "in": 1.395,
+          "out": 4.4
         },
         "cache": {
-          "read": 0.63
+          "read": 0.6975
         }
       }
     },
@@ -2094,20 +2094,6 @@
         ]
       }
     },
-    "kimi-k2.5": {
-      "USD": {
-        "text": {
-          "in": 0.6,
-          "out": 3.0
-        }
-      },
-      "CNY": {
-        "text": {
-          "in": 2.5,
-          "out": 2.0
-        }
-      }
-    },
     "gemini-3-flash-preview": {
       "USD": {
         "text": {
@@ -2138,20 +2124,6 @@
         },
         "cache": {
           "read": 0.01
-        }
-      }
-    },
-    "kimi-k2": {
-      "USD": {
-        "text": {
-          "in": 0.55,
-          "out": 2.2
-        }
-      },
-      "CNY": {
-        "text": {
-          "in": 2.0,
-          "out": 2.0
         }
       }
     },
@@ -2220,7 +2192,7 @@
         }
       }
     },
-    "kimi.com": {
+    "kimi": {
       "CNY": {
         "text": {
           "in": 2.5,
@@ -2228,11 +2200,43 @@
         }
       }
     },
-    "moonshot-v1": {
+    "kimi-api": {
+      "CNY": {
+        "text": {
+          "in": 2.0,
+          "out": 5.0
+        }
+      }
+    },
+    "kimi-k2-5-quickstart": {
+      "CNY": {
+        "text": {
+          "in": 2.0,
+          "out": 5.0
+        }
+      }
+    },
+    "kimi-k2-quickstart": {
+      "CNY": {
+        "text": {
+          "in": 2.0,
+          "out": 2.0
+        }
+      }
+    },
+    "kimi.ai": {
       "CNY": {
         "text": {
           "in": 1.0,
-          "out": 1.0
+          "out": 2.5
+        }
+      }
+    },
+    "kimi-cli-support": {
+      "CNY": {
+        "text": {
+          "in": 2.5,
+          "out": 2.0
         }
       }
     },
@@ -2446,7 +2450,40 @@
         }
       }
     },
+    "grok-4.20-multi-agent-0309": {
+      "USD": {
+        "text": {
+          "in": 20.0,
+          "out": 60.0
+        },
+        "cache": {
+          "read": 2.0
+        }
+      }
+    },
     "grok-4.20-0309-reasoning": {
+      "USD": {
+        "text": {
+          "in": 20.0,
+          "out": 60.0
+        },
+        "cache": {
+          "read": 2.0
+        }
+      }
+    },
+    "grok-4-0709": {
+      "USD": {
+        "text": {
+          "in": 30.0,
+          "out": 150.0
+        },
+        "cache": {
+          "read": 7.5
+        }
+      }
+    },
+    "grok-4.20-0309-non-reasoning": {
       "USD": {
         "text": {
           "in": 20.0,
@@ -2476,39 +2513,6 @@
         },
         "cache": {
           "read": 0.5
-        }
-      }
-    },
-    "grok-4-0709": {
-      "USD": {
-        "text": {
-          "in": 30.0,
-          "out": 150.0
-        },
-        "cache": {
-          "read": 7.5
-        }
-      }
-    },
-    "grok-4.20-0309-non-reasoning": {
-      "USD": {
-        "text": {
-          "in": 20.0,
-          "out": 60.0
-        },
-        "cache": {
-          "read": 2.0
-        }
-      }
-    },
-    "grok-4.20-multi-agent-0309": {
-      "USD": {
-        "text": {
-          "in": 20.0,
-          "out": 60.0
-        },
-        "cache": {
-          "read": 2.0
         }
       }
     },
