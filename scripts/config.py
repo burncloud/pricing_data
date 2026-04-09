@@ -174,6 +174,7 @@ class Config:
         "cohere": 100,
         # Chinese providers
         "zhipu": 100,
+        "zai": 100,
         "aliyun": 100,
         "baidu": 100,
         "xunfei": 100,
@@ -289,6 +290,16 @@ class Config:
                 endpoint_key="open.bigmodel.cn",
                 base_url="https://open.bigmodel.cn/api/paas/v4",
                 currency="CNY",
+            ),
+            "zai": FetcherConfig(
+                name="zai",
+                url="https://docs.z.ai/guides/overview/pricing",
+                timeout=30.0,
+                max_retries=3,
+                requires_auth=False,
+                endpoint_key="open.bigmodel.cn",
+                base_url="https://open.bigmodel.cn/api/paas/v4",
+                currency="USD",
             ),
             "xai": FetcherConfig(
                 name="xai",

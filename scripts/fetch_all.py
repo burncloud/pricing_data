@@ -15,6 +15,7 @@ from scripts.fetch.aliyun import AliyunFetcher
 from scripts.fetch.anthropic import AnthropicFetcher
 from scripts.fetch.baidu import BaiduFetcher
 from scripts.fetch.chinese import ZhipuFetcher
+from scripts.fetch.zai import ZAIFetcher
 from scripts.fetch.cohere import CohereFetcher
 from scripts.fetch.deepseek import DeepSeekFetcher
 from scripts.fetch.google import GoogleFetcher
@@ -50,6 +51,7 @@ def fetch_all(date_str: Optional[str] = None) -> int:
         GoogleFetcher(config),           # priority 100, plain HTTP
         DeepSeekFetcher(config),         # priority 100, plain HTTP
         ZhipuFetcher(config),            # priority 100, Playwright (bigmodel.cn CNY)
+        ZAIFetcher(config),              # priority 100, HTML (docs.z.ai USD)
         XAIFetcher(config),              # priority 100, plain HTTP
         AliyunFetcher(config),           # priority 100, plain HTTP (USD)
         MistralFetcher(config),          # priority 100, curl_cffi
